@@ -74,5 +74,6 @@
         "title": "Bild der Wochenstatistik"
       }
     ],
-    "deprecation_text": "Hier kann ein eigener Text für die Deprecation Warning (inkl. HTML) stehen!"
+    "deprecation_text": "Hier kann ein eigener Text für die Deprecation Warning (inkl. HTML) stehen!",
+    "deprecation_enabled": true
   }
