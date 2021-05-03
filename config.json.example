@@ -2,7 +2,7 @@
     "dataPath": [
       "https://yanic.batman15.ffffm.net/"
     ],
-    "siteName": "Freifunk Frankfurt",
+    "siteName": "Freifunk München",
     "maxAge": 21,
     "nodeZoom": 19,
     "mapLayers": [
@@ -12,7 +12,7 @@
         "config": {
           "type": "osm",
           "maxZoom": 19,
-          "attribution": "<a href='https://github.com/freifunk-ffm/meshviewer/issues' target='_blank'>Report Bug</a> | Map data &copy; <a href\"http://openstreetmap.org\">OpenStreetMap</a> contributor"
+          "attribution": "<a href='https://github.com/freifunkMUC/meshviewer/issues' target='_blank'>Report Bug</a> | Map data &copy; <a href\"http://openstreetmap.org\">OpenStreetMap</a> contributor"
         }
       }
     ],
