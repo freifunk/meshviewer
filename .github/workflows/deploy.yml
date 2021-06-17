@@ -1,0 +1,33 @@
+jobs:
+  deploy:
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [webfrontend03, webfrontend04, webfrontend05, webfrontend06]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      # Use GitHub Actions' cache to shorten build times and decrease load on servers
+    jobs:
+  map-deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm install
+    - run: npm run gulp
+    - name: rsync deployments
+      uses: burnett01/rsync-deployments@4.1
+      with:
+        switches: -avzr --delete
+        path: build
+        remote_path: /srv/www/map.ffmuc.net/
+        remote_host: ${{ matrix.target }}.ext.ffmuc.net
+        remote_user: deploy-ffmuc
+        remote_key: ${{ secrets.DEPLOY_KEY }}
