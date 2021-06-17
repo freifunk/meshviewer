@@ -359,5 +359,8 @@
          "title": "Impressum",
          "href": "https://ffmuc.net/impressum/"
       }
-   ]
+   ],
+
+    "deprecation_text": "Dein Gerät ist leider veraltet, bitte kümmere dich bald möglichst um ein Upgrade https://ffmuc.net/freifunkmuc/2019/07/11/austausch-aelterer-geraete/",
+    "deprecation_enabled": true
 }
