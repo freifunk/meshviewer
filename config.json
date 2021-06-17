@@ -361,6 +361,6 @@
       }
    ],
 
-    "deprecation_text": "Dein Gerät ist leider veraltet, bitte kümmere dich bald möglichst um ein Upgrade https://ffmuc.net/freifunkmuc/2019/07/11/austausch-aelterer-geraete/",
+    "deprecation_text": "Warnung: Dieser Knoten ist veraltet und wird ab bald nicht mehr unterstützt. Mehr Infos unter https://ffmuc.net/freifunkmuc/2019/07/11/austausch-aelterer-geraete. Wenn Sie der Besitzer des Geräts sind, bitten wir Sie, das Gerät dringend zu ersetzen, um weiterhin am Netzwerk teilnehmen zu können.",
     "deprecation_enabled": true
 }
