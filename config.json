@@ -172,7 +172,7 @@
    "nodeInfos": [
       {
          "name": "Clients (24 Stunden)",
-         "image": "https://stats.ffmuc.net/render/d-solo/hRIn3dRWk/mesh-nodes?orgId=1&panelId=6&var-nodeid={NODE_ID}&width=450&height=300&theme=light&from=now-24h",
+         "image": "https://stats.ffmuc.net/render/d-solo/hRIn3dRWk/mesh-nodes?orgId=1&panelId=2&var-nodeid={NODE_ID}&width=450&height=300&theme=light&from=now-24h",
          "href": "https://stats.ffmuc.net/d/hRIn3dRWk/mesh-nodes?orgId=1&var-nodeid={NODE_ID}",
          "title": "Clients - Knoten {NODE_ID}"
       },
