@@ -23,7 +23,7 @@ jobs:
       uses: burnett01/rsync-deployments@4.1
       with:
         switches: -avzr --delete
-        path: build
+        path: build/
         remote_path: /srv/www/map.ffmuc.net/
         remote_host: ${{ matrix.target }}.ext.ffmuc.net
         remote_user: deploy-map
