@@ -19,7 +19,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm install
     - run: npm run gulp
-    - run: cp config.js build/
+    - run: cp config.json build/
     - name: rsync deployments
       uses: burnett01/rsync-deployments@4.1
       with:
