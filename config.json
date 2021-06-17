@@ -361,6 +361,6 @@
       }
    ],
 
-    "deprecation_text": "Dein Gerät ist leider veraltet, bitte kümmere dich bald möglichst um ein Upgrade https://ffmuc.net/freifunkmuc/2019/07/11/austausch-aelterer-geraete/",
+    "deprecation_text": "Dieses Gerät ist leider veraltet und wird bald nicht mehr durch Software-Updates unterstützt - <a href='https://ffmuc.net/freifunkmuc/2019/07/11/austausch-aelterer-geraete/'>Mehr Infos</a>",
     "deprecation_enabled": true
 }
