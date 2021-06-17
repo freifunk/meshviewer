@@ -26,5 +26,5 @@ jobs:
         path: build
         remote_path: /srv/www/map.ffmuc.net/
         remote_host: ${{ matrix.target }}.ext.ffmuc.net
-        remote_user: deploy-ffmuc
+        remote_user: deploy-map
         remote_key: ${{ secrets.DEPLOY_KEY }}
