@@ -1,291 +1,363 @@
 {
-                reverseGeocodingApi: "https://nominatim.openstreetmap.org/reverse",
-                maxAge: 7,
-                maxAgeAlert: 3,
-                nodeZoom: 18,
-                labelZoom: 13,
-                clientZoom: 15,
-                fullscreen: !0,
-                fullscreenFrame: !0,
-                nodeAttr: [{
-                    name: "node.status",
-                    value: "Status"
-                }, {
-                    name: "node.gateway",
-                    value: "Gateway"
-                }, {
-                    name: "node.coordinates",
-                    value: "GeoURI"
-                }, {
-                    name: "node.contact",
-                    value: "owner"
-                }, {
-                    name: "node.hardware",
-                    value: "model"
-                }, {
-                    name: "node.primaryMac",
-                    value: "mac"
-                }, {
-                    name: "node.firmware",
-                    value: "Firmware"
-                }, {
-                    name: "node.uptime",
-                    value: "Uptime"
-                }, {
-                    name: "node.firstSeen",
-                    value: "FirstSeen"
-                }, {
-                    name: "node.systemLoad",
-                    value: "Load"
-                }, {
-                    name: "node.ram",
-                    value: "RAM"
-                }, {
-                    name: "node.ipAddresses",
-                    value: "IPs"
-                }, {
-                    name: "node.update",
-                    value: "Autoupdate"
-                }, {
-                    name: "node.domain",
-                    value: "Domain"
-                }, {
-                    name: "node.clients",
-                    value: "Clients"
-                }],
-                supportedLocale: ["en", "de", "cz", "fr", "tr", "ru"],
-                icon: {
-                    base: {
-                        fillOpacity: .6,
-                        opacity: .6,
-                        weight: 2,
-                        radius: 6,
-                        className: "stroke-first"
-                    },
-                    online: {
-                        color: "#1566A9",
-                        fillColor: "#1566A9"
-                    },
-                    offline: {
-                        color: "#D43E2A",
-                        fillColor: "#D43E2A",
-                        radius: 3
-                    },
-                    lost: {
-                        color: "#D43E2A",
-                        fillColor: "#D43E2A",
-                        radius: 4
-                    },
-                    alert: {
-                        color: "#D43E2A",
-                        fillColor: "#D43E2A",
-                        radius: 5
-                    },
-                    new: {
-                        color: "#1566A9",
-                        fillColor: "#93E929"
-                    }
-                },
-                client: {
-                    wifi24: "rgba(220, 0, 103, 0.7)",
-                    wifi5: "rgba(10, 156, 146, 0.7)",
-                    other: "rgba(227, 166, 25, 0.7)"
-                },
-                map: {
-                    labelNewColor: "#459c18",
-                    tqFrom: "#F02311",
-                    tqTo: "#04C714",
-                    highlightNode: {
-                        color: "#ad2358",
-                        weight: 8,
-                        fillOpacity: 1,
-                        opacity: .4,
-                        className: "stroke-first"
-                    },
-                    highlightLink: {
-                        weight: 4,
-                        opacity: 1,
-                        dashArray: "5, 10"
-                    }
-                },
-                forceGraph: {
-                    nodeColor: "#fff",
-                    nodeOfflineColor: "#D43E2A",
-                    highlightColor: "rgba(255, 255, 255, 0.2)",
-                    labelColor: "#fff",
-                    tqFrom: "#770038",
-                    tqTo: "#dc0067",
-                    zoomModifier: 1
-                },
-                locate: {
-                    outerCircle: {
-                        stroke: !1,
-                        color: "#4285F4",
-                        opacity: 1,
-                        fillOpacity: .3,
-                        clickable: !1,
-                        radius: 16
-                    },
-                    innerCircle: {
-                        "stroke:": !0,
-                        color: "#ffffff",
-                        fillColor: "#4285F4",
-                        weight: 1.5,
-                        clickable: !1,
-                        opacity: 1,
-                        fillOpacity: 1,
-                        radius: 7
-                    },
-                    accuracyCircle: {
-                        stroke: !0,
-                        color: "#4285F4",
-                        weight: 1,
-                        clickable: !1,
-                        opacity: .7,
-                        fillOpacity: .2
-                    }
-                },
-                cacheBreaker: "22967a527",
-                nodeInfos: [{
-                    name: "Clients (24 Stunden)",
-                    image: "https://stats.ffmuc.net/render/dashboard-solo/db/mesh-nodes?orgId=1&panelId=2&var-nodeid={NODE_ID}&width=450&height=300&theme=light&from=now-24h",
-                    href: "https://stats.ffmuc.net/dashboard/db/mesh-nodes?var-nodeid={NODE_ID}",
-                    title: "Clients - Knoten {NODE_ID}"
-                }, {
-                    name: "Traffic (24 Stunden)",
-                    image: "https://stats.ffmuc.net/render/dashboard-solo/db/mesh-nodes?panelId=6&var-nodeid={NODE_ID}&width=450&height=400&theme=light&from=now-24h",
-                    href: "https://stats.ffmuc.net/dashboard/db/mesh-nodes?var-nodeid={NODE_ID}",
-                    title: "Traffic - Knoten {NODE_ID}"
-                }, {
-                    name: "Clients (7 Tage)",
-                    image: "https://stats.ffmuc.net/render/dashboard-solo/db/mesh-nodes?panelId=2&var-nodeid={NODE_ID}&width=450&height=300&theme=light&from=now-7d",
-                    href: "https://stats.ffmuc.net/dashboard/db/mesh-nodes?var-nodeid={NODE_ID}",
-                    title: "Clients - Knoten {NODE_ID}"
-                }, {
-                    name: "Traffic (7 Tage)",
-                    image: "https://stats.ffmuc.net/render/dashboard-solo/db/mesh-nodes?panelId=6&var-nodeid={NODE_ID}&width=450&height=400&theme=light&from=now-7d",
-                    href: "https://stats.ffmuc.net/dashboard/db/mesh-nodes?var-nodeid={NODE_ID}",
-                    title: "Traffic - Knoten {NODE_ID}"
-                }, {
-                    name: "Uptime (7 Tage)",
-                    image: "https://stats.ffmuc.net/render/dashboard-solo/db/mesh-nodes?panelId=8&var-nodeid={NODE_ID}&width=450&height=400&theme=light&from=now-7d",
-                    href: "https://stats.ffmuc.net/dashboard/db/mesh-nodes?var-nodeid={NODE_ID}",
-                    title: "Traffic - Knoten {NODE_ID}"
-                }],
-                globalInfos: [{
-                    name: "Clients",
-                    title: "Clients pro Segment",
-                    href: "https://stats.ffmuc.net",
-                    image: "https://stats.ffmuc.net/render/dashboard-solo/db/network-overview?panelId=6&orgId=1&theme=light&width=500&height=500"
-                }, {
-                    name: "Traffic",
-                    title: "Traffic pro Server",
-                    href: "https://stats.ffmuc.net",
-                    image: "https://stats.ffmuc.net/render/dashboard-solo/db/network-overview?panelId=7&orgId=1&theme=light&width=500&height=500"
-                }],
-                dataPath: ["https://map.ffmuc.net/data/"],
-                siteName: "Freifunk Muenchen",
-                mapLayers: [{
-                    name: "FFMUC OSM.HOT Proxy",
-                    url: "https://tiles.ext.ffmuc.net/hot/{z}/{x}/{y}.png",
-                    config: {
-                        maxZoom: 20,
-                        attribution: '&copy; Openstreetmap France | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                    }
-                }, {
-                    name: "FFMUC OSM Proxy",
-                    url: "https://tiles.ext.ffmuc.net/osm/{z}/{x}/{y}.png",
-                    config: {
-                        maxZoom: 19,
-                        attribution: '&copy; Openstreetmap France | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                    }
-                }, {
-                    name: "Esri.WorldImagery",
-                    url: "//server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-                    config: {
-                        maxZoom: 20,
-                        attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
-                    }
-                }],
-                backup_map_provider_ffmuc: [{
-                    name: "HERE",
-                    url: "https://{s}.base.maps.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?app_id=YOUR_KEY&app_code=YOUR_CODE&lg=deu",
-                    config: {
-                        attribution: 'Map &copy; 1987-2014 <a href="http://developer.here.com">HERE</a>',
-                        subdomains: "1234",
-                        maxZoom: 20
-                    }
-                }, {
-                    name: "HERE.hybridDay",
-                    url: "https://{s}.aerial.maps.api.here.com/maptile/2.1/maptile/newest/{variant}/{z}/{x}/{y}/256/png8?app_id=YOUR_KEY&app_code=YOUR_CODE&lg=deu",
-                    config: {
-                        attribution: 'Map &copy; 1987-2014 <a href="http://developer.here.com">HERE</a>',
-                        subdomains: "1234",
-                        variant: "hybrid.day",
-                        maxZoom: 20
-                    }
-                }],
-                fixedCenter: [[48.3957886, 12.012732], [48.0428527, 11.2707154]],
-                domainNames: [{
-                    domain: "ffmuc_muc_cty",
-                    name: "FFMUC München Stadt"
-                }, {
-                    domain: "ffmuc_muc_nord",
-                    name: "FFMUC München Nord"
-                }, {
-                    domain: "ffmuc_muc_ost",
-                    name: "FFMUC München Ost"
-                }, {
-                    domain: "ffmuc_muc_sued",
-                    name: "FFMUC München Süd"
-                }, {
-                    domain: "ffmuc_muc_west",
-                    name: "FFMUC München West"
-                }, {
-                    domain: "ffmuc_uml_nord",
-                    name: "FFMUC Umland Nord"
-                }, {
-                    domain: "ffmuc_uml_ost",
-                    name: "FFMUC Umland Ost"
-                }, {
-                    domain: "ffmuc_uml_sued",
-                    name: "FFMUC Umland Süd"
-                }, {
-                    domain: "ffmuc_uml_west",
-                    name: "FFMUC Umland West"
-                }, {
-                    domain: "ffmuc_welt",
-                    name: "FFMUC Welt"
-                }, {
-                    domain: "ffmuc_gauting",
-                    name: "FFMUC Gauting"
-                }, {
-                    domain: "ffmuc_freising",
-                    name: "FFMUC Freising"
-                }, {
-                    domain: "ffmuc",
-                    name: "FFMUC (alt)"
-                }, {
-                    domain: "ffmuc_umland",
-                    name: "FFMUC Umland (alt)"
-                }, {
-                    domain: "ffmuc_welcome",
-                    name: "FFMUC Welcome (alt)"
-                }],
-                linkList: [{
-                    title: "Chat",
-                    href: "https://chat.ffmuc.net"
-                }, {
-                    title: "Tickets",
-                    href: "https://tickets.ffmuc.net"
-                }, {
-                    title: "Statistiken",
-                    href: "https://stats.ffmuc.net"
-                }, {
-                    title: "Kontakt",
-                    href: "https://ffmuc.net/kontakt"
-                }, {
-                    title: "Impressum",
-                    href: "https://ffmuc.net/impressum/"
-                }]
-            }
+   "reverseGeocodingApi": "https://nominatim.openstreetmap.org/reverse",
+   "maxAge": 7,
+   "maxAgeAlert": 3,
+   "nodeZoom": 18,
+   "labelZoom": 13,
+   "clientZoom": 15,
+   "fullscreen": true,
+   "fullscreenFrame": true,
+   "nodeAttr": [
+      {
+         "name": "node.status",
+         "value": "Status"
+      },
+      {
+         "name": "node.gateway",
+         "value": "Gateway"
+      },
+      {
+         "name": "node.coordinates",
+         "value": "GeoURI"
+      },
+      {
+         "name": "node.contact",
+         "value": "owner"
+      },
+      {
+         "name": "node.hardware",
+         "value": "model"
+      },
+      {
+         "name": "node.primaryMac",
+         "value": "mac"
+      },
+      {
+         "name": "node.firmware",
+         "value": "Firmware"
+      },
+      {
+         "name": "node.uptime",
+         "value": "Uptime"
+      },
+      {
+         "name": "node.firstSeen",
+         "value": "FirstSeen"
+      },
+      {
+         "name": "node.systemLoad",
+         "value": "Load"
+      },
+      {
+         "name": "node.ram",
+         "value": "RAM"
+      },
+      {
+         "name": "node.ipAddresses",
+         "value": "IPs"
+      },
+      {
+         "name": "node.update",
+         "value": "Autoupdate"
+      },
+      {
+         "name": "node.domain",
+         "value": "Domain"
+      },
+      {
+         "name": "node.clients",
+         "value": "Clients"
+      }
+   ],
+   "supportedLocale": [
+      "en",
+      "de",
+      "cz",
+      "fr",
+      "tr",
+      "ru"
+   ],
+   "icon": {
+      "base": {
+         "fillOpacity": 0.6,
+         "opacity": 0.6,
+         "weight": 2,
+         "radius": 6,
+         "className": "stroke-first"
+      },
+      "online": {
+         "color": "#1566A9",
+         "fillColor": "#1566A9"
+      },
+      "offline": {
+         "color": "#D43E2A",
+         "fillColor": "#D43E2A",
+         "radius": 3
+      },
+      "lost": {
+         "color": "#D43E2A",
+         "fillColor": "#D43E2A",
+         "radius": 4
+      },
+      "alert": {
+         "color": "#D43E2A",
+         "fillColor": "#D43E2A",
+         "radius": 5
+      },
+      "new": {
+         "color": "#1566A9",
+         "fillColor": "#93E929"
+      }
+   },
+   "client": {
+      "wifi24": "rgba(220, 0, 103, 0.7)",
+      "wifi5": "rgba(10, 156, 146, 0.7)",
+      "other": "rgba(227, 166, 25, 0.7)"
+   },
+   "map": {
+      "labelNewColor": "#459c18",
+      "tqFrom": "#F02311",
+      "tqTo": "#04C714",
+      "highlightNode": {
+         "color": "#ad2358",
+         "weight": 8,
+         "fillOpacity": 1,
+         "opacity": 0.4,
+         "className": "stroke-first"
+      },
+      "highlightLink": {
+         "weight": 4,
+         "opacity": 1,
+         "dashArray": "5, 10"
+      }
+   },
+   "forceGraph": {
+      "nodeColor": "#fff",
+      "nodeOfflineColor": "#D43E2A",
+      "highlightColor": "rgba(255, 255, 255, 0.2)",
+      "labelColor": "#fff",
+      "tqFrom": "#770038",
+      "tqTo": "#dc0067",
+      "zoomModifier": 1
+   },
+   "locate": {
+      "outerCircle": {
+         "stroke": false,
+         "color": "#4285F4",
+         "opacity": 1,
+         "fillOpacity": 0.3,
+         "clickable": false,
+         "radius": 16
+      },
+      "innerCircle": {
+         "stroke:": true,
+         "color": "#ffffff",
+         "fillColor": "#4285F4",
+         "weight": 1.5,
+         "clickable": false,
+         "opacity": 1,
+         "fillOpacity": 1,
+         "radius": 7
+      },
+      "accuracyCircle": {
+         "stroke": true,
+         "color": "#4285F4",
+         "weight": 1,
+         "clickable": false,
+         "opacity": 0.7,
+         "fillOpacity": 0.2
+      }
+   },
+   "cacheBreaker": "22967a527",
+   "nodeInfos": [
+      {
+         "name": "Clients (24 Stunden)",
+         "image": "https://stats.ffmuc.net/render/dashboard-solo/db/mesh-nodes?orgId=1&panelId=2&var-nodeid={NODE_ID}&width=450&height=300&theme=light&from=now-24h",
+         "href": "https://stats.ffmuc.net/dashboard/db/mesh-nodes?var-nodeid={NODE_ID}",
+         "title": "Clients - Knoten {NODE_ID}"
+      },
+      {
+         "name": "Traffic (24 Stunden)",
+         "image": "https://stats.ffmuc.net/render/dashboard-solo/db/mesh-nodes?panelId=6&var-nodeid={NODE_ID}&width=450&height=400&theme=light&from=now-24h",
+         "href": "https://stats.ffmuc.net/dashboard/db/mesh-nodes?var-nodeid={NODE_ID}",
+         "title": "Traffic - Knoten {NODE_ID}"
+      },
+      {
+         "name": "Clients (7 Tage)",
+         "image": "https://stats.ffmuc.net/render/dashboard-solo/db/mesh-nodes?panelId=2&var-nodeid={NODE_ID}&width=450&height=300&theme=light&from=now-7d",
+         "href": "https://stats.ffmuc.net/dashboard/db/mesh-nodes?var-nodeid={NODE_ID}",
+         "title": "Clients - Knoten {NODE_ID}"
+      },
+      {
+         "name": "Traffic (7 Tage)",
+         "image": "https://stats.ffmuc.net/render/dashboard-solo/db/mesh-nodes?panelId=6&var-nodeid={NODE_ID}&width=450&height=400&theme=light&from=now-7d",
+         "href": "https://stats.ffmuc.net/dashboard/db/mesh-nodes?var-nodeid={NODE_ID}",
+         "title": "Traffic - Knoten {NODE_ID}"
+      },
+      {
+         "name": "Uptime (7 Tage)",
+         "image": "https://stats.ffmuc.net/render/dashboard-solo/db/mesh-nodes?panelId=8&var-nodeid={NODE_ID}&width=450&height=400&theme=light&from=now-7d",
+         "href": "https://stats.ffmuc.net/dashboard/db/mesh-nodes?var-nodeid={NODE_ID}",
+         "title": "Traffic - Knoten {NODE_ID}"
+      }
+   ],
+   "globalInfos": [
+      {
+         "name": "Clients",
+         "title": "Clients pro Segment",
+         "href": "https://stats.ffmuc.net",
+         "image": "https://stats.ffmuc.net/render/dashboard-solo/db/network-overview?panelId=6&orgId=1&theme=light&width=500&height=500"
+      },
+      {
+         "name": "Traffic",
+         "title": "Traffic pro Server",
+         "href": "https://stats.ffmuc.net",
+         "image": "https://stats.ffmuc.net/render/dashboard-solo/db/network-overview?panelId=7&orgId=1&theme=light&width=500&height=500"
+      }
+   ],
+   "dataPath": [
+      "https://map.ffmuc.net/data/"
+   ],
+   "siteName": "Freifunk Muenchen",
+   "mapLayers": [
+      {
+         "name": "FFMUC OSM.HOT Proxy",
+         "url": "https://tiles.ext.ffmuc.net/hot/{z}/{x}/{y}.png",
+         "config": {
+            "maxZoom": 20,
+            "attribution": "&copy; Openstreetmap France | &copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>"
+         }
+      },
+      {
+         "name": "FFMUC OSM Proxy",
+         "url": "https://tiles.ext.ffmuc.net/osm/{z}/{x}/{y}.png",
+         "config": {
+            "maxZoom": 19,
+            "attribution": "&copy; Openstreetmap France | &copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>"
+         }
+      },
+      {
+         "name": "Esri.WorldImagery",
+         "url": "//server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+         "config": {
+            "maxZoom": 20,
+            "attribution": "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+         }
+      }
+   ],
+   "backup_map_provider_ffmuc": [
+      {
+         "name": "HERE",
+         "url": "https://{s}.base.maps.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?app_id=YOUR_KEY&app_code=YOUR_CODE&lg=deu",
+         "config": {
+            "attribution": "Map &copy; 1987-2014 <a href=\"http://developer.here.com\">HERE</a>",
+            "subdomains": "1234",
+            "maxZoom": 20
+         }
+      },
+      {
+         "name": "HERE.hybridDay",
+         "url": "https://{s}.aerial.maps.api.here.com/maptile/2.1/maptile/newest/{variant}/{z}/{x}/{y}/256/png8?app_id=YOUR_KEY&app_code=YOUR_CODE&lg=deu",
+         "config": {
+            "attribution": "Map &copy; 1987-2014 <a href=\"http://developer.here.com\">HERE</a>",
+            "subdomains": "1234",
+            "variant": "hybrid.day",
+            "maxZoom": 20
+         }
+      }
+   ],
+   "fixedCenter": [
+      [
+         48.3957886,
+         12.012732
+      ],
+      [
+         48.0428527,
+         11.2707154
+      ]
+   ],
+   "domainNames": [
+      {
+         "domain": "ffmuc_muc_cty",
+         "name": "FFMUC München Stadt"
+      },
+      {
+         "domain": "ffmuc_muc_nord",
+         "name": "FFMUC München Nord"
+      },
+      {
+         "domain": "ffmuc_muc_ost",
+         "name": "FFMUC München Ost"
+      },
+      {
+         "domain": "ffmuc_muc_sued",
+         "name": "FFMUC München Süd"
+      },
+      {
+         "domain": "ffmuc_muc_west",
+         "name": "FFMUC München West"
+      },
+      {
+         "domain": "ffmuc_uml_nord",
+         "name": "FFMUC Umland Nord"
+      },
+      {
+         "domain": "ffmuc_uml_ost",
+         "name": "FFMUC Umland Ost"
+      },
+      {
+         "domain": "ffmuc_uml_sued",
+         "name": "FFMUC Umland Süd"
+      },
+      {
+         "domain": "ffmuc_uml_west",
+         "name": "FFMUC Umland West"
+      },
+      {
+         "domain": "ffmuc_welt",
+         "name": "FFMUC Welt"
+      },
+      {
+         "domain": "ffmuc_gauting",
+         "name": "FFMUC Gauting"
+      },
+      {
+         "domain": "ffmuc_freising",
+         "name": "FFMUC Freising"
+      },
+      {
+         "domain": "ffmuc",
+         "name": "FFMUC (alt)"
+      },
+      {
+         "domain": "ffmuc_umland",
+         "name": "FFMUC Umland (alt)"
+      },
+      {
+         "domain": "ffmuc_welcome",
+         "name": "FFMUC Welcome (alt)"
+      }
+   ],
+   "linkList": [
+      {
+         "title": "Chat",
+         "href": "https://chat.ffmuc.net"
+      },
+      {
+         "title": "Tickets",
+         "href": "https://tickets.ffmuc.net"
+      },
+      {
+         "title": "Statistiken",
+         "href": "https://stats.ffmuc.net"
+      },
+      {
+         "title": "Kontakt",
+         "href": "https://ffmuc.net/kontakt"
+      },
+      {
+         "title": "Impressum",
+         "href": "https://ffmuc.net/impressum/"
+      }
+   ]
+}
