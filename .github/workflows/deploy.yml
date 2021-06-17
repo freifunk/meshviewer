@@ -1,19 +1,16 @@
+name: DEPLOY
+on:
+  push:
+    branches:
+    - main
 jobs:
-  deploy:
+  map-deploy:
     strategy:
       fail-fast: false
       matrix:
         target: [webfrontend03, webfrontend04, webfrontend05, webfrontend06]
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      # Use GitHub Actions' cache to shorten build times and decrease load on servers
-    jobs:
-  map-deploy:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
         node-version: [12.x]
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
