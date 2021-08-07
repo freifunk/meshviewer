@@ -221,18 +221,18 @@
    "siteName": "Freifunk München",
    "mapLayers": [
       {
-         "name": "FFMUC OSM.HOT Proxy",
-         "url": "https://tiles.ext.ffmuc.net/hot/{z}/{x}/{y}.png",
-         "config": {
-            "maxZoom": 20,
-            "attribution": "&copy; Openstreetmap France | &copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>"
-         }
-      },
-      {
          "name": "FFMUC OSM Proxy",
          "url": "https://tiles.ext.ffmuc.net/osm/{z}/{x}/{y}.png",
          "config": {
             "maxZoom": 19,
+            "attribution": "&copy; Openstreetmap | &copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>"
+         }
+      },
+      {
+         "name": "FFMUC OSM.HOT Proxy",
+         "url": "https://tiles.ext.ffmuc.net/hot/{z}/{x}/{y}.png",
+         "config": {
+            "maxZoom": 20,
             "attribution": "&copy; Openstreetmap France | &copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>"
          }
       },
