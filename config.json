@@ -318,6 +318,10 @@
          "name": "FFMUC Welt"
       },
       {
+         "domain": "ffmuc_augsburg",
+         "name": "FFMUC Augsburg"
+      },
+      {
          "domain": "ffmuc_gauting",
          "name": "FFMUC Gauting"
       },
