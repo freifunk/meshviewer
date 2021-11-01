@@ -6,11 +6,11 @@ updates:
   - package-ecosystem: npm
     directory: /
     schedule: {interval: monthly}
-    reviewers: [@freifunkMUC/webseite]
-    assignees: [@freifunkMUC/webseite]
+    reviewers: [freifunkMUC/webseite]
+    assignees: [freifunkMUC/webseite]
 
   - package-ecosystem: github-actions
     directory: /
     schedule: {interval: monthly}
-    reviewers: [@freifunkMUC/webseite]
-    assignees: [@freifunkMUC/webseite]
+    reviewers: [freifunkMUC/webseite]
+    assignees: [freifunkMUC/webseite]
