@@ -1,5 +1,5 @@
 ### Build stage for the website frontend
-FROM --platform=$BUILDPLATFORM node:17.4.0-bullseye
+FROM --platform=$BUILDPLATFORM node:14
 RUN apt-get update && \
 apt-get install -y python
 WORKDIR /code
