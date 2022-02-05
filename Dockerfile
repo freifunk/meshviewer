@@ -8,9 +8,7 @@ RUN npm ci --no-audit --prefer-offline
 RUN npm run gulp
 
 FROM nginx:1.21.6-alpine
-COPY --from=build /code/build/* /usr/share/nginx/html
+COPY --from=build /code/build/ /usr/share/nginx/html
 COPY --from=build /code/config.json /usr/share/nginx/html
-COPY --from=build /code/locale/ /usr/share/nginx/html/locale
-COPY --from=build /code/assets/fonts /usr/share/nginx/html/fonts
 
 EXPOSE 80
