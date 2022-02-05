@@ -1,7 +1,6 @@
 const gulp = require('gulp');
 const plugins = require('gulp-load-plugins')();
 const config = require('./gulp/config')();
-const sass = require('gulp-sass')(require('sass'));
 
 const env = {
   development: plugins.environments.development,
