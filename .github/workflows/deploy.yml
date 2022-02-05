@@ -21,7 +21,7 @@ jobs:
     - run: npm run gulp
     - run: cp config.json build/
     - name: rsync deployments
-      uses: burnett01/rsync-deployments@4.1
+      uses: burnett01/rsync-deployments@5.2
       with:
         switches: -avzr --delete --exclude .ssh
         path: build/
