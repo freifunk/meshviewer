@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  meshviewer:
+    build: .
+    # image: ghcr.io/freifunkmuc/meshviewer:main
+    container_name: meshviewer
+    volumes:
+      - ./config.json:/usr/share/nginx/html
+    restart: unless-stopped
+    ports:
+      - 8080:80
