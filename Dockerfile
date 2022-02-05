@@ -6,6 +6,5 @@ WORKDIR /code
 COPY . ./
 RUN npm ci --no-audit --prefer-offline
 RUN npm run gulp
-RUN npm run build
 
 CMD ["npm" "start"]
