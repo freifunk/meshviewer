@@ -9,5 +9,6 @@ RUN npm run gulp
 
 FROM nginx:1.21.6-alpine
 COPY --from=build /code/build/* /usr/share/nginx/html
+COPY --from=build config.js /usr/share/nginx/html
 
 EXPOSE 80
