@@ -3,7 +3,7 @@ FROM --platform=$BUILDPLATFORM node:14
 RUN apt-get update && \
 apt-get install -y python
 WORKDIR /code
-COPY package*.json ./
+COPY . ./
 RUN npm ci --no-audit --prefer-offline
 RUN npm run gulp
 RUN npm run build
