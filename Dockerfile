@@ -8,4 +8,4 @@ RUN npm ci --no-audit --prefer-offline
 RUN npm run gulp
 
 EXPOSE 3000
-CMD ["npm" "start"]
+CMD ["npm", "start"]
