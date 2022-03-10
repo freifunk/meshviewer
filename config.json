@@ -330,6 +330,10 @@
          "name": "FFMUC Freising"
       },
       {
+         "domain": "ffmuc_unifi_respondd_fallback",
+         "name": "FFMUC UniFi Fallback"
+      },
+      {
          "domain": "ffmuc",
          "name": "FFMUC (alt)"
       },
