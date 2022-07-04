@@ -74,6 +74,7 @@
         "title": "Bild der Wochenstatistik"
       }
     ],
+    "hwImg": "https://map.aachen.freifunk.net/router-images/{MODEL_NORMALIZED}.svg",
     "node_custom": "/[^a-z0-9\\-\\.]/ig",
     "deprecation_text": "Hier kann ein eigener Text für die Deprecation Warning (inkl. HTML) stehen!",
     "deprecation_enabled": true
