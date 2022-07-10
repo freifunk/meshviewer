@@ -5,6 +5,7 @@
     "uptime": "Время работы",
     "links": "Ссылки",
     "clients": "Клиенты",
+    "localClients": "Clients in the local cloud",
     "distance": "Расстояние",
     "connectionType": "Тип подключения",
     "tq": "Качество связи",

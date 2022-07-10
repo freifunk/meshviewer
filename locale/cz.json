@@ -5,6 +5,7 @@
     "uptime": "Celková doba provozu",
     "links": "Odkazy",
     "clients": "Klienti",
+    "localClients": "Clients in the local cloud",
     "distance": "Vzdálenost",
     "connectionType": "typ připojení",
     "tq": "tq",
