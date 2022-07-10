@@ -5,6 +5,7 @@
     "uptime": "Çalışma süresi",
     "links": "Bağlantılar",
     "clients": "Müşteriler",
+    "localClients": "Clients in the local cloud",
     "distance": "Mesafe",
     "connectionType": "Bağlantı türü",
     "tq": "İletim kalitesi",

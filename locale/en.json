@@ -5,6 +5,7 @@
     "uptime": "Uptime",
     "links": "Links",
     "clients": "Clients",
+    "localClients": "Clients in the local cloud",
     "distance": "Distance",
     "connectionType": "Connection type",
     "tq": "Transmit quality",

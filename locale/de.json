@@ -5,6 +5,7 @@
     "uptime": "Laufzeit",
     "links": "Verbindungen",
     "clients": "Nutzer",
+    "localClients": "Nutzer in der lokalen Wolke",
     "distance": "Entfernung",
     "connectionType": "Verbindungsart",
     "tq": "Übertragungsqualität",
