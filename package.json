@@ -17,7 +17,7 @@
     "eslint": "^7.31.0",
     "eslint-config-airbnb-es5": "^1.2.0",
     "eslint-config-defaults": "^9.0.0",
-    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react": "^7.32.2",
     "gulp": "^4.0.1",
     "gulp-autoprefixer": "^8.0.0",
     "gulp-cache-bust": "^1.4.0",
