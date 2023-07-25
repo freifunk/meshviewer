@@ -330,6 +330,10 @@
          "name": "FFMUC Freising"
       },
       {
+         "domain": "ffmuc_ffdon_test",
+         "name": "Freifunk Donau-Ries Test"
+      },
+      {
          "domain": "ffmuc_unifi_respondd_fallback",
          "name": "FFMUC UniFi Fallback"
       },
