@@ -278,6 +278,10 @@
    ],
    "domainNames": [
       {
+         "domain": "",
+         "name": "Unknown Domain"
+      },
+      {
          "domain": "ffmuc_muc_cty",
          "name": "FFMUC München Stadt"
       },
