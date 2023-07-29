@@ -6,7 +6,7 @@ module.exports = function (gulp, plugins, config, env) {
       .on('error', function () {
         this.emit('end');
       })
-      .pipe(env.production(plugins.uglify({ output: { comments: 'all' } })))
+      // .pipe(env.production(plugins.uglify({ output: { comments: 'all' } })))
       .pipe(env.development(plugins.sourcemaps.write('.', { addComment: true })))
       .pipe(gulp.dest(config.build));
   };
