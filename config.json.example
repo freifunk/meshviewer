@@ -2,6 +2,7 @@
     "dataPath": [
       "https://yanic.batman15.ffffm.net/"
     ],
+    "hwImg': 'https://cdn.rawgit.com/Moorviper/meshviewer_hwpics/master/nodes/{MODEL_HASH}.svg",
     "siteName": "Freifunk Frankfurt",
     "maxAge": 21,
     "nodeZoom": 19,
@@ -75,6 +76,16 @@
       }
     ],
     "node_custom": "/[^a-z0-9\\-\\.]/ig",
+    "linkList": [
+      {
+        "title": "Impressum",
+        "href": "/verein/impressum/"
+      },
+      {
+        "title": "Datenschutz",
+        "href": "/verein/datenschutz/"
+      }
+    ],
     "deprecation_text": "Hier kann ein eigener Text für die Deprecation Warning (inkl. HTML) stehen!",
     "deprecation_enabled": true
   }

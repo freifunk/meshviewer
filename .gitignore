@@ -15,5 +15,5 @@ Thumbs.db
 # Project files
 node_modules/
 build/
-config.js
+config.json
 *.zip
