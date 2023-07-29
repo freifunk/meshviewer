@@ -14,6 +14,8 @@
     "deactivated": "deaktiviert",
     "status": "Status",
     "firmware": "Firmware-Version",
+    "baseversion": "Base Version",
+    "deprecationStatus": "Veralterungsstatus",
     "hardware": "Geräte-Modell",
     "visible": "Auf der Karte sichtbar",
     "update": "Auto-Update",
