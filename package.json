@@ -81,7 +81,7 @@
     }
   },
   "optionalDependencies": {
-    "fsevents": "^2.0.7"
+    "fsevents": "^2.3.3"
   },
   "scripts": {
     "gulp": "./node_modules/gulp-cli/bin/gulp.js",
