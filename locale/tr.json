@@ -14,6 +14,8 @@
     "deactivated": "devredışı bırakıldı",
     "status": "Durum",
     "firmware": "Yazılım versiyonu",
+    "baseversion": "Base version",
+    "deprecationStatus": "Deprecation Status",
     "hardware": "Donanım modeli",
     "visible": "Harita üzerinde görünür",
     "update": "Otomatik güncelleme",

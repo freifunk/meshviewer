@@ -14,6 +14,8 @@
     "deactivated": "деактивировано",
     "status": "Статус",
     "firmware": "Версия прошивки",
+    "baseversion": "Base version",
+    "deprecationStatus": "Deprecation Status",
     "hardware": "Тип оборудования",
     "visible": "Видно на карте",
     "update": "Автообновление",

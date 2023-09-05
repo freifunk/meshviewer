@@ -14,6 +14,8 @@
     "deactivated": "deaktivováno",
     "status": "Stav",
     "firmware": "Verze firmwaru",
+    "baseversion": "Base version",
+    "deprecationStatus": "Deprecation Status",
     "hardware": "Model hardwaru",
     "visible": "Visible on the map",
     "update": "Automatický update",

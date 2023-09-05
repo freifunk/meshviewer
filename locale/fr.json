@@ -14,6 +14,8 @@
     "deactivated": "désactivé",
     "status": "Statut",
     "firmware": "Version firmware",
+    "baseversion": "Base version",
+    "deprecationStatus": "Deprecation Status",
     "hardware": "Modèle matériel",
     "visible": "Visible sur la carte",
     "update": "Mise à jour automatique",
