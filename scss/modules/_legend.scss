@@ -67,6 +67,17 @@ header {
   }
 }
 
+.legend-uplink {
+  .symbol {
+    background-color: lighten($color-online, 50%);
+    border-color: lighten($color-online, 10%);
+    border-style: solid;
+    border-width: .27em;
+    height: .47em;
+    width: .47em;
+  }
+}
+
 .legend-others {
   .symbol {
     background-color: $color-others;

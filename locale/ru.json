@@ -50,6 +50,7 @@
     "nodeNew": "Узел новый",
     "nodeOnline": "Узел в сети",
     "nodeOffline": "Узел не в сети",
+    "nodeUplink": "Uplink",
     "aboutInfo": "<h2>О Meshviewer</h2> <p>Вы можете увеличить масштаб двойным щелчком мыши и уменьшить с shift + двойной щелчок</p>",
     "actual": "Текущее",
     "stats": "Статистика",

@@ -50,6 +50,7 @@
     "nodeNew": "new",
     "nodeOnline": "online",
     "nodeOffline": "offline",
+    "nodeUplink": "uplink",
     "aboutInfo": "<h2>About Meshviewer</h2> <p>You can zoom in with double-click and zoom out with shift+double-click</p>",
     "actual": "Current",
     "stats": "Statistics",

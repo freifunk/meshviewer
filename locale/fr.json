@@ -50,6 +50,7 @@
     "nodeNew": "Nœud est nouveau",
     "nodeOnline": "Nœud est en ligne",
     "nodeOffline": "Nœud hors ligne",
+    "nodeUplink": "Uplink",
     "aboutInfo": "<h2>Sur Meshviewer</h2> <p>Vous pouvez zoomer avec double-clic et effectuer un zoom arrière avec shift + double-clic</p>",
     "actual": "Actuel",
     "stats": "Statistiques",
