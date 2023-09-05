@@ -115,8 +115,14 @@ strong {
   }
 }
 
-.hwImg {
-  width: 35%;
-  margin: auto;
-  display: block;
+.hw-img-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: .83em;
+  width: 100%;
+}
+
+.hw-img {
+  height: 150px;
+  padding: 0 !important;
 }
