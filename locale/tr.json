@@ -53,6 +53,7 @@
     "nodeNew": "yeni",
     "nodeOnline": "çevrimiçi",
     "nodeOffline": "çevrimdışı",
+    "nodeUplink": "uplink",
     "aboutInfo": "<h2>Meshviewer Hakkında</h2> <p>Çift tıklayarak yakınlaştırabilir ve Shift tuşuna basıp+çift tıklayarak uzaklaştırabilirsiniz</p>",
     "actual": "Mevcut",
     "stats": "İstatistikler",

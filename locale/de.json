@@ -53,6 +53,7 @@
     "nodeNew": "neu",
     "nodeOnline": "online",
     "nodeOffline": "offline",
+    "nodeUplink": "uplink",
     "aboutInfo": "<h2>Über Meshviewer</h2><p>Mit Doppelklick kann man in die Karte hinein zoomen und Shift+Doppelklick heraus zoomen.</p>",
     "actual": "Aktuell",
     "stats": "Statistiken",
