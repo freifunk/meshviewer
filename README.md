@@ -11,7 +11,7 @@ Meshviewer is an online visualization app to represent nodes and links on a map 
 This fork of the new meshviewer has a new installation method:
 - Go to the [release page](https://github.com/freifunk-ffm/meshviewer/releases) and download the current build
 - Let your webserver serve this build
-- Add a config.json to the webdir (based on config.json.example)
+- Add a config.json to the webdir (based on config.example.json)
 
 ### Build yourself
 - Clone this repository
@@ -29,7 +29,7 @@ docker  run -it --rm -u $(id -u):$(id -g) -v "$PWD":/app -w /app node npm run gu
 docker run -it --rm -v "$PWD/build":/usr/share/nginx/html -p 8080:80 --name nginx nginx
 ```
 The map is reachable at [localhost:8080](http://localhost:8080).
-You have to copy `config.json.example` as `build/config.json`.
+You have to copy `config.example.json` as `build/config.json`.
 
 Live build / development env:
 ```bash
