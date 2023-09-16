@@ -1,6 +1,6 @@
 module.exports = function (gulp, plugins, config) {
   return function copy() {
-    gulp.src(['config.json.example'])
+    gulp.src(['config.example.json'])
       .pipe(gulp.dest(config.build));
     gulp.src(['html/*.html', 'assets/favicon/*'])
       .pipe(gulp.dest(config.build));
