@@ -21,7 +21,7 @@ gulp.task(
   "serve",
   gulp.series(
     getTask("setDevelopment"),
-    gulp.parallel(getTask("eslint"), getTask("sasslint")),
+    gulp.parallel(getTask("eslint")),
     gulp.parallel(getTask("copy"), getTask("javascript"), getTask("sass"), getTask("jsonMinify")),
     getTask("html"),
     gulp.parallel("watch", "ws"),
@@ -31,7 +31,7 @@ gulp.task(
 gulp.task(
   "ci",
   gulp.series(
-    gulp.parallel(getTask("eslint-fail"), getTask("sasslint")),
+    gulp.parallel(getTask("eslint-fail")),
     gulp.parallel(getTask("copy"), getTask("javascript"), getTask("sass"), getTask("jsonMinify")),
     getTask("html"),
     getTask("clean"),
@@ -41,7 +41,7 @@ gulp.task(
 gulp.task(
   "default",
   gulp.series(
-    gulp.parallel(getTask("eslint"), getTask("sasslint")),
+    gulp.parallel(getTask("eslint")),
     gulp.parallel(getTask("copy"), getTask("javascript"), getTask("sass"), getTask("jsonMinify")),
     getTask("html"),
     getTask("clean"),
