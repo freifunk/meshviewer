@@ -1,6 +1,7 @@
 ---
 "extends":
   - "eslint-config-airbnb-es5"
+  - "prettier"
 
 rules:
   "no-undef": 0
