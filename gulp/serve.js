@@ -13,7 +13,7 @@ module.exports = function (gulp, plugins, config, env) {
     gulp.watch(config.src.javascript, gulp.parallel(getTask("eslint"), getTask("javascript"))),
   );
 
-  gulp.task("watch:styles", () => gulp.watch(config.src.sass, gulp.parallel(getTask("sasslint"), getTask("sass"))));
+  gulp.task("watch:styles", () => gulp.watch(config.src.sass, gulp.parallel(getTask("sass"))));
 
   gulp.task("watch:json", () => gulp.watch(config.src.json, gulp.parallel(getTask("jsonMinify"))));
 
