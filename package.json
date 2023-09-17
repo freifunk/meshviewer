@@ -89,10 +89,12 @@
     "gulp": "./node_modules/gulp-cli/bin/gulp.js",
     "gulp-ci": "gulp ci",
     "serve": "gulp serve",
-    "lint": "npm run lint:prettier",
+    "lint": "npm run lint:prettier && npm run lint:eslint",
+    "lint:eslint": "./node_modules/.bin/eslint .",
     "lint:prettier": "./node_modules/.bin/prettier --check .",
-    "lint:fix": "npm run lint:fix:prettier",
-    "lint:fix:prettier": "./node_modules/.bin/prettier --write ."
+    "lint:fix": "npm run lint:fix:prettier && npm run lint:fix:eslint",
+    "lint:fix:eslint": "./node_modules/.bin/eslint --fix .",
+    "lint:fix:prettier": "./node_modules/.bin/prettier --log-level warn --write ."
   },
   "browserslist": [
     "> 1% in DE"
