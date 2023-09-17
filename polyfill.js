@@ -2,9 +2,9 @@
 // Polyfills for (old) firefox 75
 // From https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/
 if (typeof Object.assign !== "function") {
-  Object.assign = function (target, varArgs) {
+  Object.assign = function (target) {
     // .length of function is 2
-    if (target == null) {
+    if (target === null) {
       // TypeError if undefined or null
       throw new TypeError("Cannot convert undefined or null to object");
     }
@@ -14,7 +14,7 @@ if (typeof Object.assign !== "function") {
     for (var index = 1; index < arguments.length; index++) {
       var nextSource = arguments[index];
 
-      if (nextSource != null) {
+      if (nextSource !== null) {
         // Skip over if undefined or null
         for (var nextKey in nextSource) {
           // Avoid bugs when hasOwnProperty is shadowed
