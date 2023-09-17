@@ -1,6 +1,6 @@
-$font-path: 'fonts';
+$font-path: "fonts";
 
 @if $use-included-font == 1 {
-  @include load-font('Assistant', 'Light', 300, normal);
-  @include load-font('Assistant', 'Bold', 700, normal);
+  @include load-font("Assistant", "Light", 300, normal);
+  @include load-font("Assistant", "Bold", 700, normal);
 }

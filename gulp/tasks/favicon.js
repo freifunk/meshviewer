@@ -1,64 +1,64 @@
 module.exports = function (gulp, plugins, config) {
   return function javascript(cb) {
     plugins.realFavicon.generateFavicon({
-      masterPicture: 'assets/logo.svg',
-      dest: 'assets/favicon',
-      iconsPath: '.',
+      masterPicture: "assets/logo.svg",
+      dest: "assets/favicon",
+      iconsPath: ".",
       design: {
         ios: {
-          pictureAspect: 'backgroundAndMargin',
-          backgroundColor: '#ffffff',
-          margin: '14%',
+          pictureAspect: "backgroundAndMargin",
+          backgroundColor: "#ffffff",
+          margin: "14%",
           assets: {
             ios6AndPriorIcons: false,
             ios7AndLaterIcons: false,
             precomposedIcons: false,
-            declareOnlyDefaultIcon: true
+            declareOnlyDefaultIcon: true,
           },
-          appName: 'Meshviewer'
+          appName: "Meshviewer",
         },
         desktopBrowser: {},
         windows: {
-          pictureAspect: 'whiteSilhouette',
-          backgroundColor: '#dc0067',
-          onConflict: 'override',
+          pictureAspect: "whiteSilhouette",
+          backgroundColor: "#dc0067",
+          onConflict: "override",
           assets: {
             windows80Ie10Tile: false,
             windows10Ie11EdgeTiles: {
               small: true,
               medium: true,
               big: true,
-              rectangle: false
-            }
+              rectangle: false,
+            },
           },
-          appName: 'Meshviewer'
+          appName: "Meshviewer",
         },
         androidChrome: {
           // pictureAspect: 'shadow',
-          themeColor: '#dc0067',
+          themeColor: "#dc0067",
           manifest: {
-            name: 'Meshviewer',
-            display: 'standalone',
-            orientation: 'portrait',
-            onConflict: 'override',
-            declared: true
+            name: "Meshviewer",
+            display: "standalone",
+            orientation: "portrait",
+            onConflict: "override",
+            declared: true,
           },
           assets: {
             legacyIcon: false,
-            lowResolutionIcons: false
-          }
+            lowResolutionIcons: false,
+          },
         },
         safariPinnedTab: {
-          pictureAspect: 'silhouette',
-          themeColor: '#dc0067'
-        }
+          pictureAspect: "silhouette",
+          themeColor: "#dc0067",
+        },
       },
       settings: {
         compression: 2,
-        scalingAlgorithm: 'Mitchell',
-        errorOnImageTooSmall: false
+        scalingAlgorithm: "Mitchell",
+        errorOnImageTooSmall: false,
       },
-      markupFile: config.faviconData
+      markupFile: config.faviconData,
     });
     return cb();
   };

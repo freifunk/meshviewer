@@ -1,29 +1,29 @@
 // Set variables
-@import 'modules/variables';
-@import 'custom/variables';
+@import "modules/variables";
+@import "custom/variables";
 
 // Mixins
-@import 'mixins/icon';
-@import 'mixins/font';
+@import "mixins/icon";
+@import "mixins/font";
 
 // Add modules
-@import 'modules/reset';
-@import 'modules/font/font';
-@import 'modules/base';
-@import 'modules/font/icon';
-@import 'modules/loader';
-@import 'modules/leaflet';
-@import 'modules/table';
-@import 'modules/filter';
-@import 'modules/sidebar';
-@import 'modules/map';
-@import 'modules/forcegraph';
-@import 'modules/legend';
-@import 'modules/proportion';
-@import 'modules/tabs';
-@import 'modules/node';
-@import 'modules/infobox';
-@import 'modules/button';
+@import "modules/reset";
+@import "modules/font/font";
+@import "modules/base";
+@import "modules/font/icon";
+@import "modules/loader";
+@import "modules/leaflet";
+@import "modules/table";
+@import "modules/filter";
+@import "modules/sidebar";
+@import "modules/map";
+@import "modules/forcegraph";
+@import "modules/legend";
+@import "modules/proportion";
+@import "modules/tabs";
+@import "modules/node";
+@import "modules/infobox";
+@import "modules/button";
 
 // Make adjustments in custom scss
-@import 'custom/custom';
+@import "custom/custom";

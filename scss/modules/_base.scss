@@ -9,7 +9,7 @@ body {
 }
 
 header {
-  background: transparentize($color-black, .98);
+  background: transparentize($color-black, 0.98);
   border-bottom: 1px solid darken($color-white, 10%);
 }
 
@@ -31,7 +31,7 @@ h6 {
 h1,
 h2 {
   font-size: 1.5em;
-  padding: .83em 0;
+  padding: 0.83em 0;
 }
 
 h3 {
@@ -108,7 +108,8 @@ strong {
       color: $color-white;
       text-decoration: underline;
 
-      &:hover { // sass-lint:disable-line nesting-depth
+      &:hover {
+        // sass-lint:disable-line nesting-depth
         text-decoration: none;
       }
     }
@@ -118,7 +119,7 @@ strong {
 .hw-img-container {
   display: flex;
   justify-content: center;
-  margin-bottom: .83em;
+  margin-bottom: 0.83em;
   width: 100%;
 }
 
