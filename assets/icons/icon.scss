@@ -4,17 +4,17 @@
 $cache-breaker: unique-id();
 
 @font-face {
-  font-family: 'ionicons';
+  font-family: "ionicons";
   font-style: normal;
   font-weight: normal;
   src:
-    url('fonts/meshviewer.woff2?rel=#{$cache-breaker}') format('woff2'),
-    url('fonts/meshviewer.woff?rel=#{$cache-breaker}') format('woff'),
-    url('fonts/meshviewer.ttf?rel=#{$cache-breaker}') format('truetype');
+    url("fonts/meshviewer.woff2?rel=#{$cache-breaker}") format("woff2"),
+    url("fonts/meshviewer.woff?rel=#{$cache-breaker}") format("woff"),
+    url("fonts/meshviewer.ttf?rel=#{$cache-breaker}") format("truetype");
 }
 
-[class^='ion-'],
-[class*=' ion-'] {
+[class^="ion-"],
+[class*=" ion-"] {
   &::before {
     display: inline-block;
     font-family: $font-family-icons;
@@ -29,26 +29,26 @@ $cache-breaker: unique-id();
   }
 }
 
-@include icon('chevron-left', '\f124');
-@include icon('chevron-right', '\f125');
-@include icon('pin', '\f3a3');
-@include icon('wifi', '\f25c');
-@include icon('eye', '\f133');
-@include icon('up-b', '\f10d');
-@include icon('down-b', '\f104');
-@include icon('locate', '\f2e9');
-@include icon('close', '\f2d7');
-@include icon('location', '\f456');
-@include icon('layer', '\f229');
-@include icon('filter', '\f38B');
-@include icon('connection-bars', '\f274');
-@include icon('share-alt', '\f3ac');
-@include icon('clipboard', '\f376');
-@include icon('people', '\f39e');
-@include icon('person', '\f3a0');
-@include icon('time', '\f3b3');
-@include icon('arrow-resize', '\f264');
-@include icon('arrow-left-c', '\f108');
-@include icon('arrow-right-c', '\f10b');
-@include icon('full-enter', '\e901');
-@include icon('full-exit', '\e900');
+@include icon("chevron-left", "\f124");
+@include icon("chevron-right", "\f125");
+@include icon("pin", "\f3a3");
+@include icon("wifi", "\f25c");
+@include icon("eye", "\f133");
+@include icon("up-b", "\f10d");
+@include icon("down-b", "\f104");
+@include icon("locate", "\f2e9");
+@include icon("close", "\f2d7");
+@include icon("location", "\f456");
+@include icon("layer", "\f229");
+@include icon("filter", "\f38B");
+@include icon("connection-bars", "\f274");
+@include icon("share-alt", "\f3ac");
+@include icon("clipboard", "\f376");
+@include icon("people", "\f39e");
+@include icon("person", "\f3a0");
+@include icon("time", "\f3b3");
+@include icon("arrow-resize", "\f264");
+@include icon("arrow-left-c", "\f108");
+@include icon("arrow-right-c", "\f10b");
+@include icon("full-enter", "\e901");
+@include icon("full-exit", "\e900");

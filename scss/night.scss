@@ -1,6 +1,6 @@
 // Overwrite normal style (colors)
-@import 'modules/variables';
-@import 'custom/variables';
+@import "modules/variables";
+@import "custom/variables";
 
 $color-white: #1c1c13;
 $color-black: #fefefe;
@@ -18,7 +18,7 @@ html {
   }
 
   header {
-    background: transparentize($color-black, .98);
+    background: transparentize($color-black, 0.98);
     border-bottom-color: lighten($color-white, 10%);
   }
 
@@ -62,7 +62,7 @@ html {
 
   .leaflet-control-layers {
     &.leaflet-control {
-      opacity: .9;
+      opacity: 0.9;
     }
   }
 
@@ -85,7 +85,7 @@ html {
   .sidebar {
     .infobox,
     .container {
-      background: transparentize($color-white, .03);
+      background: transparentize($color-white, 0.03);
       border-right: 1px solid darken($color-white, 10%);
     }
 
@@ -100,11 +100,11 @@ html {
 
   //@import 'modules/tabs';
   .tabs {
-    background: transparentize($color-black, .98);
+    background: transparentize($color-black, 0.98);
     border-bottom-color: lighten($color-white, 10%);
 
     li {
-      color: transparentize($color-black, .5);
+      color: transparentize($color-black, 0.5);
 
       &:hover {
         color: $color-black;
@@ -136,7 +136,7 @@ html {
 
     &.close {
       background: transparent;
-      color: transparentize($color-black, .5);
+      color: transparentize($color-black, 0.5);
     }
   }
 }
