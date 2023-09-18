@@ -10,33 +10,17 @@
     "url": "https://github.com/freifunk/meshviewer/issues"
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.1",
-    "browser-sync": "^2.27.4",
-    "del": "^6.0.0",
+    "@vite-pwa/assets-generator": "^0.0.10",
+    "babel-eslint": "^10.1.0",
     "eslint": "^7.31.0",
     "eslint-config-airbnb-es5": "^1.2.0",
     "eslint-config-defaults": "^9.0.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-react": "^7.33.2",
-    "gulp": "^4.0.1",
-    "gulp-autoprefixer": "^8.0.0",
-    "gulp-cache-bust": "^1.4.0",
-    "gulp-cli": "^2.3.0",
-    "gulp-environments": "^1.0.1",
-    "gulp-eslint": "^6.0.0",
-    "gulp-htmlmin": "^5.0.1",
-    "gulp-inject": "^5.0.2",
-    "gulp-inline-source": "^4.0.0",
-    "gulp-jsonminify": "^1.1.0",
-    "gulp-load-plugins": "^2.0.7",
-    "gulp-real-favicon": "^0.3.2",
-    "gulp-requirejs-optimize": "^1.3.0",
-    "gulp-sass": "^5.0.0",
-    "gulp-sourcemaps": "^3.0.0",
-    "gulp-stylelint": "^13.0.0",
-    "gulp-uglify": "^3.0.2",
     "prettier": "3.0.3",
-    "sass": "^1.66.1"
+    "sass": "^1.68.0",
+    "vite": "^4.4.9",
+    "vite-plugin-pwa": "^0.16.5"
   },
   "eslintConfig": {
     "env": {
@@ -47,10 +31,10 @@
     }
   },
   "dependencies": {
-    "almond": "^0.3.3",
     "d3-collection": "^1.0.7",
     "d3-drag": "^3.0.0",
     "d3-force": "^3.0.0",
+    "d3-interpolate": "^3.0.1",
     "d3-selection": "^3.0.0",
     "d3-zoom": "^3.0.0",
     "leaflet": "^1.7.1",
@@ -59,40 +43,19 @@
     "node-polyglot": "2.2.2",
     "promise-polyfill": "^8.2.0",
     "rbush": "^3.0.1",
-    "requirejs": "^2.3.6",
     "snabbdom": "^0.7.4"
   },
-  "overrides": {
-    "gulp": {
-      "glob-watcher": "^6.0.0"
-    },
-    "gulp-cache-bust": {
-      "nth-check": "^2.1.1"
-    },
-    "gulp-inject": {
-      "set-value": "^4.1.0"
-    },
-    "gulp-inline-source": {
-      "inline-source": "^8.0.0",
-      "nth-check": "^2.1.1"
-    },
-    "vinyl-fs": {
-      "glob-stream": "^8.0.0"
-    }
-  },
-  "optionalDependencies": {
-    "fsevents": "^2.3.3"
-  },
   "scripts": {
-    "gulp": "./node_modules/gulp-cli/bin/gulp.js",
-    "gulp-ci": "gulp ci",
-    "serve": "gulp serve",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "lint": "npm run lint:prettier && npm run lint:eslint",
     "lint:eslint": "./node_modules/.bin/eslint .",
     "lint:prettier": "./node_modules/.bin/prettier --check .",
     "lint:fix": "npm run lint:fix:prettier && npm run lint:fix:eslint",
     "lint:fix:eslint": "./node_modules/.bin/eslint --fix .",
-    "lint:fix:prettier": "./node_modules/.bin/prettier --log-level warn --write ."
+    "lint:fix:prettier": "./node_modules/.bin/prettier --log-level warn --write .",
+    "generate-pwa-assets": "pwa-assets-generator --preset minimal assets/logo.svg"
   },
   "browserslist": [
     "> 1% in DE"

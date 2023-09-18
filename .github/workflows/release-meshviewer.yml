@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm install
-      - run: npm run gulp
+      - run: npm run build
       - run: "cd build; zip -r ../meshviewer-build.zip .; cd .."
       - name: Create Release
         id: create_release

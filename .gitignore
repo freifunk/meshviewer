@@ -10,10 +10,11 @@
 Thumbs.db
 
 # IDE files
-/.idea/
+/.idea
 
 # Project files
-node_modules/
-build/
-config.js
+/node_modules
+/build
+/config.js
 *.zip
+/dev-dist
