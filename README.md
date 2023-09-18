@@ -18,31 +18,34 @@ It is recommended to use the latest release:
 
 - Clone this repository
 - Run `npm install`
-- Run `npm run gulp`
+- Run `npm run build`
 - A production build can then be found in [`/build`](./build)
 
-Hint: You can start a development server with `npm run serve`
+Hint: You can start a development server with `npm run dev`
 
-### Build & Run using Docker
+### Build and run using Docker
 
 Static local test instance:
 
 ```bash
-docker  run -it --rm -u $(id -u):$(id -g) -v "$PWD":/app -w /app node npm install
-docker  run -it --rm -u $(id -u):$(id -g) -v "$PWD":/app -w /app node npm run gulp-ci
+docker run -it --rm -u $(id -u):$(id -g) -v "$PWD":/app -w /app node npm install
+docker run -it --rm -u $(id -u):$(id -g) -v "$PWD":/app -w /app node npm run build
 docker run -it --rm -v "$PWD/build":/usr/share/nginx/html -p 8080:80 --name nginx nginx
 ```
 
 The map is reachable at [localhost:8080](http://localhost:8080).
-You have to copy `config.example.json` as `build/config.json`.
+You have to copy `config.example.json` to `build/config.json`.
 
-Live build / development env:
+Start a development environment:
 
 ```bash
-docker  run -it --rm -u $(id -u):$(id -g) -v "$PWD":/app -w /app -e NODE_ENV=development -p 3000:3000 node npm run gulp serve
+docker run -it --rm --name meshviewer-dev \
+  -u $(id -u):$(id -g) \
+  -v "$PWD":/app -w /app \
+  -e NODE_ENV=development \
+  -p 5173:5173 \
+  node npm run dev -- --host 0.0.0.0
 ```
-
-The map is reachable at [localhost:3000](http://localhost:3000).
 
 ## Configuration
 

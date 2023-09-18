@@ -1,5 +1,3 @@
-$font-path: "fonts" !default;
-
 @mixin load-font($name, $type, $weight, $style, $alias: "") {
   @if $alias == "" {
     $alias: $name;
@@ -12,8 +10,8 @@ $font-path: "fonts" !default;
     src:
       local("#{$name} #{$type}"),
       local("#{$name}-#{$type}"),
-      url("#{$font-path}/#{$name}-#{$type}.woff2") format("woff2"),
-      url("#{$font-path}/#{$name}-#{$type}.woff") format("woff"),
-      url("#{$font-path}/#{$name}-#{$type}.ttf") format("truetype");
+      url("@fonts/#{$name}-#{$type}.woff2") format("woff2"),
+      url("@fonts/#{$name}-#{$type}.woff") format("woff"),
+      url("@fonts/#{$name}-#{$type}.ttf") format("truetype");
   }
 }
