@@ -18,6 +18,8 @@ It is recommended to use the latest release:
 
 - Clone this repository
 - Run `npm install`
+- Place your config file in `public/config.json`.
+  You can copy the example config for testing/development: `cp config.example.json public`.
 - Run `npm run build`
 - A production build can then be found in [`/build`](./build)
 
@@ -34,7 +36,7 @@ docker run -it --rm -v "$PWD/build":/usr/share/nginx/html -p 8080:80 --name ngin
 ```
 
 The map is reachable at [localhost:8080](http://localhost:8080).
-You have to copy `config.example.json` to `build/config.json`.
+You have to copy `config.example.json` to `public/config.json`:
 
 Start a development environment:
 
