@@ -66,7 +66,9 @@
       "title": "Bild der Wochenstatistik"
     }
   ],
-  "hwImg": "https://map.aachen.freifunk.net/router-images/{MODEL_NORMALIZED}.svg",
+  "devicePictures": "https://map.aachen.freifunk.net/pictures-svg/{MODEL_NORMALIZED}.svg",
+  "devicePicturesSource": "<a href='https://github.com/freifunk/device-pictures'>https://github.com/freifunk/device-pictures</a>",
+  "devicePicturesLicense": "CC-BY-NC-SA 4.0",
   "node_custom": "/[^a-z0-9\\-\\.]/ig",
   "deprecation_text": "Hier kann ein eigener Text für die Deprecation Warning (inkl. HTML) stehen!",
   "deprecation_enabled": true

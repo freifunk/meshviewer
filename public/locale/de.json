@@ -55,6 +55,7 @@
     "nodeOffline": "offline",
     "nodeUplink": "uplink",
     "aboutInfo": "<h2>Über Meshviewer</h2><p>Mit Doppelklick kann man in die Karte hinein zoomen und Shift+Doppelklick heraus zoomen.</p>",
+    "devicePicturesAttribution": "<h3>Hardware-Bilder Attribution</h3><p>Die Hardware Bilder sind unter %{pictures_source} lizensiert unter %{pictures_license} verfügbar</p>",
     "actual": "Aktuell",
     "stats": "Statistiken",
     "about": "Über",

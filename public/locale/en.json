@@ -55,6 +55,7 @@
     "nodeOffline": "offline",
     "nodeUplink": "uplink",
     "aboutInfo": "<h2>About Meshviewer</h2> <p>You can zoom in with double-click and zoom out with shift+double-click</p>",
+    "devicePicturesAttribution": "<h3>Device Pictures Attribution</h3><p>The hardware pictures are available at %{pictures_source} licensed under %{pictures_license}</p>",
     "actual": "Current",
     "stats": "Statistics",
     "about": "About",
