@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "target": "ES6",
-    "allowJs": true
+    "allowJs": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext"
   },
   "include": ["lib"]
 }

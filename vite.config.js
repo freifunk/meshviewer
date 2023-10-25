@@ -1,5 +1,6 @@
 import { resolve } from "path";
 import { defineConfig } from "vite";
+import { checker } from "vite-plugin-checker";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
@@ -51,6 +52,10 @@ export default defineConfig({
       devOptions: {
         enabled: true,
       },
+    }),
+    checker({
+      // Run TypeScript checks
+      typescript: true,
     }),
   ],
 });
