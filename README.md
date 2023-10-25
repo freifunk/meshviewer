@@ -59,6 +59,10 @@ The deprecation warning can be turned of with `"deprecation_enabled": false` - b
 
 You can insert your own HTML into the deprecation warning via `"deprecation_text":""`.
 
+## Development
+
+To contribute to the project by developing new features, have a look at our [development documentation](DEVELOPMENT.md).
+
 ## History
 
 Meshviewer started as [ffnord/meshviewer](https://github.com/ffnord/meshviewer) for Freifunk Nord
