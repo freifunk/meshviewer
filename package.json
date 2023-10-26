@@ -21,6 +21,7 @@
     "vite-plugin-pwa": "^0.17.3"
   },
   "dependencies": {
+    "@types/node-polyglot": "^2.4.4",
     "d3-collection": "^1.0.7",
     "d3-drag": "^3.0.0",
     "d3-force": "^3.0.0",

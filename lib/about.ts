@@ -1,5 +1,6 @@
-export const About = function (picturesSource, picturesLicense) {
+export const About = function (picturesSource: string, picturesLicense: string) {
   this.render = function render(d) {
+    let _ = window._;
     d.innerHTML =
       _.t("sidebar.aboutInfo") +
       "<h4>" +
