@@ -1,31 +1,8 @@
-export const config = {
-  reverseGeocodingApi: "https://nominatim.openstreetmap.org/reverse",
-  maxAge: 14,
-  maxAgeAlert: 3,
-  nodeZoom: 18,
-  labelZoom: 13,
-  clientZoom: 15,
-  fullscreen: true,
-  fullscreenFrame: true,
-  nodeAttr: [
-    // value can be a node attribute (1 depth) or a a function in utils/node with prefix show
-    {
-      name: "node.status",
-      value: "Status",
-    },
-    {
-      name: "node.gateway",
-      value: "Gateway",
-    },
-    {
-      name: "node.coordinates",
-      value: "GeoURI",
-    },
-    //    {
-    //      "name": "node.contact",
-    //      "value": "owner"
-    //    },
 
+interface NodeAttr {
+    name: string;
+    // value can be a node attribute (1 depth) or a function in utils/node with prefix show
+    value: string | (() => string);
     // Examples for functions
     // {
     //   // no name will remove first column
@@ -43,6 +20,128 @@ export const config = {
     //     return nodeDict[d.gateway_nexthop].firstseen.format() + 'access node object';
     //   }
     // },
+}
+
+interface Icon {
+    fillOpacity?: number;
+    opacity?: number;
+    weight?: number;
+    radius?: number;
+    className?: string;
+    color?: string;
+    fillColor?: string;
+    stroke?: boolean;
+}
+
+export interface Config {
+    reverseGeocodingApi: string;
+    maxAge: number;
+    maxAgeAlert: number;
+    nodeZoom: number;
+    labelZoom: number;
+    clientZoom: number;
+    fullscreen: boolean;
+    fullscreenFrame: boolean;
+    nodeAttr: NodeAttr[];
+    // List of two letter locale names
+    supportedLocale: string[];
+    // Color configs
+    icon: {
+        base: Icon;
+        online: Icon;
+        "online.uplink": Icon;
+        offline: Icon;
+        lost: Icon;
+        alert: Icon;
+        new: Icon;
+        "new.uplink": Icon;
+    };
+    client: {
+        // Colors
+        wifi24: string;
+        wifi5: string;
+        other: string;
+    };
+    map: {
+        labelNewColor: string;
+        tqFrom: string;
+        tqTo: string;
+        highlightNode: {
+            color: string;
+            weight: number;
+            fillOpacity: number;
+            opacity: number;
+            className: string;
+        };
+        highlightLink: {
+            weight: number;
+            opacity: number;
+            dashArray: string;
+        };
+    };
+    forceGraph: {
+        nodeColor: string;
+        nodeOfflineColor: string;
+        highlightColor: string;
+        labelColor: string;
+        tqFrom: string;
+        tqTo: string;
+        zoomModifier: number;
+    };
+    locate: {
+        outerCircle: {
+            stroke: boolean;
+            color: string;
+            opacity: number;
+            fillOpacity: number;
+            clickable: boolean;
+            radius: number;
+        };
+        innerCircle: {
+            stroke: boolean;
+            color: string;
+            fillColor: string;
+            weight: number;
+            clickable: false;
+            opacity: number;
+            fillOpacity: number;
+            radius: number;
+        };
+        accuracyCircle: {
+            stroke: boolean;
+            color: string;
+            weight: number;
+            clickable: boolean;
+            opacity: number;
+            fillOpacity: number;
+        };
+    };
+    deprecated: string[];
+}
+
+export const config: Config = {
+  reverseGeocodingApi: "https://nominatim.openstreetmap.org/reverse",
+  maxAge: 14,
+  maxAgeAlert: 3,
+  nodeZoom: 18,
+  labelZoom: 13,
+  clientZoom: 15,
+  fullscreen: true,
+  fullscreenFrame: true,
+  nodeAttr: [
+    // value can be a node attribute (1 depth) or a function in utils/node with prefix show
+    {
+      name: "node.status",
+      value: "Status",
+    },
+    {
+      name: "node.gateway",
+      value: "Gateway",
+    },
+    {
+      name: "node.coordinates",
+      value: "GeoURI",
+    },
     {
       name: "node.hardware",
       value: "model",
@@ -176,7 +275,7 @@ export const config = {
       radius: 16,
     },
     innerCircle: {
-      "stroke:": true,
+      stroke: true,
       color: "#ffffff",
       fillColor: "#4285F4",
       weight: 1.5,

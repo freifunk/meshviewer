@@ -4,6 +4,7 @@ import Polyglot from "node-polyglot";
 
 export const Language = function () {
   var router;
+  let config = globalThis.config;
 
   function languageSelect(el) {
     var select = document.createElement("select");
@@ -38,6 +39,7 @@ export const Language = function () {
   }
 
   function setTranslation(json) {
+    let _ = window._;
     _.extend(json);
 
     if (moment.locale(_.locale()) !== _.locale()) {
@@ -60,6 +62,7 @@ export const Language = function () {
     router = routing;
     /** global: _ */
     window._ = new Polyglot({ locale: getLocale(router.getLang()), allowMissing: true });
+    let _ = window._;
     helper.getJSON("locale/" + _.locale() + ".json?" + config.cacheBreaker).then(setTranslation);
     document.querySelector("html").setAttribute("lang", _.locale());
   }
