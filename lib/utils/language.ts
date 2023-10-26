@@ -1,13 +1,14 @@
 import moment from "moment";
 import * as helper from "./helper";
 import Polyglot from "node-polyglot";
+import Navigo from "navigo/lib/navigo.es";
 
 export const Language = function () {
-  var router;
+  let router: Navigo;
   let config = globalThis.config;
 
   function languageSelect(el) {
-    var select = document.createElement("select");
+    let select = document.createElement("select");
     select.className = "language-switch";
     select.setAttribute("aria-label", "Language");
     select.addEventListener("change", setSelectLocale);
@@ -15,7 +16,7 @@ export const Language = function () {
 
     // Keep english
     select.innerHTML = "<option>Language</option>";
-    for (var i = 0; i < config.supportedLocale.length; i++) {
+    for (let i = 0; i < config.supportedLocale.length; i++) {
       select.innerHTML +=
         '<option value="' + config.supportedLocale[i] + '">' + config.supportedLocale[i] + "</option>";
     }
@@ -25,10 +26,10 @@ export const Language = function () {
     router.fullUrl({ lang: event.target.value }, false, true);
   }
 
-  function getLocale(input) {
-    var language = input || (navigator.languages && navigator.languages[0]) || navigator.language;
-    var locale = config.supportedLocale[0];
-    config.supportedLocale.some(function (item) {
+  function getLocale(input?: string) {
+    let language = input || (navigator.languages && navigator.languages[0]) || navigator.language;
+    let locale = config.supportedLocale[0];
+    config.supportedLocale.some(function (item: string) {
       if (language.indexOf(item) !== -1) {
         locale = item;
         return true;
@@ -38,9 +39,9 @@ export const Language = function () {
     return locale;
   }
 
-  function setTranslation(json) {
+  function setTranslation(translationJson) {
     let _ = window._;
-    _.extend(json);
+    _.extend(translationJson);
 
     if (moment.locale(_.locale()) !== _.locale()) {
       moment.defineLocale(_.locale(), {
@@ -52,13 +53,13 @@ export const Language = function () {
           LLL: "D. MMMM YYYY HH:mm",
           LLLL: "dddd, D. MMMM YYYY HH:mm",
         },
-        calendar: json.momentjs.calendar,
-        relativeTime: json.momentjs.relativeTime,
+        calendar: translationJson.momentjs.calendar,
+        relativeTime: translationJson.momentjs.relativeTime,
       });
     }
   }
 
-  function init(routing) {
+  function init(routing: Navigo) {
     router = routing;
     /** global: _ */
     window._ = new Polyglot({ locale: getLocale(router.getLang()), allowMissing: true });

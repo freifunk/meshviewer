@@ -45,6 +45,8 @@ export interface Config {
     nodeAttr: NodeAttr[];
     // List of two letter locale names
     supportedLocale: string[];
+    // Cache breaker string used when loading language json files
+    cacheBreaker?: string;
     // Color configs
     icon: {
         base: Icon;
