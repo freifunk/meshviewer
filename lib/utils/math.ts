@@ -1,20 +1,24 @@
-var self = {};
+let self = {
+  distance: undefined,
+  distancePoint: undefined,
+  distanceLink: undefined,
+};
 
-self.distance = function distance(a, b) {
+self.distance = function distance(a: Point, b: Point) {
   return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
 };
 
-self.distancePoint = function distancePoint(a, b) {
+self.distancePoint = function distancePoint(a: Point, b: Point) {
   return Math.sqrt(self.distance(a, b));
 };
 
-self.distanceLink = function distanceLink(p, a, b) {
+self.distanceLink = function distanceLink(p: Point, a: Point, b: Point) {
   /* http://stackoverflow.com/questions/849211 */
-  var l2 = self.distance(a, b);
+  let l2 = self.distance(a, b);
   if (l2 === 0) {
     return self.distance(p, a);
   }
-  var t = ((p.x - a.x) * (b.x - a.x) + (p.y - a.y) * (b.y - a.y)) / l2;
+  let t = ((p.x - a.x) * (b.x - a.x) + (p.y - a.y) * (b.y - a.y)) / l2;
   if (t < 0) {
     return self.distance(p, a);
   } else if (t > 1) {
