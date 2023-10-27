@@ -1,23 +1,27 @@
-export const FilterGui = function (distributor) {
-  var container = document.createElement("ul");
-  container.classList.add("filters");
-  var div = document.createElement("div");
+import { CanFiltersChanged, DataDistributor, Filter } from "../datadistributor";
+import { CanRender } from "../container";
 
-  function render(el) {
+export const FilterGui = function (distributor: ReturnType<typeof DataDistributor>): CanFiltersChanged & CanRender {
+  let container = document.createElement("ul");
+  container.classList.add("filters");
+  let div = document.createElement("div");
+
+  function render(el: HTMLElement) {
     el.appendChild(div);
   }
 
-  function filtersChanged(filters) {
+  function filtersChanged(filters: Filter[] & CanRender[]) {
     while (container.firstChild) {
       container.removeChild(container.firstChild);
     }
 
-    filters.forEach(function (filter) {
-      var li = document.createElement("li");
+    filters.forEach(function (filter: Filter & CanRender) {
+      let _ = window._;
+      let li = document.createElement("li");
       container.appendChild(li);
       filter.render(li);
 
-      var button = document.createElement("button");
+      let button = document.createElement("button");
       button.classList.add("ion-close");
       button.setAttribute("aria-label", _.t("remove"));
       button.onclick = function onclick() {
