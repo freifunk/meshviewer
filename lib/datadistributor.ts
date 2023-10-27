@@ -23,7 +23,7 @@ export interface ObjectsLinksAndNodes {
 }
 
 export interface Filter {
-  getKey(): string;
+  getKey?: () => string;
   setRefresh(refresh: () => any): any;
   run(data: any): Boolean;
 }

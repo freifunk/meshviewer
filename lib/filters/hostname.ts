@@ -1,7 +1,11 @@
-export const HostnameFilter = function () {
-  var refreshFunctions = [];
-  var timer;
-  var input = document.createElement("input");
+import { Node } from "../utils/node";
+import { CanRender } from "../container";
+import { Filter } from "../datadistributor";
+
+export const HostnameFilter = function (): CanRender & Filter {
+  let refreshFunctions: (() => any)[] = [];
+  let timer: NodeJS.Timeout;
+  let input = document.createElement("input");
 
   function refresh() {
     clearTimeout(timer);
@@ -12,15 +16,16 @@ export const HostnameFilter = function () {
     }, 250);
   }
 
-  function run(node) {
+  function run(node: Node) {
     return node.hostname.toLowerCase().includes(input.value.toLowerCase());
   }
 
-  function setRefresh(f) {
+  function setRefresh(f: () => any) {
     refreshFunctions.push(f);
   }
 
-  function render(el) {
+  function render(el: HTMLElement) {
+    let _ = window._;
     input.type = "search";
     input.placeholder = _.t("sidebar.nodeFilter");
     input.setAttribute("aria-label", _.t("sidebar.nodeFilter"));

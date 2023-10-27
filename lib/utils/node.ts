@@ -30,6 +30,7 @@ export type NodeId = string;
 
 export interface Node {
   node_id: NodeId;
+  hostname: string;
   domain?: string;
   firstseen: Moment;
   lastseen: Moment;
