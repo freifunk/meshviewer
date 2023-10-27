@@ -1,6 +1,11 @@
-export const get = function get(url) {
+import {Moment} from "moment";
+import { snabbdomBundle as sv } from "snabbdom/snabbdom.bundle";
+import {VNode} from "snabbdom/vnode";
+import {Map} from "leaflet";
+
+export const get = function get(url: string) {
   return new Promise(function (resolve, reject) {
-    var req = new XMLHttpRequest();
+    let req = new XMLHttpRequest();
     req.open("GET", url);
 
     req.onload = function onload() {
@@ -19,23 +24,27 @@ export const get = function get(url) {
   });
 };
 
-export const getJSON = function getJSON(url) {
+export const getJSON = function getJSON(url: string) {
   return get(url).then(JSON.parse);
 };
 
-export const sortByKey = function sortByKey(key, data) {
+export const sortByKey = function sortByKey(key: string, data: {[k: string]: Moment}[]) {
   return data.sort(function (a, b) {
-    return b[key] - a[key];
+    return b[key].unix() - a[key].unix();
   });
 };
 
-export const limit = function limit(key, moment, data) {
+export const limit = function limit(
+  key: string,
+  moment: Moment,
+  data: { [k: string]: { isAfter: (p: Moment) => boolean } }[]
+) {
   return data.filter(function (entry) {
     return entry[key].isAfter(moment);
   });
 };
 
-export const sum = function sum(items) {
+export const sum = function sum(items: number[]) {
   return items.reduce(function (a, b) {
     return a + b;
   }, 0);
@@ -45,8 +54,8 @@ export const one = function one() {
   return 1;
 };
 
-export const dictGet = function dictGet(dict, keys) {
-  var key = keys.shift();
+export const dictGet = function dictGet(dict: { [x: string]: any; }, keys: string[]) {
+  let key = keys.shift();
 
   if (!(key in dict)) {
     return null;
@@ -59,21 +68,21 @@ export const dictGet = function dictGet(dict, keys) {
   return dictGet(dict[key], keys);
 };
 
-export const listReplace = function listReplace(string, subst) {
-  for (var key in subst) {
+export const listReplace = function listReplace(template: string, subst: ReplaceMapping) {
+  for (let key in subst) {
     if (subst.hasOwnProperty(key)) {
-      var re = new RegExp(key, "g");
-      string = string.replace(re, subst[key]);
+      let re = new RegExp(key, "g");
+      template = template.replace(re, subst[key]);
     }
   }
-  return string;
+  return template;
 };
 
-export const hasLocation = function hasLocation(data) {
+export const hasLocation = function hasLocation(data: { location: LatLon; }) {
   return "location" in data && Math.abs(data.location.latitude) < 90 && Math.abs(data.location.longitude) < 180;
 };
 
-export const hasUplink = function hasUplink(data) {
+export const hasUplink = function hasUplink(data: { neighbours: { link: {type: string} }[]; }) {
   if (!("neighbours" in data)) {
     return false;
   }
@@ -86,8 +95,8 @@ export const hasUplink = function hasUplink(data) {
   return uplink;
 };
 
-export const subtract = function subtract(a, b) {
-  var ids = {};
+export const subtract = function subtract(a: {node_id: string}[], b: {node_id: string}[]) {
+  let ids = {};
 
   b.forEach(function (d) {
     ids[d.node_id] = true;
@@ -100,7 +109,7 @@ export const subtract = function subtract(a, b) {
 
 /* Helpers working with links */
 
-export const showDistance = function showDistance(data) {
+export const showDistance = function showDistance(data: { distance: number; }) {
   if (isNaN(data.distance)) {
     return "";
   }
@@ -108,11 +117,12 @@ export const showDistance = function showDistance(data) {
   return data.distance.toFixed(0) + " m";
 };
 
-export const showTq = function showTq(tq) {
+export const showTq = function showTq(tq: number) {
   return (tq * 100).toFixed(0) + "%";
 };
 
-export const attributeEntry = function attributeEntry(V, children, label, value) {
+export const attributeEntry = function attributeEntry(V: typeof sv, children: VNode[], label: string, value: string) {
+  let _ = window._;
   if (value !== undefined) {
     if (typeof value !== "object") {
       value = V.h("td", value);
@@ -122,8 +132,9 @@ export const attributeEntry = function attributeEntry(V, children, label, value)
   }
 };
 
-export const showStat = function showStat(V, linkInfo, subst) {
-  var content = V.h("img", {
+export const showStat = function showStat(V: typeof sv, linkInfo: { [x: string]: string; }, subst: ReplaceMapping) {
+  let _ = window._;
+  let content = V.h("img", {
     attrs: {
       src: listReplace(linkInfo.image, subst),
       width: linkInfo.width,
@@ -151,7 +162,7 @@ export const showStat = function showStat(V, linkInfo, subst) {
   return V.h("div", content);
 };
 
-export const showDevicePicture = function showDevicePicture(V, pictures, subst) {
+export const showDevicePicture = function showDevicePicture(V: typeof sv, pictures: string, subst: ReplaceMapping) {
   if (!pictures) {
     return null;
   }
@@ -159,7 +170,7 @@ export const showDevicePicture = function showDevicePicture(V, pictures, subst) 
   return V.h("img", {
     attrs: { src: listReplace(pictures, subst), class: "hw-img" },
     on: {
-      // hide non-existant images
+      // hide non-existent images
       error: function (e) {
         e.target.style.display = "none";
       },
@@ -167,31 +178,38 @@ export const showDevicePicture = function showDevicePicture(V, pictures, subst) 
   });
 };
 
-export const getTileBBox = function getTileBBox(size, map, tileSize, margin) {
-  var tl = map.unproject([size.x - margin, size.y - margin]);
-  var br = map.unproject([size.x + margin + tileSize, size.y + margin + tileSize]);
+export const getTileBBox = function getTileBBox(size: Point, map: Map, tileSize: number, margin: number) {
+  let tl = map.unproject([size.x - margin, size.y - margin]);
+  let br = map.unproject([size.x + margin + tileSize, size.y + margin + tileSize]);
 
   return { minX: br.lat, minY: tl.lng, maxX: tl.lat, maxY: br.lng };
 };
 
-export const positionClients = function positionClients(ctx, point, startAngle, node, startDistance) {
+export const positionClients = function positionClients(
+    ctx: CanvasRenderingContext2D,
+    point: Point,
+    startAngle: number,
+    node: { clients: number; clients_wifi24: number; clients_wifi5: number; },
+    startDistance: number
+) {
   if (node.clients === 0) {
     return;
   }
 
-  var radius = 3;
-  var a = 1.2;
-  var mode = 0;
+  let radius = 3;
+  let a = 1.2;
+  let mode = 0;
+  let config = window.config;
 
   ctx.beginPath();
   ctx.fillStyle = config.client.wifi24;
 
-  for (var orbit = 0, i = 0; i < node.clients; orbit++) {
-    var distance = startDistance + orbit * 2 * radius * a;
-    var n = Math.floor((Math.PI * distance) / (a * radius));
-    var delta = node.clients - i;
+  for (let orbit = 0, i = 0; i < node.clients; orbit++) {
+    let distance = startDistance + orbit * 2 * radius * a;
+    let n = Math.floor((Math.PI * distance) / (a * radius));
+    let delta = node.clients - i;
 
-    for (var j = 0; j < Math.min(delta, n); i++, j++) {
+    for (let j = 0; j < Math.min(delta, n); i++, j++) {
       if (mode !== 1 && i >= node.clients_wifi24 + node.clients_wifi5) {
         mode = 1;
         ctx.fill();
@@ -203,9 +221,9 @@ export const positionClients = function positionClients(ctx, point, startAngle, 
         ctx.beginPath();
         ctx.fillStyle = config.client.other;
       }
-      var angle = ((2 * Math.PI) / n) * j;
-      var x = point.x + distance * Math.cos(angle + startAngle);
-      var y = point.y + distance * Math.sin(angle + startAngle);
+      let angle = ((2 * Math.PI) / n) * j;
+      let x = point.x + distance * Math.cos(angle + startAngle);
+      let y = point.y + distance * Math.sin(angle + startAngle);
 
       ctx.moveTo(x, y);
       ctx.arc(x, y, radius, 0, 2 * Math.PI);
@@ -214,15 +232,15 @@ export const positionClients = function positionClients(ctx, point, startAngle, 
   ctx.fill();
 };
 
-export const fullscreen = function fullscreen(btn) {
-  if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement) {
-    var fel = document.firstElementChild;
-    var func = fel.requestFullscreen || fel.webkitRequestFullScreen || fel.mozRequestFullScreen;
+export const fullscreen = function fullscreen(btn: HTMLButtonElement) {
+  if (!document.fullscreenElement && !document["webkitFullscreenElement"] && !document["mozFullScreenElement"]) {
+    let fel = document.firstElementChild;
+    let func = fel.requestFullscreen || fel["webkitRequestFullScreen"] || fel["mozRequestFullScreen"];
     func.call(fel);
     btn.classList.remove("ion-full-enter");
     btn.classList.add("ion-full-exit");
   } else {
-    func = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen;
+    let func = document.exitFullscreen || document["webkitExitFullscreen"] || document["mozCancelFullScreen"];
     if (func) {
       func.call(document);
       btn.classList.remove("ion-full-exit");
@@ -231,6 +249,6 @@ export const fullscreen = function fullscreen(btn) {
   }
 };
 
-export const escape = function escape(string) {
+export const escape = function escape(string: string) {
   return string.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&#34;").replace(/'/g, "&#39;");
 };
