@@ -1,9 +1,12 @@
-import V from "snabbdom/dist/snabbdom-patch";
-
+import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
 import * as helper from "../utils/helper";
+import { LinkInfo } from "../config_default";
+import { Link as LinkData } from "../utils/node";
+import { interpolate } from "d3-interpolate";
 
-function showStatImg(img, linkInfo, link, time) {
-  var subst = {
+function showStatImg(images: HTMLElement[], linkInfo: LinkInfo, link: LinkData, time: string) {
+  let _ = window._;
+  let subst: ReplaceMapping = {
     "{SOURCE_ID}": link.source.node_id,
     "{SOURCE_NAME}": link.source.hostname.replace(/[^a-z0-9\-]/gi, "_"),
     "{SOURCE_ADDR}": link.source_addr,
@@ -13,27 +16,30 @@ function showStatImg(img, linkInfo, link, time) {
     "{TARGET_ADDR}": link.target_addr,
     "{TARGET_MAC}": link.target_mac ? link.target_mac : link.target_addr,
     "{TYPE}": link.type,
-    "{TIME}": time,
+    "{TIME}": time, // numeric datetime
     "{LOCALE}": _.locale(),
   };
 
-  img.push(V.h("h4", helper.listReplace(linkInfo.name, subst)));
-  img.push(helper.showStat(V, linkInfo, subst));
+  images.push(V.h("h4", helper.listReplace(linkInfo.name, subst)));
+  images.push(helper.showStat(V, linkInfo, subst));
 }
 
-export const Link = function (el, linkData, linkScale) {
-  var self = this;
-  var header = document.createElement("div");
-  var table = document.createElement("table");
-  var images = document.createElement("div");
+export const Link = function (el: HTMLElement, linkData: LinkData[], linkScale: ReturnType<typeof interpolate>) {
+  let self = this;
+  let header = document.createElement("div");
+  let table = document.createElement("table");
+  let images = document.createElement("div");
   el.appendChild(header);
   el.appendChild(table);
   el.appendChild(images);
 
   self.render = function render() {
-    var children = [];
-    var img = [];
-    var time = linkData[0].target.lastseen.format("DDMMYYYYHmmss");
+    let _ = window._;
+    let config = window.config;
+    let router = window.router;
+    let children = [];
+    let img = [];
+    let time = linkData[0].target.lastseen.format("DDMMYYYYHmmss");
 
     header = V.patch(
       header,
@@ -96,13 +102,13 @@ export const Link = function (el, linkData, linkScale) {
       });
     }
 
-    var elNew = V.h("table", children);
-    table = V.patch(table, elNew);
-    table.elm.classList.add("attributes");
+    let elNew = V.h("table", children);
+    let pTable = (table = V.patch(table, elNew));
+    pTable.elm.classList.add("attributes");
     images = V.patch(images, V.h("div", img));
   };
 
-  self.setData = function setData(data) {
+  self.setData = function setData(data: { links: LinkData[] }) {
     linkData = data.links.filter(function (link) {
       return link.id === linkData[0].id;
     });

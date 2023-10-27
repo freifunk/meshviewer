@@ -3,10 +3,17 @@ import moment, { Moment } from "moment";
 import * as helper from "./helper";
 
 export interface Link {
-  type: string;
+  type: string; // wifi, vpn etc
   id: LinkId;
+  distance: number;
   source: Node;
   target: Node;
+  source_addr: string;
+  target_addr: string;
+  source_mac?: string; // Same as _addr
+  target_mac?: string; // Same as _addr
+  source_tq: number;
+  target_tq: number;
 }
 
 export interface Neighbour {
@@ -42,6 +49,7 @@ export interface Node {
   nproc: number;
   loadavg: number;
   memory_usage: number;
+  model?: string;
   clients: number;
   clients_wifi24: number;
   clients_wifi5: number;

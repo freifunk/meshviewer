@@ -3,6 +3,7 @@ import { snabbdomBundle as sv } from "snabbdom/snabbdom.bundle";
 import { VNode } from "snabbdom/vnode";
 import { Map } from "leaflet";
 import { Node } from "./node";
+import { LinkInfo } from "../config_default";
 
 export const get = function get(url: string) {
   return new Promise(function (resolve, reject) {
@@ -133,7 +134,7 @@ export const attributeEntry = function attributeEntry(V: typeof sv, children: VN
   }
 };
 
-export const showStat = function showStat(V: typeof sv, linkInfo: { [x: string]: string }, subst: ReplaceMapping) {
+export const showStat = function showStat(V: typeof sv, linkInfo: LinkInfo, subst: ReplaceMapping) {
   let _ = window._;
   let content = V.h("img", {
     attrs: {
@@ -172,7 +173,7 @@ export const showDevicePicture = function showDevicePicture(V: typeof sv, pictur
     attrs: { src: listReplace(pictures, subst), class: "hw-img" },
     on: {
       // hide non-existent images
-      error: function (e) {
+      error: function (e: any) {
         e.target.style.display = "none";
       },
     },
