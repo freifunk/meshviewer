@@ -4,6 +4,9 @@ import * as helper from "./helper";
 
 export interface Link {
   type: string;
+  id: LinkId;
+  source: Node;
+  target: Node;
 }
 
 export interface Neighbour {
