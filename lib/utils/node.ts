@@ -56,6 +56,9 @@ export interface Node {
   clients_other: number;
   is_gateway: boolean;
   addresses: IPAddress[];
+  gateway_nexthop: NodeId;
+  gateway: NodeId;
+  gateway6: string; // mac address for some reason
   autoupdater: Autoupdater;
 }
 

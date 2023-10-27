@@ -1,11 +1,15 @@
-import V from "snabbdom/dist/snabbdom-patch";
+import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
 
 import { SortTable } from "../sorttable";
 import * as helper from "../utils/helper";
-import nodef from "../utils/node";
+import nodef, { Neighbour, Node as NodeData, NodeId } from "../utils/node";
+import { NodeInfo } from "../config_default";
+import { interpolate } from "d3-interpolate";
 
-function showStatImg(nodeInfo, node) {
-  var subst = {
+function showStatImg(nodeInfo: NodeInfo, node: NodeData) {
+  let config = window.config;
+  let _ = window._;
+  let subst = {
     "{NODE_ID}": node.node_id,
     "{NODE_NAME}": node.hostname.replace(/[^a-z0-9\-]/gi, "_"),
     "{NODE_CUSTOM}": node.hostname.replace(config.node_custom, "_"),
@@ -15,28 +19,40 @@ function showStatImg(nodeInfo, node) {
   return helper.showStat(V, nodeInfo, subst);
 }
 
-function showDevicePictures(pictures, device) {
+function showDevicePictures(pictures: string, device: NodeData) {
   if (!device.model) {
     return null;
   }
-  var subst = {
+  let subst = {
     "{MODEL}": device.model,
     "{NODE_NAME}": device.hostname,
-    "{MODEL_HASH}": device.model.split("").reduce(function (a, b) {
-      a = (a << 5) - a + b.charCodeAt(0);
-      return a & a;
-    }, 0),
+    "{MODEL_HASH}": device.model
+      .split("")
+      .reduce(function (a, b) {
+        a = (a << 5) - a + b.charCodeAt(0);
+        return a & a;
+      }, 0)
+      .toString(),
     "{MODEL_NORMALIZED}": device.model
       .toLowerCase()
-      .replace(/[^a-z0-9\.\-]+/gi, "-")
+      .replace(/[^a-z0-9.\-]+/gi, "-")
       .replace(/^-+/, "")
       .replace(/-+$/, ""),
   };
   return helper.showDevicePicture(V, pictures, subst);
 }
 
-export function Node(el, node, linkScale, nodeDict) {
-  function nodeLink(node) {
+export function Node(
+  el: HTMLElement,
+  node: NodeData,
+  linkScale: ReturnType<typeof interpolate>,
+  nodeDict: { [k: NodeId]: NodeData },
+) {
+  let _ = window._;
+  let config = window.config;
+  let router = window.router;
+
+  function nodeLink(node: NodeData) {
     return V.h(
       "a",
       {
@@ -45,7 +61,7 @@ export function Node(el, node, linkScale, nodeDict) {
           href: router.generateLink({ node: node.node_id }),
         },
         on: {
-          click: function (e) {
+          click: function (e: Event) {
             router.fullUrl({ node: node.node_id }, e);
           },
         },
@@ -54,15 +70,15 @@ export function Node(el, node, linkScale, nodeDict) {
     );
   }
 
-  function nodeIdLink(nodeId) {
+  function nodeIdLink(nodeId: NodeId) {
     if (nodeDict[nodeId]) {
       return nodeLink(nodeDict[nodeId]);
     }
     return nodeId;
   }
 
-  function showGateway(node) {
-    var gatewayCols = [
+  function showGateway(node: NodeData) {
+    let gatewayCols = [
       V.h("span", [nodeIdLink(node.gateway_nexthop), V.h("br"), _.t("node.nexthop")]),
       V.h("span", { props: { className: "ion-arrow-right-c" } }),
       V.h("span", [nodeIdLink(node.gateway), V.h("br"), "IPv4"]),
@@ -75,8 +91,8 @@ export function Node(el, node, linkScale, nodeDict) {
     return V.h("td", { props: { className: "gateway" } }, gatewayCols);
   }
 
-  function renderNeighbourRow(connecting) {
-    var icons = [
+  function renderNeighbourRow(connecting: Neighbour) {
+    let icons = [
       V.h("span", {
         props: {
           className: "icon ion-" + (connecting.link.type.indexOf("wifi") === 0 ? "wifi" : "share-alt"),
@@ -104,7 +120,7 @@ export function Node(el, node, linkScale, nodeDict) {
               href: router.generateLink({ link: connecting.link.id }),
             },
             on: {
-              click: function (e) {
+              click: function (e: Event) {
                 router.fullUrl({ link: connecting.link.id }, e);
               },
             },
@@ -116,22 +132,25 @@ export function Node(el, node, linkScale, nodeDict) {
     ]);
   }
 
-  var self = this;
-  var header = document.createElement("h2");
-  var devicePicture = document.createElement("div");
-  var table = document.createElement("table");
-  var images = document.createElement("div");
-  var neighbours = document.createElement("h3");
-  var headings = [
+  let self = {
+    render: undefined,
+    setData: undefined,
+  };
+  let header = document.createElement("h2");
+  let devicePicture = document.createElement("div");
+  let table = document.createElement("table");
+  let images = document.createElement("div");
+  let neighbours = document.createElement("h3");
+  let headings = [
     {
       name: "",
-      sort: function (a, b) {
+      sort: function (a: Neighbour, b: Neighbour) {
         return a.link.type.localeCompare(b.link.type);
       },
     },
     {
       name: "node.nodes",
-      sort: function (a, b) {
+      sort: function (a: Neighbour, b: Neighbour) {
         return a.node.hostname.localeCompare(b.node.hostname);
       },
       reverse: false,
@@ -139,7 +158,7 @@ export function Node(el, node, linkScale, nodeDict) {
     {
       name: "node.clients",
       class: "ion-people",
-      sort: function (a, b) {
+      sort: function (a: Neighbour, b: Neighbour) {
         return a.node.clients - b.node.clients;
       },
       reverse: true,
@@ -147,7 +166,7 @@ export function Node(el, node, linkScale, nodeDict) {
     {
       name: "node.tq",
       class: "ion-connection-bars",
-      sort: function (a, b) {
+      sort: function (a: Neighbour, b: Neighbour) {
         return a.link.source_tq - b.link.source_tq;
       },
       reverse: true,
@@ -155,7 +174,7 @@ export function Node(el, node, linkScale, nodeDict) {
     {
       name: "node.distance",
       class: "ion-arrow-resize",
-      sort: function (a, b) {
+      sort: function (a: Neighbour, b: Neighbour) {
         return (
           (a.link.distance === undefined ? -1 : a.link.distance) -
           (b.link.distance === undefined ? -1 : b.link.distance)
@@ -164,10 +183,10 @@ export function Node(el, node, linkScale, nodeDict) {
       reverse: true,
     },
   ];
-  var tableNeighbour = new SortTable(headings, 1, renderNeighbourRow);
+  let tableNeighbour = new SortTable(headings, 1, renderNeighbourRow);
 
   // Prepare deprecation warning. At first not displayed, text follows later
-  var deprecation = document.createElement("div");
+  let deprecation = document.createElement("div");
   deprecation.setAttribute("class", "deprecated");
   deprecation.setAttribute("style", "display: none;");
   deprecation.innerHTML = "<div>" + (config.deprecation_text || _.t("deprecation")) + "</div>";
@@ -183,8 +202,8 @@ export function Node(el, node, linkScale, nodeDict) {
   self.render = function render() {
     V.patch(header, V.h("h2", node.hostname));
 
-    var devicePictures = showDevicePictures(config.devicePictures, node);
-    var devicePicturesContainerData = {
+    let devicePictures = showDevicePictures(config.devicePictures, node);
+    let devicePicturesContainerData = {
       attrs: {
         class: "hw-img-container",
       },
@@ -194,10 +213,10 @@ export function Node(el, node, linkScale, nodeDict) {
       devicePictures ? V.h("div", devicePicturesContainerData, devicePictures) : V.h("div"),
     );
 
-    var children = [];
+    let children = [];
 
     config.nodeAttr.forEach(function (row) {
-      var field = node[row.value];
+      let field = node[String(row.value)];
       if (typeof row.value === "function") {
         field = row.value(node, nodeDict);
       } else if (nodef["show" + row.value] !== undefined) {
@@ -222,18 +241,20 @@ export function Node(el, node, linkScale, nodeDict) {
 
     children.push(V.h("tr", [V.h("th", _.t("node.gateway")), showGateway(node)]));
 
-    var elNew = V.h("table", children);
+    let elNew = V.h("table", children);
     table = V.patch(table, elNew);
+    // @ts-ignore
     table.elm.classList.add("attributes");
 
     V.patch(neighbours, V.h("h3", _.t("node.link", node.neighbours.length) + " (" + node.neighbours.length + ")"));
     if (node.neighbours.length > 0) {
       tableNeighbour.setData(node.neighbours);
+      // @ts-ignore
       tableNeighbour.el.elm.classList.add("node-links");
     }
 
     if (config.nodeInfos) {
-      var img = [];
+      let img = [];
       config.nodeInfos.forEach(function (nodeInfo) {
         img.push(V.h("h4", nodeInfo.name));
         img.push(showStatImg(nodeInfo, node));
@@ -242,7 +263,7 @@ export function Node(el, node, linkScale, nodeDict) {
     }
   };
 
-  self.setData = function setData(data) {
+  self.setData = function setData(data: { nodeDict: { [x: NodeId]: NodeData } }) {
     if (data.nodeDict[node.node_id]) {
       node = data.nodeDict[node.node_id];
     }

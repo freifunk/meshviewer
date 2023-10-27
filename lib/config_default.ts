@@ -1,9 +1,10 @@
 import { LanguageCode } from "./utils/language";
+import { Node, NodeId } from "./utils/node";
 
 interface NodeAttr {
   name: string;
   // value can be a node attribute (1 depth) or a function in utils/node with prefix show
-  value: string | (() => string);
+  value: string | ((d: Node) => string) | ((d: Node, nodeDict: { [k: NodeId]: Node }) => string);
   // Examples for functions
   // {
   //   // no name will remove first column
@@ -47,6 +48,8 @@ export interface LinkInfo {
   width: string;
   height: string;
 }
+
+export type NodeInfo = LinkInfo;
 
 export interface Config {
   reverseGeocodingApi: string;
@@ -135,8 +138,15 @@ export interface Config {
   };
   linkTypeInfos: LinkInfo[];
   linkInfos: LinkInfo[];
+  nodeInfos: NodeInfo[];
+  deprecation_enabled: boolean;
   deprecated: string[];
+  deprecation_text?: string;
   domainNames: Domain[];
+  node_custom: string; // Custom node replacement regex
+  devicePictures: string;
+  devicePicturesSource: string;
+  devicePicturesLicense: string;
 }
 
 export const config: Config = {
@@ -405,7 +415,15 @@ export const config: Config = {
     "VoCore 8M",
     "VoCore 16M",
   ],
+  deprecation_enabled: true,
+  deprecation_text: undefined,
   domainNames: [],
   linkTypeInfos: [],
   linkInfos: [],
+  nodeInfos: [],
+  node_custom: "",
+  devicePictures: "https://map.aachen.freifunk.net/pictures-svg/{MODEL_NORMALIZED}.svg",
+  devicePicturesSource:
+    "<a href='https://github.com/freifunk/device-pictures'>https://github.com/freifunk/device-pictures</a>",
+  devicePicturesLicense: "CC-BY-NC-SA 4.0",
 };

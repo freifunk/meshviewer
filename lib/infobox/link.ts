@@ -25,7 +25,10 @@ function showStatImg(images: HTMLElement[], linkInfo: LinkInfo, link: LinkData, 
 }
 
 export const Link = function (el: HTMLElement, linkData: LinkData[], linkScale: ReturnType<typeof interpolate>) {
-  let self = this;
+  let self = {
+    render: undefined,
+    setData: undefined,
+  };
   let header = document.createElement("div");
   let table = document.createElement("table");
   let images = document.createElement("div");
