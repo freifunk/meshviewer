@@ -1,21 +1,45 @@
 import * as helper from "../utils/helper";
+import { ZoomTransform } from "d3-zoom";
+import { Link, Node } from "../utils/node";
 
-var self = {};
+type Highlight = { type: string; id: string } | null;
 
-var ctx; // Canvas context
-var width;
-var height;
-var transform;
-var highlight;
+export interface MapNode extends Point {
+  o: Node;
+}
 
-var NODE_RADIUS = 15;
-var LINE_RADIUS = 12;
+export interface MapLink extends Point {
+  o: Link;
+  source: MapNode;
+  target: MapNode;
+  color: string;
+  color_to: string;
+}
 
-function drawDetailNode(node) {
+let self = {
+  drawNode: undefined,
+  drawLink: undefined,
+  setCTX: undefined,
+  setHighlight: undefined,
+  setTransform: undefined,
+  setMaxArea: undefined,
+};
+
+let ctx: CanvasRenderingContext2D; // Canvas context
+let width: number;
+let height: number;
+let transform: ZoomTransform;
+let highlight: Highlight;
+
+let NODE_RADIUS = 15;
+let LINE_RADIUS = 12;
+
+function drawDetailNode(node: MapNode) {
   if (transform.k > 1 && node.o.is_online) {
+    let config = window.config;
     helper.positionClients(ctx, node, Math.PI, node.o, 15);
     ctx.beginPath();
-    var name = node.o.node_id;
+    let name = node.o.node_id;
     if (node.o) {
       name = node.o.hostname;
     }
@@ -25,8 +49,9 @@ function drawDetailNode(node) {
   }
 }
 
-function drawHighlightNode(node) {
+function drawHighlightNode(node: MapNode) {
   if (highlight && highlight.type === "node" && node.o.node_id === highlight.id) {
+    let config = window.config;
     ctx.arc(node.x, node.y, NODE_RADIUS * 1.5, 0, 2 * Math.PI);
     ctx.fillStyle = config.forceGraph.highlightColor;
     ctx.fill();
@@ -34,8 +59,9 @@ function drawHighlightNode(node) {
   }
 }
 
-function drawHighlightLink(link, to) {
+function drawHighlightLink(link: MapLink, to: number[]) {
   if (highlight && highlight.type === "link" && link.o.id === highlight.id) {
+    let config = window.config;
     ctx.lineTo(to[0], to[1]);
     ctx.strokeStyle = config.forceGraph.highlightColor;
     ctx.lineWidth = LINE_RADIUS * 2;
@@ -46,7 +72,7 @@ function drawHighlightLink(link, to) {
   return to;
 }
 
-self.drawNode = function drawNode(node) {
+self.drawNode = function drawNode(node: MapNode) {
   if (
     node.x < transform.invertX(0) ||
     node.y < transform.invertY(0) ||
@@ -59,6 +85,7 @@ self.drawNode = function drawNode(node) {
 
   drawHighlightNode(node);
 
+  let config = window.config;
   if (node.o.is_online) {
     ctx.arc(node.x, node.y, 8, 0, 2 * Math.PI);
     if (node.o.is_gateway) {
@@ -75,9 +102,9 @@ self.drawNode = function drawNode(node) {
   drawDetailNode(node);
 };
 
-self.drawLink = function drawLink(link) {
-  var zero = transform.invert([0, 0]);
-  var area = transform.invert([width, height]);
+self.drawLink = function drawLink(link: MapLink) {
+  let zero = transform.invert([0, 0]);
+  let area = transform.invert([width, height]);
   if (
     (link.source.x < zero[0] && link.target.x < zero[0]) ||
     (link.source.y < zero[1] && link.target.y < zero[1]) ||
@@ -88,11 +115,11 @@ self.drawLink = function drawLink(link) {
   }
   ctx.beginPath();
   ctx.moveTo(link.source.x, link.source.y);
-  var to = [link.target.x, link.target.y];
+  let to = [link.target.x, link.target.y];
 
   to = drawHighlightLink(link, to);
 
-  var grd = ctx.createLinearGradient(link.source.x, link.source.y, link.target.x, link.target.y);
+  let grd = ctx.createLinearGradient(link.source.x, link.source.y, link.target.x, link.target.y);
   grd.addColorStop(0.45, link.color);
   grd.addColorStop(0.55, link.color_to);
 
@@ -109,19 +136,19 @@ self.drawLink = function drawLink(link) {
   ctx.globalAlpha = 1;
 };
 
-self.setCTX = function setCTX(newValue) {
+self.setCTX = function setCTX(newValue: CanvasRenderingContext2D) {
   ctx = newValue;
 };
 
-self.setHighlight = function setHighlight(newValue) {
+self.setHighlight = function setHighlight(newValue: Highlight) {
   highlight = newValue;
 };
 
-self.setTransform = function setTransform(newValue) {
+self.setTransform = function setTransform(newValue: ZoomTransform) {
   transform = newValue;
 };
 
-self.setMaxArea = function setMaxArea(newWidth, newHeight) {
+self.setMaxArea = function setMaxArea(newWidth: number, newHeight: number) {
   width = newWidth;
   height = newHeight;
 };
