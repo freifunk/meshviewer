@@ -32,6 +32,11 @@ interface Icon {
   stroke?: boolean;
 }
 
+interface Domain {
+    name: string;
+    domain: string;
+}
+
 export interface Config {
   reverseGeocodingApi: string;
   maxAge: number;
@@ -118,6 +123,7 @@ export interface Config {
     };
   };
   deprecated: string[];
+  domainNames: Domain[];
 }
 
 export const config: Config = {
@@ -386,4 +392,5 @@ export const config: Config = {
     "VoCore 8M",
     "VoCore 16M",
   ],
+  domainNames: [],
 };

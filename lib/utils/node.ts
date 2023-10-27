@@ -1,11 +1,75 @@
-import V from "snabbdom/dist/snabbdom-patch";
-import moment from "moment";
-
+import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
+import moment, { Moment } from "moment";
 import * as helper from "./helper";
 
-var self = {};
+export interface Link {
+  type: string;
+}
 
-function showBar(value, width, warning) {
+export interface Neighbour {
+  node: Node;
+  link: Link;
+}
+
+export interface Firmware {
+  release: string;
+  base: string;
+}
+
+export type IPAddress = string;
+
+export interface Autoupdater {
+  enabled: boolean;
+  branch: string;
+}
+
+export type NodeId = string;
+
+export interface Node {
+  node_id: NodeId;
+  domain?: string;
+  firstseen: Moment;
+  lastseen: Moment;
+  is_online: boolean;
+  location: LatLon;
+  neighbours: Neighbour[];
+  firmware: Firmware;
+  uptime: number;
+  nproc: number;
+  loadavg: number;
+  memory_usage: number;
+  clients: number;
+  clients_wifi24: number;
+  clients_wifi5: number;
+  clients_other: number;
+  is_gateway: boolean;
+  addresses: IPAddress[];
+  autoupdater: Autoupdater;
+}
+
+export type LinkId = string;
+
+export interface Link {
+  id: LinkId;
+}
+
+let self = {
+  showStatus: undefined,
+  showGeoURI: undefined,
+  showGateway: undefined,
+  showFirmware: undefined,
+  showUptime: undefined,
+  showFirstSeen: undefined,
+  showLoad: undefined,
+  showRAM: undefined,
+  showDomain: undefined,
+  countLocalClients: undefined,
+  showClients: undefined,
+  showIPs: undefined,
+  showAutoupdate: undefined,
+};
+
+function showBar(value: string, width: number, warning: boolean) {
   return V.h("span", { props: { className: "bar" + (warning ? " warning" : "") } }, [
     V.h("span", {
       style: { width: width * 100 + "%" },
@@ -14,7 +78,8 @@ function showBar(value, width, warning) {
   ]);
 }
 
-self.showStatus = function showStatus(node) {
+self.showStatus = function showStatus(node: Node) {
+  let _ = window._;
   return V.h(
     "td",
     { props: { className: node.is_online ? "online" : "offline" } },
@@ -25,7 +90,7 @@ self.showStatus = function showStatus(node) {
   );
 };
 
-self.showGeoURI = function showGeoURI(data) {
+self.showGeoURI = function showGeoURI(data: Node) {
   if (!helper.hasLocation(data)) {
     return undefined;
   }
@@ -40,11 +105,12 @@ self.showGeoURI = function showGeoURI(data) {
   );
 };
 
-self.showGateway = function showGateway(node) {
+self.showGateway = function showGateway(node: Node) {
+  let _ = window._;
   return node.is_gateway ? _.t("yes") : undefined;
 };
 
-self.showFirmware = function showFirmware(node) {
+self.showFirmware = function showFirmware(node: Node) {
   return (
     [helper.dictGet(node, ["firmware", "release"]), helper.dictGet(node, ["firmware", "base"])]
       .filter(function (value) {
@@ -54,24 +120,25 @@ self.showFirmware = function showFirmware(node) {
   );
 };
 
-self.showUptime = function showUptime(node) {
+self.showUptime = function showUptime(node: Node) {
   return moment.utc(node.uptime).local().fromNow(true);
 };
 
-self.showFirstSeen = function showFirstSeen(node) {
+self.showFirstSeen = function showFirstSeen(node: Node) {
   return node.firstseen.fromNow(true);
 };
 
-self.showLoad = function showLoad(node) {
+self.showLoad = function showLoad(node: Node) {
   return showBar(node.loadavg.toFixed(2), node.loadavg / (node.nproc || 1), node.loadavg >= node.nproc);
 };
 
-self.showRAM = function showRAM(node) {
+self.showRAM = function showRAM(node: Node) {
   return showBar(Math.round(node.memory_usage * 100) + " %", node.memory_usage, node.memory_usage >= 0.8);
 };
 
-self.showDomain = function showDomain(node) {
-  var domainTitle = node.domain;
+self.showDomain = function showDomain(node: Node) {
+  let domainTitle = node.domain;
+  let config = window.config;
   if (config.domainNames) {
     config.domainNames.some(function (domain) {
       if (domainTitle === domain.domain) {
@@ -83,11 +150,10 @@ self.showDomain = function showDomain(node) {
   return domainTitle;
 };
 
-self.countLocalClients = function countLocalClients(node, visited = {}) {
+self.countLocalClients = function countLocalClients(node: Node, visited = {}) {
   if (node.node_id in visited) return 0;
   visited[node.node_id] = 1;
-
-  var count = node.clients || 0;
+  let count = node.clients || 0;
   node.neighbours.forEach(function (neighbour) {
     if (neighbour.link.type === "vpn") return;
     count += self.countLocalClients(neighbour.node, visited);
@@ -95,13 +161,14 @@ self.countLocalClients = function countLocalClients(node, visited = {}) {
   return count;
 };
 
-self.showClients = function showClients(node) {
+self.showClients = function showClients(node: Node) {
   if (!node.is_online) {
     return undefined;
   }
-  var localClients = self.countLocalClients(node);
+  let _ = window._;
+  let localClients = self.countLocalClients(node);
 
-  var clients = [
+  let clients = [
     V.h("span", [
       node.clients > 0 ? node.clients : _.t("none"),
       V.h("br"),
@@ -131,9 +198,9 @@ self.showClients = function showClients(node) {
   return V.h("td", { props: { className: "clients" } }, clients);
 };
 
-self.showIPs = function showIPs(node) {
-  var string = [];
-  var ips = node.addresses;
+self.showIPs = function showIPs(node: Node) {
+  let string = [];
+  let ips = node.addresses;
   ips.sort();
   ips.forEach(function (ip, i) {
     if (i > 0) {
@@ -149,7 +216,8 @@ self.showIPs = function showIPs(node) {
   return V.h("td", string);
 };
 
-self.showAutoupdate = function showAutoupdate(node) {
+self.showAutoupdate = function showAutoupdate(node: Node) {
+  let _ = window._;
   return node.autoupdater.enabled
     ? _.t("node.activated", { branch: node.autoupdater.branch })
     : _.t("node.deactivated");
