@@ -1,7 +1,10 @@
 import * as helper from "../utils/helper";
+import { TargetLocation } from "../utils/router";
 
-export const location = function (el, position) {
-  var sidebarTitle = document.createElement("h2");
+export const location = function (el: HTMLElement, position: TargetLocation) {
+  let _ = window._;
+  let config = window.config;
+  let sidebarTitle = document.createElement("h2");
   sidebarTitle.textContent = _.t("location.location");
   el.appendChild(sidebarTitle);
 
@@ -15,25 +18,25 @@ export const location = function (el, position) {
         "&zoom=18&addressdetails=0&accept-language=" +
         _.locale(),
     )
-    .then(function (result) {
+    .then(function (result: { display_name: string }) {
       if (result.display_name) {
         sidebarTitle.outerHTML += "<p>" + result.display_name + "</p>";
       }
     });
 
-  var editLat = document.createElement("input");
+  let editLat = document.createElement("input");
   editLat.setAttribute("aria-label", _.t("location.latitude"));
   editLat.type = "text";
   editLat.value = position.lat.toFixed(9);
   el.appendChild(createBox("lat", _.t("location.latitude"), editLat));
 
-  var editLng = document.createElement("input");
+  let editLng = document.createElement("input");
   editLng.setAttribute("aria-label", _.t("location.longitude"));
   editLng.type = "text";
   editLng.value = position.lng.toFixed(9);
   el.appendChild(createBox("lng", _.t("location.longitude"), editLng));
 
-  var editUci = document.createElement("textarea");
+  let editUci = document.createElement("textarea");
   editUci.setAttribute("aria-label", "Uci");
   editUci.value =
     "uci set gluon-node-info.@location[0]='location'; " +
@@ -48,12 +51,12 @@ export const location = function (el, position) {
 
   el.appendChild(createBox("uci", "Uci", editUci));
 
-  function createBox(name, title, inputElem) {
-    var box = document.createElement("div");
-    var heading = document.createElement("h3");
+  function createBox(name: string, title: string, inputElem: HTMLInputElement | HTMLTextAreaElement) {
+    let box = document.createElement("div");
+    let heading = document.createElement("h3");
     heading.textContent = title;
     box.appendChild(heading);
-    var btn = document.createElement("button");
+    let btn = document.createElement("button");
     btn.classList.add("ion-clipboard");
     btn.title = _.t("location.copy");
     btn.setAttribute("aria-label", _.t("location.copy"));
@@ -62,7 +65,7 @@ export const location = function (el, position) {
     };
     inputElem.id = "location-" + name;
     inputElem.readOnly = true;
-    var line = document.createElement("p");
+    let line = document.createElement("p");
     line.appendChild(inputElem);
     line.appendChild(btn);
     box.appendChild(line);
@@ -70,8 +73,8 @@ export const location = function (el, position) {
     return box;
   }
 
-  function copy2clip(id) {
-    var copyField = document.querySelector("#" + id);
+  function copy2clip(id: string) {
+    let copyField: HTMLTextAreaElement = document.querySelector("#" + id);
     copyField.select();
     try {
       document.execCommand("copy");
