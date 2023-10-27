@@ -1,7 +1,8 @@
-import {Moment} from "moment";
+import { Moment } from "moment";
 import { snabbdomBundle as sv } from "snabbdom/snabbdom.bundle";
-import {VNode} from "snabbdom/vnode";
-import {Map} from "leaflet";
+import { VNode } from "snabbdom/vnode";
+import { Map } from "leaflet";
+import { Node } from "./node";
 
 export const get = function get(url: string) {
   return new Promise(function (resolve, reject) {
@@ -28,7 +29,7 @@ export const getJSON = function getJSON(url: string) {
   return get(url).then(JSON.parse);
 };
 
-export const sortByKey = function sortByKey(key: string, data: {[k: string]: Moment}[]) {
+export const sortByKey = function sortByKey(key: string, data: { [k: string]: Moment }[]) {
   return data.sort(function (a, b) {
     return b[key].unix() - a[key].unix();
   });
@@ -37,7 +38,7 @@ export const sortByKey = function sortByKey(key: string, data: {[k: string]: Mom
 export const limit = function limit(
   key: string,
   moment: Moment,
-  data: { [k: string]: { isAfter: (p: Moment) => boolean } }[]
+  data: { [k: string]: { isAfter: (p: Moment) => boolean } }[],
 ) {
   return data.filter(function (entry) {
     return entry[key].isAfter(moment);
@@ -54,7 +55,7 @@ export const one = function one() {
   return 1;
 };
 
-export const dictGet = function dictGet(dict: { [x: string]: any; }, keys: string[]) {
+export const dictGet = function dictGet(dict: { [x: string]: any }, keys: string[]) {
   let key = keys.shift();
 
   if (!(key in dict)) {
@@ -78,11 +79,11 @@ export const listReplace = function listReplace(template: string, subst: Replace
   return template;
 };
 
-export const hasLocation = function hasLocation(data: { location: LatLon; }) {
+export const hasLocation = function hasLocation(data: Node | {}) {
   return "location" in data && Math.abs(data.location.latitude) < 90 && Math.abs(data.location.longitude) < 180;
 };
 
-export const hasUplink = function hasUplink(data: { neighbours: { link: {type: string} }[]; }) {
+export const hasUplink = function hasUplink(data: Node | {}) {
   if (!("neighbours" in data)) {
     return false;
   }
@@ -95,7 +96,7 @@ export const hasUplink = function hasUplink(data: { neighbours: { link: {type: s
   return uplink;
 };
 
-export const subtract = function subtract(a: {node_id: string}[], b: {node_id: string}[]) {
+export const subtract = function subtract(a: Node[], b: Node[]) {
   let ids = {};
 
   b.forEach(function (d) {
@@ -109,7 +110,7 @@ export const subtract = function subtract(a: {node_id: string}[], b: {node_id: s
 
 /* Helpers working with links */
 
-export const showDistance = function showDistance(data: { distance: number; }) {
+export const showDistance = function showDistance(data: { distance: number }) {
   if (isNaN(data.distance)) {
     return "";
   }
@@ -132,7 +133,7 @@ export const attributeEntry = function attributeEntry(V: typeof sv, children: VN
   }
 };
 
-export const showStat = function showStat(V: typeof sv, linkInfo: { [x: string]: string; }, subst: ReplaceMapping) {
+export const showStat = function showStat(V: typeof sv, linkInfo: { [x: string]: string }, subst: ReplaceMapping) {
   let _ = window._;
   let content = V.h("img", {
     attrs: {
@@ -186,11 +187,11 @@ export const getTileBBox = function getTileBBox(size: Point, map: Map, tileSize:
 };
 
 export const positionClients = function positionClients(
-    ctx: CanvasRenderingContext2D,
-    point: Point,
-    startAngle: number,
-    node: { clients: number; clients_wifi24: number; clients_wifi5: number; },
-    startDistance: number
+  ctx: CanvasRenderingContext2D,
+  point: Point,
+  startAngle: number,
+  node: Node,
+  startDistance: number,
 ) {
   if (node.clients === 0) {
     return;
