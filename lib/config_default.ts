@@ -34,9 +34,18 @@ interface Icon {
   stroke?: boolean;
 }
 
-interface Domain {
+export interface Domain {
   name: string;
   domain: string;
+}
+
+export interface LinkInfo {
+  name: string;
+  title: string;
+  href: string;
+  image: string;
+  width: string;
+  height: string;
 }
 
 export interface Config {
@@ -124,6 +133,8 @@ export interface Config {
       fillOpacity: number;
     };
   };
+  linkTypeInfos: LinkInfo[];
+  linkInfos: LinkInfo[];
   deprecated: string[];
   domainNames: Domain[];
 }
@@ -395,4 +406,6 @@ export const config: Config = {
     "VoCore 16M",
   ],
   domainNames: [],
+  linkTypeInfos: [],
+  linkInfos: [],
 };
