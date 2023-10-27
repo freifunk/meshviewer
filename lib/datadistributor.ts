@@ -1,19 +1,49 @@
 import { NodeFilter } from "./filters/nodefilter";
+import { Link, Node } from "./utils/node";
+
+export interface CanSetData {
+  setData: (data: any) => any;
+}
+
+export interface CanFiltersChanged {
+  filtersChanged: (filters: Filter[]) => any;
+}
+
+export interface NodesByState {
+  all: Node[];
+  lost: Node[];
+  new: Node[];
+  online: Node[];
+  offline: Node[];
+}
+
+export interface ObjectsLinksAndNodes {
+  links: Link[];
+  nodes: NodesByState;
+}
+
+export interface Filter {
+  getKey(): string;
+  setRefresh(refresh: () => any): any;
+  run(data: any): Boolean;
+}
+
+export type FilterMethod = (node: Node) => boolean;
 
 export const DataDistributor = function () {
-  var targets = [];
-  var filterObservers = [];
-  var filters = [];
-  var filteredData;
-  var data;
+  let targets = [];
+  let filterObservers: CanFiltersChanged[] = [];
+  let filters: Filter[] = [];
+  let filteredData: ObjectsLinksAndNodes;
+  let data: ObjectsLinksAndNodes;
 
-  function remove(target) {
+  function remove(target: CanSetData) {
     targets = targets.filter(function (currentElement) {
       return target !== currentElement;
     });
   }
 
-  function add(target) {
+  function add(target: CanSetData) {
     targets.push(target);
 
     if (filteredData !== undefined) {
@@ -21,7 +51,7 @@ export const DataDistributor = function () {
     }
   }
 
-  function setData(dataValue) {
+  function setData(dataValue: ObjectsLinksAndNodes) {
     data = dataValue;
     refresh();
   }
@@ -31,10 +61,10 @@ export const DataDistributor = function () {
       return;
     }
 
-    var filter = filters.reduce(
-      function (a, filter) {
-        return function (d) {
-          return a(d) && filter.run(d);
+    let filter: FilterMethod = filters.reduce(
+      function (a: FilterMethod, filter) {
+        return function (d: Node): boolean {
+          return (a(d) && filter.run(d)).valueOf();
         };
       },
       function () {
@@ -42,7 +72,7 @@ export const DataDistributor = function () {
       },
     );
 
-    filteredData = new NodeFilter(filter)(data);
+    filteredData = NodeFilter(filter)(data);
 
     targets.forEach(function (target) {
       target.setData(filteredData);
@@ -55,10 +85,10 @@ export const DataDistributor = function () {
     });
   }
 
-  function addFilter(filter) {
-    var newItem = true;
+  function addFilter(filter: Filter) {
+    let newItem = true;
 
-    filters.forEach(function (oldFilter) {
+    filters.forEach(function (oldFilter: Filter) {
       if (oldFilter.getKey && oldFilter.getKey() === filter.getKey()) {
         removeFilter(oldFilter);
         newItem = false;
@@ -73,7 +103,7 @@ export const DataDistributor = function () {
     }
   }
 
-  function removeFilter(filter) {
+  function removeFilter(filter: Filter) {
     filters = filters.filter(function (currentElement) {
       return filter !== currentElement;
     });
@@ -81,7 +111,7 @@ export const DataDistributor = function () {
     refresh();
   }
 
-  function watchFilters(filterObserver) {
+  function watchFilters(filterObserver: CanFiltersChanged) {
     filterObservers.push(filterObserver);
 
     filterObserver.filtersChanged(filters);
