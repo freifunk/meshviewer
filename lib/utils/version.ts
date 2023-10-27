@@ -1,13 +1,16 @@
-const Version = function (v) {
-  var version = /^[a-zA-Z]?([0-9]*(?=:))?:(.*)/.exec(v);
-  this.epoch = version ? version[1] : 0;
-  version = version && version[2] ? version[2] : v;
-  version = version.split("-");
-  this.debian = version.length > 1 ? version.pop() : "";
-  this.upstream = version.join("-");
+type Version = { epoch: number; upstream: string; debian: string };
+
+const Version = function (v: string) {
+  let versionResult = /^[a-zA-Z]?([0-9]*(?=:))?:(.*)/.exec(v);
+  let version = versionResult && versionResult[2] ? versionResult[2] : v;
+  let versionParts = version.split("-");
+
+  this.epoch = versionResult ? Number(versionResult[1]) : 0;
+  this.debian = versionParts.length > 1 ? versionParts.pop() : "";
+  this.upstream = versionParts.join("-");
 };
 
-Version.prototype.compare = function (b) {
+Version.prototype.compare = function (b: Version) {
   if ((this.epoch > 0 || b.epoch > 0) && Math.sign(this.epoch - b.epoch) !== 0) {
     return Math.sign(this.epoch - b.epoch);
   }
@@ -17,7 +20,7 @@ Version.prototype.compare = function (b) {
   return this.compareStrings(this.debian, b.debian);
 };
 
-Version.prototype.charCode = function (c) {
+Version.prototype.charCode = function (c: string) {
   // the lower the character code the lower the version.
   // if (c === '~') {return 0;} // tilde sort before anything
   // else
@@ -25,13 +28,13 @@ Version.prototype.charCode = function (c) {
     return c.charCodeAt(0) - "A".charCodeAt(0) + 1;
   } else if (/[.:+-:]/.test(c)) {
     return c.charCodeAt(0) + "z".charCodeAt(0) + 1;
-  } // charcodes are 46..58
+  } // char codes are 46..58
   return 0;
 };
 
 // find index in "array" by "fn" callback.
-Version.prototype.findIndex = function (array, fn) {
-  for (var i = 0; i < array.length; i++) {
+Version.prototype.findIndex = function (array: string[], fn: (c: string, i: number) => boolean) {
+  for (let i = 0; i < array.length; i++) {
     if (fn(array[i], i)) {
       return i;
     }
@@ -39,10 +42,10 @@ Version.prototype.findIndex = function (array, fn) {
   return -1;
 };
 
-Version.prototype.compareChunk = function (a, b) {
-  var ca = a.split("");
-  var cb = b.split("");
-  var diff = this.findIndex(ca, function (c, index) {
+Version.prototype.compareChunk = function (a: string, b: string) {
+  let ca = a.split("");
+  let cb = b.split("");
+  let diff = this.findIndex(ca, function (c: string, index: number) {
     return !(cb[index] && c === cb[index]);
   });
   if (diff === -1) {
@@ -59,16 +62,16 @@ Version.prototype.compareChunk = function (a, b) {
   return this.charCode(ca[diff]) > this.charCode(cb[diff]) ? 1 : -1;
 };
 
-Version.prototype.compareStrings = function (a, b) {
+Version.prototype.compareStrings = function (a: string, b: string) {
   if (a === b) {
     return 0;
   }
-  var parseA = /([^0-9]+|[0-9]+)/g;
-  var parseB = /([^0-9]+|[0-9]+)/g;
-  var ra = parseA.exec(a);
-  var rb = parseB.exec(b);
+  let parseA = /([^0-9]+|[0-9]+)/g;
+  let parseB = /([^0-9]+|[0-9]+)/g;
+  let ra = parseA.exec(a);
+  let rb = parseB.exec(b);
   while (ra !== null && rb !== null) {
-    if ((isNaN(ra[1]) || isNaN(rb[1])) && ra[1] !== rb[1]) {
+    if ((isNaN(Number(ra[1])) || isNaN(Number(rb[1]))) && ra[1] !== rb[1]) {
       // a or b is not a number and they're not equal. Note : "" IS a number so both null is impossible
       return this.compareChunk(ra[1], rb[1]);
     } // both are numbers
@@ -87,8 +90,8 @@ Version.prototype.compareStrings = function (a, b) {
   return 0;
 };
 
-export const compare = (a, b) => {
-  var va = new Version(a[0]);
-  var vb = new Version(b[0]);
+export const compare = (a: any[], b: any[]) => {
+  let va = new Version(a[0]);
+  let vb = new Version(b[0]);
   return vb.compare(va);
 };
