@@ -1,12 +1,17 @@
 import { Link } from "./link";
 import { Node } from "./node";
 import { location } from "./location";
+import { Link as LinkData, Node as NodeData, NodeId } from "../utils/node";
+import { interpolate } from "d3-interpolate";
+import { Sidebar } from "../sidebar";
+import { TargetLocation } from "../utils/router";
+import { ObjectsLinksAndNodes } from "../datadistributor";
 
-export const Main = function (sidebar, linkScale) {
-  var self = this;
-  var el;
-  var node;
-  var link;
+export const Main = function (sidebar: ReturnType<typeof Sidebar>, linkScale: ReturnType<typeof interpolate>) {
+  let self = this;
+  let el: HTMLDivElement;
+  let node: ReturnType<typeof Node>;
+  let link: ReturnType<typeof Link>;
 
   function destroy() {
     if (el && el.parentNode) {
@@ -26,9 +31,12 @@ export const Main = function (sidebar, linkScale) {
 
     el.scrollIntoView(false);
     el.classList.add("infobox");
+    // @ts-ignore
     el.destroy = destroy;
 
-    var closeButton = document.createElement("button");
+    let _ = window._;
+    let router = window.router;
+    let closeButton = document.createElement("button");
     closeButton.classList.add("close");
     closeButton.classList.add("ion-close");
     closeButton.setAttribute("aria-label", _.t("close"));
@@ -40,24 +48,24 @@ export const Main = function (sidebar, linkScale) {
 
   self.resetView = destroy;
 
-  self.gotoNode = function gotoNode(nodeData, nodeDict) {
+  self.gotoNode = function gotoNode(nodeData: NodeData, nodeDict: { [k: NodeId]: NodeData }) {
     create();
-    node = new Node(el, nodeData, linkScale, nodeDict);
+    node = Node(el, nodeData, linkScale, nodeDict);
     node.render();
   };
 
-  self.gotoLink = function gotoLink(linkData) {
+  self.gotoLink = function gotoLink(linkData: LinkData[]) {
     create();
-    link = new Link(el, linkData, linkScale);
+    link = Link(el, linkData, linkScale);
     link.render();
   };
 
-  self.gotoLocation = function gotoLocation(locationData) {
+  self.gotoLocation = function gotoLocation(locationData: TargetLocation) {
     create();
     location(el, locationData);
   };
 
-  self.setData = function setData(nodeOrLinkData) {
+  self.setData = function setData(nodeOrLinkData: ObjectsLinksAndNodes) {
     if (typeof node === "object") {
       node.setData(nodeOrLinkData);
     }

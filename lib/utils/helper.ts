@@ -3,7 +3,7 @@ import { snabbdomBundle as sv } from "snabbdom/snabbdom.bundle";
 import { VNode } from "snabbdom/vnode";
 import { Map } from "leaflet";
 import { Node } from "./node";
-import { LinkInfo } from "../config_default";
+import { LinkInfo, NodeInfo } from "../config_default";
 
 export const get = function get(url: string) {
   return new Promise(function (resolve, reject) {
@@ -134,7 +134,7 @@ export const attributeEntry = function attributeEntry(V: typeof sv, children: VN
   }
 };
 
-export const showStat = function showStat(V: typeof sv, linkInfo: LinkInfo, subst: ReplaceMapping) {
+export const showStat = function showStat(V: typeof sv, linkInfo: LinkInfo | NodeInfo, subst: ReplaceMapping) {
   let _ = window._;
   let content = V.h("img", {
     attrs: {
