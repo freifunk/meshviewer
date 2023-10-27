@@ -1,10 +1,12 @@
 import moment from "moment";
 import * as helper from "./helper";
 import Polyglot from "node-polyglot";
-import Navigo from "navigo/lib/navigo.es";
+import { Router } from "./router";
+
+export type LanguageCode = string;
 
 export const Language = function () {
-  let router: Navigo;
+  let router: ReturnType<typeof Router>;
   let config = globalThis.config;
 
   function languageSelect(el) {
@@ -22,12 +24,12 @@ export const Language = function () {
     }
   }
 
-  function setSelectLocale(event) {
+  function setSelectLocale(event: any) {
     router.fullUrl({ lang: event.target.value }, false, true);
   }
 
-  function getLocale(input?: string) {
-    let language = input || (navigator.languages && navigator.languages[0]) || navigator.language;
+  function getLocale(input?: LanguageCode): LanguageCode {
+    let language: LanguageCode = input || (navigator.languages && navigator.languages[0]) || navigator.language;
     let locale = config.supportedLocale[0];
     config.supportedLocale.some(function (item: string) {
       if (language.indexOf(item) !== -1) {
@@ -59,10 +61,10 @@ export const Language = function () {
     }
   }
 
-  function init(routing: Navigo) {
+  function init(routing: ReturnType<typeof Router>) {
     router = routing;
     /** global: _ */
-    window._ = new Polyglot({ locale: getLocale(router.getLang()), allowMissing: true });
+    window._ = new Polyglot({ locale: getLocale(routing.getLang()), allowMissing: true });
     let _ = window._;
     helper.getJSON("locale/" + _.locale() + ".json?" + config.cacheBreaker).then(setTranslation);
     document.querySelector("html").setAttribute("lang", _.locale());

@@ -1,3 +1,5 @@
+import { LanguageCode } from "./utils/language";
+
 interface NodeAttr {
   name: string;
   // value can be a node attribute (1 depth) or a function in utils/node with prefix show
@@ -33,8 +35,8 @@ interface Icon {
 }
 
 interface Domain {
-    name: string;
-    domain: string;
+  name: string;
+  domain: string;
 }
 
 export interface Config {
@@ -48,7 +50,7 @@ export interface Config {
   fullscreenFrame: boolean;
   nodeAttr: NodeAttr[];
   // List of two letter locale names
-  supportedLocale: string[];
+  supportedLocale: LanguageCode[];
   // Cache breaker string used when loading language json files
   cacheBreaker?: string;
   // Color configs
