@@ -1,31 +1,35 @@
-import V from "snabbdom/dist/snabbdom-patch";
+import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
 import * as d3Interpolate from "d3-interpolate";
-
+import { DataDistributor, Filter, ObjectsLinksAndNodes } from "./datadistributor";
 import { GenericNodeFilter } from "./filters/genericnode";
 import * as helper from "./utils/helper";
 import { compare } from "./utils/version";
+import { Moment } from "moment";
+import { Node } from "./utils/node";
 
-export const Proportions = function (filterManager) {
-  var self = this;
-  var scale = d3Interpolate.interpolate(config.forceGraph.tqFrom, config.forceGraph.tqTo);
-  var time;
+export const Proportions = function (filterManager: ReturnType<typeof DataDistributor>) {
+  let self = this;
+  let config = window.config;
+  let _ = window._;
+  let scale = d3Interpolate.interpolate(config.forceGraph.tqFrom, config.forceGraph.tqTo);
+  let time: Moment;
 
-  var statusTable;
-  var fwTable;
-  var baseTable;
-  var depTable;
-  var hwTable;
-  var geoTable;
-  var autoTable;
-  var gatewayTable;
-  var gateway6Table;
-  var domainTable;
+  let statusTable: HTMLTableElement;
+  let fwTable: HTMLTableElement;
+  let baseTable: HTMLTableElement;
+  let depTable: HTMLTableElement;
+  let hwTable: HTMLTableElement;
+  let geoTable: HTMLTableElement;
+  let autoTable: HTMLTableElement;
+  let gatewayTable: HTMLTableElement;
+  let gateway6Table: HTMLTableElement;
+  let domainTable: HTMLTableElement;
 
-  function count(nodes, key, f) {
-    var dict = {};
+  function count(nodes: Node[], key: string[], f?: (k: any) => any) {
+    let dict = {};
 
     nodes.forEach(function (node) {
-      var dictKey = helper.dictGet(node, key.slice(0));
+      let dictKey = helper.dictGet(node, key.slice(0));
 
       if (f !== undefined) {
         dictKey = f(dictKey);
@@ -43,34 +47,34 @@ export const Proportions = function (filterManager) {
     });
   }
 
-  function addFilter(filter) {
+  function addFilter(filter: Filter) {
     return function () {
       filterManager.addFilter(filter);
       return false;
     };
   }
 
-  function fillTable(name, table, data) {
+  function fillTable(name: string, table: HTMLTableElement | undefined, data: any[][]) {
     if (!table) {
       table = document.createElement("table");
     }
 
-    var max = Math.max.apply(
+    let max = Math.max.apply(
       Math,
       data.map(function (data) {
         return data[1];
       }),
     );
 
-    var items = data.map(function (data) {
-      var v = data[1] / max;
+    let items = data.map(function (data) {
+      let v = data[1] / max;
 
-      var filter = new GenericNodeFilter(_.t(name), data[2], data[0], data[3]);
+      let filter = GenericNodeFilter(_.t(name), data[2], data[0], data[3]);
 
-      var a = V.h("a", { on: { click: addFilter(filter) } }, data[0]);
+      let a = V.h("a", { on: { click: addFilter(filter) } }, data[0]);
 
-      var th = V.h("th", a);
-      var td = V.h(
+      let th = V.h("th", a);
+      let td = V.h(
         "td",
         V.h(
           "span",
@@ -86,47 +90,48 @@ export const Proportions = function (filterManager) {
 
       return V.h("tr", [th, td]);
     });
-    var tableNew = V.h("table", { props: { className: "proportion" } }, items);
+    let tableNew = V.h("table", { props: { className: "proportion" } }, items);
     return V.patch(table, tableNew);
   }
 
-  self.setData = function setData(data) {
-    var onlineNodes = data.nodes.online;
-    var nodes = onlineNodes.concat(data.nodes.lost);
+  self.setData = function setData(data: ObjectsLinksAndNodes) {
+    let onlineNodes = data.nodes.online;
+    let nodes = onlineNodes.concat(data.nodes.lost);
     time = data.timestamp;
 
-    function hostnameOfNodeID(nodeid) {
-      var gateway = data.nodeDict[nodeid];
+    function hostnameOfNodeID(nodeid: string | null) {
+      // nodeid is a mac address here
+      let gateway = data.nodeDict[nodeid];
       if (gateway) {
         return gateway.hostname;
       }
       return null;
     }
 
-    var gatewayDict = count(nodes, ["gateway"], hostnameOfNodeID);
-    var gateway6Dict = count(nodes, ["gateway6"], hostnameOfNodeID);
+    let gatewayDict = count(nodes, ["gateway"], hostnameOfNodeID);
+    let gateway6Dict = count(nodes, ["gateway6"], hostnameOfNodeID);
 
-    var statusDict = count(nodes, ["is_online"], function (d) {
+    let statusDict = count(nodes, ["is_online"], function (d) {
       return d ? "online" : "offline";
     });
-    var fwDict = count(nodes, ["firmware", "release"]);
-    var baseDict = count(nodes, ["firmware", "base"]);
-    var deprecationDict = count(nodes, ["model"], function (d) {
+    let fwDict = count(nodes, ["firmware", "release"]);
+    let baseDict = count(nodes, ["firmware", "base"]);
+    let deprecationDict = count(nodes, ["model"], function (d) {
       return config.deprecated && d && config.deprecated.includes(d) ? _.t("yes") : _.t("no");
     });
-    var hwDict = count(nodes, ["model"]);
-    var geoDict = count(nodes, ["location"], function (d) {
+    let hwDict = count(nodes, ["model"]);
+    let geoDict = count(nodes, ["location"], function (d) {
       return d && d.longitude && d.latitude ? _.t("yes") : _.t("no");
     });
 
-    var autoDict = count(nodes, ["autoupdater"], function (d) {
+    let autoDict = count(nodes, ["autoupdater"], function (d) {
       if (d.enabled) {
         return d.branch;
       }
       return _.t("node.deactivated");
     });
 
-    var domainDict = count(nodes, ["domain"], function (d) {
+    let domainDict = count(nodes, ["domain"], function (d) {
       if (config.domainNames) {
         config.domainNames.some(function (t) {
           if (d === t.domain) {
@@ -198,7 +203,7 @@ export const Proportions = function (filterManager) {
     );
   };
 
-  self.render = function render(el) {
+  self.render = function render(el: HTMLElement) {
     self.renderSingle(el, "node.status", statusTable);
     self.renderSingle(el, "node.firmware", fwTable);
     self.renderSingle(el, "node.baseversion", baseTable);
@@ -211,11 +216,11 @@ export const Proportions = function (filterManager) {
     self.renderSingle(el, "node.domain", domainTable);
 
     if (config.globalInfos) {
-      var images = document.createElement("div");
+      let images = document.createElement("div");
       el.appendChild(images);
-      var img = [];
-      var subst = {
-        "{TIME}": time,
+      let img = [];
+      let subst = {
+        "{TIME}": String(time.unix()),
         "{LOCALE}": _.locale(),
       };
       config.globalInfos.forEach(function (globalInfo) {
@@ -226,15 +231,17 @@ export const Proportions = function (filterManager) {
     }
   };
 
-  self.renderSingle = function renderSingle(el, heading, table) {
+  self.renderSingle = function renderSingle(el: HTMLElement, heading: string, table: HTMLTableElement) {
     if (table.children.length > 0) {
-      var h2 = document.createElement("h2");
+      let h2 = document.createElement("h2");
       h2.classList.add("proportion-header");
       h2.textContent = _.t(heading);
       h2.onclick = function onclick() {
+        // @ts-ignore
         table.elm.classList.toggle("hide");
       };
       el.appendChild(h2);
+      // @ts-ignore
       el.appendChild(table.elm);
     }
   };
