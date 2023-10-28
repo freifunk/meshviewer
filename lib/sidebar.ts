@@ -1,18 +1,21 @@
-export const Sidebar = function (el) {
-  var self = this;
+import { CanRender } from "./container";
+
+export const Sidebar = function (el: HTMLElement) {
+  let self = this;
+  let _ = window._;
 
   // Needed to avoid render blocking
-  var gridBreakpoints = {
+  let gridBreakpoints = {
     lg: [992, 446],
     xl: [1200, 560],
   };
 
-  var sidebar = document.createElement("div");
+  let sidebar = document.createElement("div");
   sidebar.classList.add("sidebar");
   el.appendChild(sidebar);
 
-  var button = document.createElement("button");
-  var visibility = new CustomEvent("visibility");
+  let button = document.createElement("button");
+  let visibility = new CustomEvent("visibility");
   sidebar.appendChild(button);
 
   button.classList.add("sidebarhandle");
@@ -22,7 +25,7 @@ export const Sidebar = function (el) {
     sidebar.classList.toggle("hidden");
   };
 
-  var container = document.createElement("div");
+  let container = document.createElement("div");
   container.classList.add("container");
   sidebar.appendChild(container);
 
@@ -35,7 +38,7 @@ export const Sidebar = function (el) {
     return gridBreakpoints.xl[1];
   };
 
-  self.add = function add(d) {
+  self.add = function add(d: CanRender) {
     d.render(container);
   };
 
