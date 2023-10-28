@@ -1,5 +1,5 @@
 import { NodeFilter } from "./filters/nodefilter";
-import { Link, Node } from "./utils/node";
+import { Link, Node, NodeId } from "./utils/node";
 import { Moment } from "moment";
 
 export interface CanSetData {
@@ -21,7 +21,9 @@ export interface NodesByState {
 export interface ObjectsLinksAndNodes {
   links: Link[];
   nodes: NodesByState;
+  nodeDict?: { [k: NodeId]: Node };
   now?: Moment;
+  timestamp?: Moment;
 }
 
 export interface Filter {

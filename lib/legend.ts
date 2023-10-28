@@ -1,19 +1,22 @@
 import * as helper from "./utils/helper";
+import { Language } from "./utils/language";
+import { ObjectsLinksAndNodes } from "./datadistributor";
 
-export const Legend = function (language) {
-  var self = this;
-  var stats = document.createTextNode("");
-  var timestamp = document.createTextNode("");
+export const Legend = function (language: ReturnType<typeof Language>) {
+  let self = this;
+  let stats = document.createTextNode("");
+  let timestamp = document.createTextNode("");
 
-  self.setData = function setData(data) {
-    var totalNodes = Object.keys(data.nodeDict).length;
-    var totalOnlineNodes = data.nodes.online.length;
-    var totalClients = helper.sum(
+  self.setData = function setData(data: ObjectsLinksAndNodes) {
+    let _ = window._;
+    let totalNodes = Object.keys(data.nodeDict).length;
+    let totalOnlineNodes = data.nodes.online.length;
+    let totalClients = helper.sum(
       data.nodes.online.map(function (node) {
         return node.clients;
       }),
     );
-    var totalGateways = helper.sum(
+    let totalGateways = helper.sum(
       data.nodes.online
         .filter(function (node) {
           return node.is_gateway;
@@ -31,14 +34,15 @@ export const Legend = function (language) {
     timestamp.textContent = _.t("sidebar.lastUpdate") + " " + data.timestamp.fromNow();
   };
 
-  self.render = function render(el) {
-    var h1 = document.createElement("h1");
+  self.render = function render(el: HTMLElement) {
+    let config = window.config;
+    let h1 = document.createElement("h1");
     h1.textContent = config.siteName;
     el.appendChild(h1);
 
     language.languageSelect(el);
 
-    var p = document.createElement("p");
+    let p = document.createElement("p");
     p.classList.add("legend");
 
     p.appendChild(stats);
@@ -48,7 +52,7 @@ export const Legend = function (language) {
     if (config.linkList) {
       p.appendChild(document.createElement("br"));
       config.linkList.forEach(function (link) {
-        var a = document.createElement("a");
+        let a = document.createElement("a");
         a.innerText = link.title;
         a.href = link.href;
         p.appendChild(a);
