@@ -2,7 +2,7 @@ import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
 
 export interface Heading {
   name: string;
-  sort: (a: any, b: any) => number;
+  sort?: (a: any, b: any) => number;
   reverse?: Boolean;
   class?: string;
 }
