@@ -1,13 +1,15 @@
-import V from "snabbdom/dist/snabbdom-patch";
-
-import { SortTable } from "./sorttable";
+import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
+import { Heading, SortTable } from "./sorttable";
 import * as helper from "./utils/helper";
+import { Link } from "./utils/node";
+import { interpolate } from "d3-interpolate";
+import { ObjectsLinksAndNodes } from "./datadistributor";
 
-function linkName(link) {
-  return (link.source ? link.source.hostname : link.source.id) + " – " + link.target.hostname;
+function linkName(link: Link) {
+  return (link.source ? link.source.hostname : link.id) + " – " + link.target.hostname;
 }
 
-var headings = [
+let headings: Heading[] = [
   {
     name: "",
     sort: function (a, b) {
@@ -39,11 +41,13 @@ var headings = [
   },
 ];
 
-export const Linklist = function (linkScale) {
-  var table = new SortTable(headings, 3, renderRow);
+export const Linklist = function (linkScale: ReturnType<typeof interpolate>) {
+  let _ = window._;
+  let router = window.router;
+  let table = SortTable(headings, 3, renderRow);
 
-  function renderRow(link) {
-    var td1Content = [
+  function renderRow(link: Link) {
+    let td1Content = [
       V.h(
         "a",
         {
@@ -51,7 +55,7 @@ export const Linklist = function (linkScale) {
             href: router.generateLink({ link: link.id }),
           },
           on: {
-            click: function (e) {
+            click: function (e: Event) {
               router.fullUrl({ link: link.id }, e);
             },
           },
@@ -80,15 +84,15 @@ export const Linklist = function (linkScale) {
     ]);
   }
 
-  this.render = function render(d) {
-    var h2 = document.createElement("h2");
+  this.render = function render(d: HTMLElement) {
+    let h2 = document.createElement("h2");
     h2.textContent = _.t("node.links");
     d.appendChild(h2);
     table.el.elm.classList.add("link-list");
     d.appendChild(table.el.elm);
   };
 
-  this.setData = function setData(d) {
+  this.setData = function setData(d: ObjectsLinksAndNodes) {
     table.setData(d.links);
   };
 };

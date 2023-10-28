@@ -1,5 +1,4 @@
 import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
-import { Neighbour } from "./utils/node";
 
 export interface Heading {
   name: string;
@@ -11,7 +10,7 @@ export interface Heading {
 export const SortTable = function (
   headings: Heading[],
   sortIndex: number,
-  renderRow: { (link: any): any; (node: any): any; (connecting: Neighbour): any },
+  renderRow: (element: any, i: number, all: []) => any,
 ) {
   let self = { el: undefined, setData: undefined };
   let data: any[];
