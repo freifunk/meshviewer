@@ -9,7 +9,7 @@ export const Language = function () {
   let router: ReturnType<typeof Router>;
   let config = globalThis.config;
 
-  function languageSelect(el) {
+  function languageSelect(el: HTMLElement) {
     let select = document.createElement("select");
     select.className = "language-switch";
     select.setAttribute("aria-label", "Language");
@@ -41,7 +41,7 @@ export const Language = function () {
     return locale;
   }
 
-  function setTranslation(translationJson) {
+  function setTranslation(translationJson: { [k: string]: any }) {
     let _ = window._;
     _.extend(translationJson);
 

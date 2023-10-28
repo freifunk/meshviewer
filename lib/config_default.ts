@@ -58,6 +58,7 @@ export interface Link {
 
 export interface Config {
   siteName: string;
+  dataPath: string[];
   linkList?: Link[];
   reverseGeocodingApi: string;
   maxAge: number;
@@ -158,6 +159,7 @@ export interface Config {
 
 export const config: Config = {
   siteName: "",
+  dataPath: [],
   linkList: [],
   reverseGeocodingApi: "https://nominatim.openstreetmap.org/reverse",
   maxAge: 14,
