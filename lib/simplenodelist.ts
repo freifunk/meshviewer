@@ -1,19 +1,21 @@
 import moment from "moment";
-import V from "snabbdom/dist/snabbdom-patch";
+import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
 
 import * as helper from "./utils/helper";
+import { ObjectsLinksAndNodes } from "./datadistributor";
+import { Node } from "./utils/node";
 
-export const SimpleNodelist = function (nodes, field, title) {
-  var self = this;
-  var el;
-  var tbody;
+export const SimpleNodelist = function (nodesState: string, field: string, title: string) {
+  let self = this;
+  let el: HTMLElement;
+  let tbody: HTMLTableSectionElement;
 
-  self.render = function render(d) {
+  self.render = function render(d: HTMLElement) {
     el = d;
   };
 
-  self.setData = function setData(data) {
-    var nodeList = data.nodes[nodes];
+  self.setData = function setData(data: ObjectsLinksAndNodes) {
+    let nodeList = data.nodes[nodesState];
 
     if (nodeList.length === 0) {
       tbody = null;
@@ -21,26 +23,29 @@ export const SimpleNodelist = function (nodes, field, title) {
     }
 
     if (!tbody) {
-      var h2 = document.createElement("h2");
+      let h2 = document.createElement("h2");
       h2.textContent = title;
       el.appendChild(h2);
 
-      var table = document.createElement("table");
+      let table = document.createElement("table");
       table.classList.add("node-list");
       el.appendChild(table);
 
       tbody = document.createElement("tbody");
+      // @ts-ignore
       tbody.last = V.h("tbody");
       table.appendChild(tbody);
     }
 
-    var items = nodeList.map(function (node) {
-      var td0Content = "";
+    let items = nodeList.map(function (node: Node) {
+      let _ = window._;
+      let router = window.router;
+      let td0Content = "";
       if (helper.hasLocation(node)) {
         td0Content = V.h("span", { props: { className: "icon ion-location", title: _.t("location.location") } });
       }
 
-      var td1Content = V.h(
+      let td1Content = V.h(
         "a",
         {
           props: {
@@ -48,7 +53,7 @@ export const SimpleNodelist = function (nodes, field, title) {
             href: router.generateLink({ node: node.node_id }),
           },
           on: {
-            click: function (e) {
+            click: function (e: Event) {
               router.fullUrl({ node: node.node_id }, e);
             },
           },
@@ -59,7 +64,7 @@ export const SimpleNodelist = function (nodes, field, title) {
       return V.h("tr", [V.h("td", td0Content), V.h("td", td1Content), V.h("td", moment(node[field]).from(data.now))]);
     });
 
-    var tbodyNew = V.h("tbody", items);
+    let tbodyNew = V.h("tbody", items);
     tbody = V.patch(tbody, tbodyNew);
   };
 
