@@ -1,11 +1,12 @@
-import V from "snabbdom/dist/snabbdom-patch";
-
-import { SortTable } from "./sorttable";
+import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
+import { Heading, SortTable } from "./sorttable";
 import * as helper from "./utils/helper";
+import { Node } from "./utils/node";
+import { ObjectsLinksAndNodes } from "./datadistributor";
 
-function showUptime(uptime) {
+function showUptime(uptime: number) {
   // 1000ms are 1 second and 60 second are 1min: 60 * 1000 =  60000
-  var seconds = uptime / 60000;
+  let seconds = uptime / 60000;
   if (Math.abs(seconds) < 60) {
     return Math.round(seconds) + " m";
   }
@@ -17,7 +18,7 @@ function showUptime(uptime) {
   return Math.round(seconds) + " d";
 }
 
-var headings = [
+let headings: Heading[] = [
   {
     name: "",
   },
@@ -55,13 +56,16 @@ var headings = [
 ];
 
 export const Nodelist = function () {
-  function renderRow(node) {
-    var td0Content = "";
+  let _ = window._;
+  let router = window.router;
+
+  function renderRow(node: Node) {
+    let td0Content = "";
     if (helper.hasLocation(node)) {
       td0Content = V.h("span", { props: { className: "icon ion-location", title: _.t("location.location") } });
     }
 
-    var td1Content = V.h(
+    let td1Content = V.h(
       "a",
       {
         props: {
@@ -69,7 +73,7 @@ export const Nodelist = function () {
           href: router.generateLink({ node: node.node_id }),
         },
         on: {
-          click: function (e) {
+          click: function (e: Event) {
             router.fullUrl({ node: node.node_id }, e);
           },
         },
@@ -86,23 +90,23 @@ export const Nodelist = function () {
     ]);
   }
 
-  var table = new SortTable(headings, 1, renderRow);
+  let table = SortTable(headings, 1, renderRow);
 
-  this.render = function render(d) {
-    var h2 = document.createElement("h2");
+  this.render = function render(d: HTMLElement) {
+    let h2 = document.createElement("h2");
     h2.textContent = _.t("node.all");
     d.appendChild(h2);
     table.el.elm.classList.add("node-list");
     d.appendChild(table.el.elm);
   };
 
-  this.setData = function setData(nodesData) {
-    var nodesList = nodesData.nodes.all.map(function (node) {
-      var nodeData = Object.create(node);
+  this.setData = function setData(nodesData: ObjectsLinksAndNodes) {
+    let nodesList = nodesData.nodes.all.map(function (node) {
+      let nodeData = Object.create(node);
       if (node.is_online) {
-        nodeData.uptime = nodesData.now - new Date(node.uptime).getTime();
+        nodeData.uptime = nodesData.now.valueOf() - new Date(node.uptime).getTime();
       } else {
-        nodeData.uptime = node.lastseen - nodesData.now;
+        nodeData.uptime = node.lastseen.valueOf() - nodesData.now.valueOf();
       }
       return nodeData;
     });
