@@ -144,6 +144,7 @@ export interface Config {
       fillOpacity: number;
     };
   };
+  globalInfos: LinkInfo[];
   linkTypeInfos: LinkInfo[];
   linkInfos: LinkInfo[];
   nodeInfos: NodeInfo[];
@@ -429,6 +430,7 @@ export const config: Config = {
   deprecation_enabled: true,
   deprecation_text: undefined,
   domainNames: [],
+  globalInfos: [],
   linkTypeInfos: [],
   linkInfos: [],
   nodeInfos: [],
