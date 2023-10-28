@@ -8,6 +8,6 @@ declare global {
   interface Window {
     config: Config;
     router: ReturnType<typeof Router>;
-    _: Polyglot;
+    _: Polyglot & { phrases?: { [k: string]: any } };
   }
 }

@@ -5,15 +5,17 @@ import { Router } from "./utils/router";
 import { Gui } from "./gui";
 import { Language } from "./utils/language";
 import * as helper from "./utils/helper";
+import { Link } from "./utils/node";
 
 export const main = () => {
-  function handleData(data) {
-    var timestamp;
-    var nodes = [];
-    var links = [];
-    var nodeDict = {};
+  function handleData(data: { links: Link[]; nodes: Node[]; timestamp: string }[]) {
+    let config = window.config;
+    let timestamp: string;
+    let nodes = [];
+    let links = [];
+    let nodeDict = {};
 
-    for (var i = 0; i < data.length; ++i) {
+    for (let i = 0; i < data.length; ++i) {
       nodes = nodes.concat(data[i].nodes);
       timestamp = data[i].timestamp;
       links = links.concat(data[i].links);
@@ -24,17 +26,17 @@ export const main = () => {
       node.lastseen = moment.utc(node.lastseen).local();
     });
 
-    var age = moment().subtract(config.maxAge, "days");
+    let age = moment().subtract(config.maxAge, "days");
 
-    var online = nodes.filter(function (node) {
+    let online = nodes.filter(function (node) {
       return node.is_online;
     });
-    var offline = nodes.filter(function (node) {
+    let offline = nodes.filter(function (node) {
       return !node.is_online;
     });
 
-    var newnodes = helper.limit("firstseen", age, helper.sortByKey("firstseen", online));
-    var lostnodes = helper.limit("lastseen", age, helper.sortByKey("lastseen", offline));
+    let newnodes = helper.limit("firstseen", age, helper.sortByKey("firstseen", online));
+    let lostnodes = helper.limit("lastseen", age, helper.sortByKey("lastseen", offline));
 
     nodes.forEach(function (node) {
       node.neighbours = [];
@@ -75,10 +77,11 @@ export const main = () => {
     };
   }
 
-  var language = new Language();
-  window.router = new Router(language);
+  let config = window.config;
+  let language = Language();
+  let router = (window.router = Router(language));
 
-  config.dataPath.forEach(function (element, i) {
+  config.dataPath.forEach(function (_element, i) {
     config.dataPath[i] += "meshviewer.json";
   });
 
@@ -91,8 +94,9 @@ export const main = () => {
   update()
     .then(function (nodesData) {
       return new Promise(function (resolve, reject) {
-        var count = 0;
+        let count = 0;
         (function waitForLanguage() {
+          let _ = window._;
           if (Object.keys(_.phrases).length > 0) {
             resolve(nodesData);
           } else if (count > 500) {
@@ -105,7 +109,7 @@ export const main = () => {
       });
     })
     .then(function (nodesData) {
-      var gui = new Gui(language);
+      let gui = new Gui(language);
       gui.setData(nodesData);
       router.setData(nodesData);
       router.resolve();
