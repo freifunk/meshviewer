@@ -183,7 +183,7 @@ export function Node(
       reverse: true,
     },
   ];
-  let tableNeighbour = new SortTable(headings, 1, renderNeighbourRow);
+  let tableNeighbour = SortTable(headings, 1, renderNeighbourRow);
 
   // Prepare deprecation warning. At first not displayed, text follows later
   let deprecation = document.createElement("div");

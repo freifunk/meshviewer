@@ -1,13 +1,15 @@
-export const Tabs = function () {
-  var self = this;
+import { CanRender } from "./container";
 
-  var tabs = document.createElement("ul");
+export const Tabs = function () {
+  let self = this;
+
+  let tabs = document.createElement("ul");
   tabs.classList.add("tabs");
 
-  var container = document.createElement("div");
+  let container = document.createElement("div");
 
-  function gotoTab(li) {
-    for (var i = 0; i < tabs.children.length; i++) {
+  function gotoTab(li: HTMLLIElement) {
+    for (let i = 0; i < tabs.children.length; i++) {
       tabs.children[i].classList.remove("visible");
     }
 
@@ -17,9 +19,10 @@ export const Tabs = function () {
 
     li.classList.add("visible");
 
-    var tab = document.createElement("div");
+    let tab = document.createElement("div");
     tab.classList.add("tab");
     container.appendChild(tab);
+    // @ts-ignore
     li.child.render(tab);
   }
 
@@ -29,16 +32,18 @@ export const Tabs = function () {
     return false;
   }
 
-  self.add = function add(title, child) {
-    var li = document.createElement("li");
+  self.add = function add(title: string, child: CanRender) {
+    let _ = window._;
+    let li = document.createElement("li");
     li.textContent = _.t(title);
     li.onclick = switchTab;
+    // @ts-ignore
     li.child = child;
     tabs.appendChild(li);
 
-    var anyVisible = false;
+    let anyVisible = false;
 
-    for (var i = 0; i < tabs.children.length; i++) {
+    for (let i = 0; i < tabs.children.length; i++) {
       if (tabs.children[i].classList.contains("visible")) {
         anyVisible = true;
         break;
@@ -50,7 +55,7 @@ export const Tabs = function () {
     }
   };
 
-  self.render = function render(el) {
+  self.render = function render(el: HTMLElement) {
     el.appendChild(tabs);
     el.appendChild(container);
   };
