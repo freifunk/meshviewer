@@ -1,5 +1,7 @@
 import { LanguageCode } from "./utils/language";
 import { Node, NodeId } from "./utils/node";
+import { GeoJSONOptions, GridLayerOptions, LatLngBoundsExpression } from "leaflet";
+import { GeoJsonObject } from "geojson";
 
 interface NodeAttr {
   name: string;
@@ -56,9 +58,20 @@ export interface Link {
   href: string;
 }
 
+export interface MapLayer {
+  name: string;
+  url: string;
+  config: GridLayerOptions & {
+    start?: number; // Hour
+    end?: number; // Hour
+    order: number;
+  };
+}
+
 export interface Config {
   siteName: string;
   dataPath: string[];
+  mapLayers: MapLayer[];
   linkList?: Link[];
   reverseGeocodingApi: string;
   maxAge: number;
@@ -156,12 +169,17 @@ export interface Config {
   devicePictures: string;
   devicePicturesSource: string;
   devicePicturesLicense: string;
+  geo?: { json: GeoJsonObject | GeoJsonObject[]; option: GeoJSONOptions }[];
+  fixedCenter: LatLngBoundsExpression;
 }
 
 export const config: Config = {
   siteName: "",
   dataPath: [],
+  mapLayers: [],
   linkList: [],
+  fixedCenter: undefined,
+  geo: [],
   reverseGeocodingApi: "https://nominatim.openstreetmap.org/reverse",
   maxAge: 14,
   maxAgeAlert: 3,
