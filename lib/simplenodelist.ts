@@ -6,7 +6,10 @@ import { ObjectsLinksAndNodes } from "./datadistributor";
 import { Node } from "./utils/node";
 
 export const SimpleNodelist = function (nodesState: string, field: string, title: string) {
-  let self = this;
+  let self = {
+    render: undefined,
+    setData: undefined,
+  };
   let el: HTMLElement;
   let tbody: HTMLTableSectionElement;
 

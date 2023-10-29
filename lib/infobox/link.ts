@@ -2,7 +2,6 @@ import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
 import * as helper from "../utils/helper";
 import { LinkInfo } from "../config_default";
 import { Link as LinkData } from "../utils/node";
-import { interpolate } from "d3-interpolate";
 
 function showStatImg(images: HTMLElement[], linkInfo: LinkInfo, link: LinkData, time: string) {
   let _ = window._;
@@ -24,7 +23,7 @@ function showStatImg(images: HTMLElement[], linkInfo: LinkInfo, link: LinkData, 
   images.push(helper.showStat(V, linkInfo, subst));
 }
 
-export const Link = function (el: HTMLElement, linkData: LinkData[], linkScale: ReturnType<typeof interpolate>) {
+export const Link = function (el: HTMLElement, linkData: LinkData[], linkScale: (t: any) => any) {
   let self = {
     render: undefined,
     setData: undefined,

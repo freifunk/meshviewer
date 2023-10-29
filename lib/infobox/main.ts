@@ -2,13 +2,18 @@ import { Link } from "./link";
 import { Node } from "./node";
 import { location } from "./location";
 import { Link as LinkData, Node as NodeData, NodeId } from "../utils/node";
-import { interpolate } from "d3-interpolate";
 import { Sidebar } from "../sidebar";
 import { TargetLocation } from "../utils/router";
 import { ObjectsLinksAndNodes } from "../datadistributor";
 
-export const Main = function (sidebar: ReturnType<typeof Sidebar>, linkScale: ReturnType<typeof interpolate>) {
-  let self = this;
+export const Main = function (sidebar: ReturnType<typeof Sidebar>, linkScale: (t: any) => any) {
+  let self = {
+    resetView: undefined,
+    gotoNode: undefined,
+    gotoLink: undefined,
+    gotoLocation: undefined,
+    setData: undefined,
+  };
   let el: HTMLDivElement;
   let node: ReturnType<typeof Node>;
   let link: ReturnType<typeof Link>;

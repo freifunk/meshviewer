@@ -2,7 +2,8 @@ import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
 import { Heading, SortTable } from "./sorttable";
 import * as helper from "./utils/helper";
 import { Node } from "./utils/node";
-import { ObjectsLinksAndNodes } from "./datadistributor";
+import { CanSetData, ObjectsLinksAndNodes } from "./datadistributor";
+import { CanRender } from "./container";
 
 function showUptime(uptime: number) {
   // 1000ms are 1 second and 60 second are 1min: 60 * 1000 =  60000
@@ -55,9 +56,13 @@ let headings: Heading[] = [
   },
 ];
 
-export const Nodelist = function () {
+export const Nodelist = function (): CanSetData & CanRender {
   let _ = window._;
   let router = window.router;
+  let self = {
+    render: undefined,
+    setData: undefined,
+  };
 
   function renderRow(node: Node) {
     let td0Content = "";
@@ -92,7 +97,7 @@ export const Nodelist = function () {
 
   let table = SortTable(headings, 1, renderRow);
 
-  this.render = function render(d: HTMLElement) {
+  self.render = function render(d: HTMLElement) {
     let h2 = document.createElement("h2");
     h2.textContent = _.t("node.all");
     d.appendChild(h2);
@@ -100,7 +105,7 @@ export const Nodelist = function () {
     d.appendChild(table.el.elm);
   };
 
-  this.setData = function setData(nodesData: ObjectsLinksAndNodes) {
+  self.setData = function setData(nodesData: ObjectsLinksAndNodes) {
     let nodesList = nodesData.nodes.all.map(function (node) {
       let nodeData = Object.create(node);
       if (node.is_online) {
@@ -112,5 +117,10 @@ export const Nodelist = function () {
     });
 
     table.setData(nodesList);
+  };
+
+  return {
+    setData: self.setData,
+    render: self.render,
   };
 };

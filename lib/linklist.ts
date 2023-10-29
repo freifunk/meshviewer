@@ -2,8 +2,8 @@ import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
 import { Heading, SortTable } from "./sorttable";
 import * as helper from "./utils/helper";
 import { Link } from "./utils/node";
-import { interpolate } from "d3-interpolate";
-import { ObjectsLinksAndNodes } from "./datadistributor";
+import { CanSetData, ObjectsLinksAndNodes } from "./datadistributor";
+import { CanRender } from "./container";
 
 function linkName(link: Link) {
   return (link.source ? link.source.hostname : link.id) + " – " + link.target.hostname;
@@ -41,10 +41,14 @@ let headings: Heading[] = [
   },
 ];
 
-export const Linklist = function (linkScale: ReturnType<typeof interpolate>) {
+export const Linklist = function (linkScale: (t: any) => any): CanRender & CanSetData {
   let _ = window._;
   let router = window.router;
   let table = SortTable(headings, 3, renderRow);
+  let self = {
+    render: undefined,
+    setData: undefined,
+  };
 
   function renderRow(link: Link) {
     let td1Content = [
@@ -84,7 +88,7 @@ export const Linklist = function (linkScale: ReturnType<typeof interpolate>) {
     ]);
   }
 
-  this.render = function render(d: HTMLElement) {
+  self.render = function render(d: HTMLElement) {
     let h2 = document.createElement("h2");
     h2.textContent = _.t("node.links");
     d.appendChild(h2);
@@ -92,7 +96,12 @@ export const Linklist = function (linkScale: ReturnType<typeof interpolate>) {
     d.appendChild(table.el.elm);
   };
 
-  this.setData = function setData(d: ObjectsLinksAndNodes) {
+  self.setData = function setData(d: ObjectsLinksAndNodes) {
     table.setData(d.links);
+  };
+
+  return {
+    setData: self.setData,
+    render: self.render,
   };
 };

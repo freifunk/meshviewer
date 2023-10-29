@@ -187,6 +187,10 @@ export const Router = function (language: ReturnType<typeof Language>) {
     views[key] = view;
   };
 
+  router.currentView = function currentView(): string | undefined {
+    return current.view;
+  };
+
   router.setData = function setData(data: Objects) {
     objects = data;
   };
