@@ -1,10 +1,12 @@
 import * as L from "leaflet";
 import RBush from "rbush";
-
 import * as helper from "../utils/helper";
+import { Node } from "../utils/node";
+import { ObjectsLinksAndNodes } from "../datadistributor";
+import { Coords } from "leaflet";
 
 export const ClientLayer = L.GridLayer.extend({
-  mapRTree: function mapRTree(node) {
+  mapRTree: function mapRTree(node: Node) {
     return {
       minX: node.location.latitude,
       minY: node.location.longitude,
@@ -13,19 +15,23 @@ export const ClientLayer = L.GridLayer.extend({
       node: node,
     };
   },
-  setData: function (data) {
+  setData: function (data: ObjectsLinksAndNodes) {
     let rtreeOnlineAll = new RBush(9);
 
     this.data = rtreeOnlineAll.load(data.nodes.online.filter(helper.hasLocation).map(this.mapRTree));
 
     // pre-calculate start angles
-    this.data.all().forEach(function (positionedNode) {
+    this.data.all().forEach(function (positionedNode: { startAngle: number; node: Node }) {
       positionedNode.startAngle = (parseInt(positionedNode.node.node_id.substr(10, 2), 16) / 255) * 2 * Math.PI;
     });
     this.redraw();
   },
-  createTile: function (tilePoint) {
-    let tile = L.DomUtil.create("canvas", "leaflet-tile");
+  createTile: function (tilePoint: Coords) {
+    let tile: HTMLElement & {
+      width?: number;
+      height?: number;
+      getContext?: (type: string) => CanvasRenderingContext2D;
+    } = L.DomUtil.create("canvas", "leaflet-tile");
 
     let tileSize = this.options.tileSize;
     tile.width = tileSize;
@@ -50,7 +56,7 @@ export const ClientLayer = L.GridLayer.extend({
 
     let startDistance = 10;
 
-    nodes.forEach(function (node) {
+    nodes.forEach(function (node: { node: Node; startAngle: number }) {
       let point = map.project([node.node.location.latitude, node.node.location.longitude]);
 
       point.x -= size.x;
