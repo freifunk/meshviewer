@@ -2,6 +2,8 @@ import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
 import moment, { Moment } from "moment";
 import * as helper from "./helper";
 
+export type LinkId = string;
+
 export interface Link {
   type: string; // wifi, vpn etc
   id: LinkId;
@@ -60,12 +62,6 @@ export interface Node {
   gateway: NodeId;
   gateway6: string; // mac address for some reason
   autoupdater: Autoupdater;
-}
-
-export type LinkId = string;
-
-export interface Link {
-  id: LinkId;
 }
 
 let self = {
