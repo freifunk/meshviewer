@@ -4,6 +4,11 @@ import { ClientLayer } from "./map/clientlayer";
 import { LabelLayer } from "./map/labellayer";
 import { Button } from "./map/button";
 import "./map/activearea";
+import { Sidebar } from "./sidebar";
+import { LatLng } from "leaflet";
+import { Geo } from "./config_default";
+import { Link, LinkId, Node, NodeId } from "./utils/node";
+import { ObjectsLinksAndNodes } from "./datadistributor";
 
 let options = {
   worldCopyJump: true,
@@ -11,7 +16,7 @@ let options = {
   minZoom: 0,
 };
 
-export const Map = function (linkScale, sidebar, buttons) {
+export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typeof Sidebar>, buttons: HTMLElement) {
   let self = {
     setData: undefined,
     resetView: undefined,
@@ -21,11 +26,11 @@ export const Map = function (linkScale, sidebar, buttons) {
     destroy: undefined,
     render: undefined,
   };
-  let savedView;
+  let savedView: { center: LatLng; zoom: number } | undefined;
   let config = window.config;
 
-  let map;
-  let layerControl;
+  let map: L.Map & { setActiveArea?: any };
+  let layerControl: L.Control.Layers;
   let baseLayers = {};
 
   function saveView() {
@@ -94,7 +99,7 @@ export const Map = function (linkScale, sidebar, buttons) {
     baseLayers[layer.name] = layer.layer;
   });
 
-  let button = new Button(map, buttons);
+  let button = Button(map, buttons);
 
   map.on("locationfound", button.locationFound);
   map.on("locationerror", button.locationError);
@@ -102,7 +107,7 @@ export const Map = function (linkScale, sidebar, buttons) {
   map.on("contextmenu", contextMenuOpenLayerMenu);
 
   if (config.geo) {
-    [].forEach.call(config.geo, function (geo) {
+    [].forEach.call(config.geo, function (geo?: Geo) {
       if (geo) {
         L.geoJSON(geo.json, geo.option).addTo(map);
       }
@@ -116,10 +121,12 @@ export const Map = function (linkScale, sidebar, buttons) {
 
   map.zoomControl.setPosition("topright");
 
+  // @ts-ignore
   let clientLayer = new ClientLayer({ minZoom: config.clientZoom });
   clientLayer.addTo(map);
   clientLayer.setZIndex(5);
 
+  // @ts-ignore
   let labelLayer = new LabelLayer({ minZoom: config.labelZoom });
   labelLayer.addTo(map);
   labelLayer.setZIndex(6);
@@ -139,13 +146,13 @@ export const Map = function (linkScale, sidebar, buttons) {
       map.setZoom(map.options.maxZoom);
     }
 
-    let style = document.querySelector('.css-mode:not([media="not"])');
+    let style: Element & { media?: string } = document.querySelector('.css-mode:not([media="not"])');
     if (style && e.layer.options.mode !== "" && !style.classList.contains(e.layer.options.mode)) {
       style.media = "not";
       labelLayer.updateLayer();
     }
     if (e.layer.options.mode) {
-      let newStyle = document.querySelector(".css-mode." + e.layer.options.mode);
+      let newStyle: Element & { media?: string } = document.querySelector(".css-mode." + e.layer.options.mode);
       newStyle.media = "";
       newStyle.appendChild(document.createTextNode(""));
       labelLayer.updateLayer();
@@ -154,17 +161,21 @@ export const Map = function (linkScale, sidebar, buttons) {
 
   map.on("load", function () {
     let inputs = document.querySelectorAll(".leaflet-control-layers-selector");
-    [].forEach.call(inputs, function (input) {
+    [].forEach.call(inputs, function (input: HTMLInputElement) {
       input.setAttribute("role", "radiogroup");
+      // @ts-ignore
       input.setAttribute("aria-label", input.nextSibling.innerHTML.trim());
     });
   });
 
   let nodeDict = {};
   let linkDict = {};
-  let highlight;
+  let highlight: { type: "node"; o: Node } | { type: "link"; o: Link } | undefined;
 
-  function resetMarkerStyles(nodes, links) {
+  function resetMarkerStyles(
+    nodes: { [k: NodeId]: { resetStyle: () => any } },
+    links: { [k: LinkId]: { resetStyle: () => any } },
+  ) {
     Object.keys(nodes).forEach(function (id) {
       nodes[id].resetStyle();
     });
@@ -174,12 +185,12 @@ export const Map = function (linkScale, sidebar, buttons) {
     });
   }
 
-  function setView(bounds, zoom) {
+  function setView(bounds: L.LatLngBoundsExpression, zoom?: number) {
     map.fitBounds(bounds, { maxZoom: zoom ? zoom : config.nodeZoom });
   }
 
-  function goto(element) {
-    let bounds;
+  function goto(element: { getLatLng: () => L.LatLngExpression; getBounds?: () => L.LatLngBoundsExpression }) {
+    let bounds: L.LatLngBoundsExpression;
 
     if ("getBounds" in element) {
       bounds = element.getBounds();
@@ -192,9 +203,9 @@ export const Map = function (linkScale, sidebar, buttons) {
     return element;
   }
 
-  function updateView(nopanzoom) {
+  function updateView(nopanzoom?: boolean) {
     resetMarkerStyles(nodeDict, linkDict);
-    let target;
+    let target: { setStyle: any; getLatLng: () => L.LatLngExpression; getBounds?: () => L.LatLngBoundsExpression };
 
     if (highlight !== undefined) {
       if (highlight.type === "node" && nodeDict[highlight.o.node_id]) {
@@ -217,7 +228,7 @@ export const Map = function (linkScale, sidebar, buttons) {
     }
   }
 
-  self.setData = function setData(data) {
+  self.setData = function setData(data: ObjectsLinksAndNodes) {
     nodeDict = {};
     linkDict = {};
 
@@ -233,19 +244,19 @@ export const Map = function (linkScale, sidebar, buttons) {
     updateView();
   };
 
-  self.gotoNode = function gotoNode(node) {
+  self.gotoNode = function gotoNode(node: Node) {
     button.disableTracking();
     highlight = { type: "node", o: node };
     updateView();
   };
 
-  self.gotoLink = function gotoLink(link) {
+  self.gotoLink = function gotoLink(link: Link[]) {
     button.disableTracking();
     highlight = { type: "link", o: link[0] };
     updateView();
   };
 
-  self.gotoLocation = function gotoLocation(destination) {
+  self.gotoLocation = function gotoLocation(destination: L.LatLngLiteral & { zoom: number }) {
     button.disableTracking();
     map.setView([destination.lat, destination.lng], destination.zoom);
   };
@@ -260,7 +271,7 @@ export const Map = function (linkScale, sidebar, buttons) {
     }
   };
 
-  self.render = function render(d) {
+  self.render = function render(d: HTMLElement) {
     d.appendChild(el);
     map.invalidateSize();
   };

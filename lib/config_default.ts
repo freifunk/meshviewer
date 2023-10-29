@@ -68,6 +68,11 @@ export interface MapLayer {
   };
 }
 
+export interface Geo {
+  json: GeoJsonObject;
+  option: GeoJSONOptions;
+}
+
 export interface Config {
   siteName: string;
   dataPath: string[];
@@ -169,7 +174,7 @@ export interface Config {
   devicePictures: string;
   devicePicturesSource: string;
   devicePicturesLicense: string;
-  geo?: { json: GeoJsonObject | GeoJsonObject[]; option: GeoJSONOptions }[];
+  geo?: Geo[];
   fixedCenter: LatLngBoundsExpression;
 }
 
