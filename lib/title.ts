@@ -1,6 +1,14 @@
 import { Link, Node } from "./utils/node";
 
 export const Title = function () {
+  let self = {
+    resetView: undefined,
+    gotoNode: undefined,
+    gotoLink: undefined,
+    gotoLocation: undefined,
+    destroy: undefined,
+  };
+
   function setTitle(addedTitle?: string) {
     let config = window.config;
     let title = [config.siteName];
@@ -12,23 +20,23 @@ export const Title = function () {
     document.title = title.join(" - ");
   }
 
-  this.resetView = function resetView() {
+  self.resetView = function resetView() {
     setTitle();
   };
 
-  this.gotoNode = function gotoNode(node: Node) {
+  self.gotoNode = function gotoNode(node: Node) {
     setTitle(node.hostname);
   };
 
-  this.gotoLink = function gotoLink(link: Link[]) {
+  self.gotoLink = function gotoLink(link: Link[]) {
     setTitle(link[0].source.hostname + " \u21D4 " + link[0].target.hostname);
   };
 
-  this.gotoLocation = function gotoLocation() {
+  self.gotoLocation = function gotoLocation() {
     // ignore
   };
 
-  this.destroy = function destroy() {};
+  self.destroy = function destroy() {};
 
-  return this;
+  return self;
 };

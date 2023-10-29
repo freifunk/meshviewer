@@ -17,20 +17,26 @@ import { Main as Infobox } from "./infobox/main";
 import { FilterGui } from "./filters/filtergui";
 import { HostnameFilter } from "./filters/hostname";
 import * as helper from "./utils/helper";
+import { Language } from "./utils/language";
 
-export const Gui = function (language) {
-  var self = this;
-  var content;
-  var contentDiv;
+export const Gui = function (language: ReturnType<typeof Language>) {
+  let self = {
+    setData: undefined,
+  };
+  let content: ReturnType<typeof Map>;
+  let contentDiv: HTMLDivElement;
+  let router = window.router;
+  let config = window.config;
+  let _ = window._;
 
-  var linkScale = interpolate(config.map.tqFrom, config.map.tqTo);
-  var sidebar;
+  let linkScale = interpolate(config.map.tqFrom, config.map.tqTo);
+  let sidebar: ReturnType<typeof Sidebar>;
 
-  var buttons = document.createElement("div");
+  let buttons = document.createElement("div");
   buttons.classList.add("buttons");
 
-  var fanout = new DataDistributor();
-  var fanoutUnfiltered = new DataDistributor();
+  let fanout = DataDistributor();
+  let fanoutUnfiltered = DataDistributor();
   fanoutUnfiltered.add(fanout);
 
   function removeContent() {
@@ -46,39 +52,39 @@ export const Gui = function (language) {
     content = null;
   }
 
-  function addContent(Content) {
+  function addContent(map: typeof Map) {
     removeContent();
 
-    content = new Content(linkScale, sidebar, buttons);
+    content = map(linkScale, sidebar, buttons);
     content.render(contentDiv);
 
     fanout.add(content);
     router.addTarget(content);
   }
 
-  function mkView(Content) {
+  function mkView(map: typeof Map) {
     return function () {
-      addContent(Content);
+      addContent(map);
     };
   }
 
-  var loader = document.getElementsByClassName("loader")[0];
+  let loader = document.getElementsByClassName("loader")[0];
   loader.classList.add("hide");
 
   contentDiv = document.createElement("div");
   contentDiv.classList.add("content");
   document.body.appendChild(contentDiv);
 
-  sidebar = new Sidebar(document.body);
+  sidebar = Sidebar(document.body);
 
   contentDiv.appendChild(buttons);
 
-  var buttonToggle = document.createElement("button");
+  let buttonToggle = document.createElement("button");
   buttonToggle.classList.add("ion-eye");
   buttonToggle.setAttribute("aria-label", _.t("button.switchView"));
   buttonToggle.onclick = function onclick() {
-    var data;
-    if (content.constructor === Map) {
+    let data: {};
+    if (router.currentView() === "map") {
       data = { view: "graph", lat: undefined, lng: undefined, zoom: undefined };
     } else {
       data = { view: "map" };
@@ -89,7 +95,7 @@ export const Gui = function (language) {
   buttons.appendChild(buttonToggle);
 
   if (config.fullscreen || (config.fullscreenFrame && window.frameElement)) {
-    var buttonFullscreen = document.createElement("button");
+    let buttonFullscreen = document.createElement("button");
     buttonFullscreen.classList.add("ion-full-enter");
     buttonFullscreen.setAttribute("aria-label", _.t("button.fullscreen"));
     buttonFullscreen.onclick = function onclick() {
@@ -99,19 +105,19 @@ export const Gui = function (language) {
     buttons.appendChild(buttonFullscreen);
   }
 
-  var title = new Title();
+  let title = Title();
 
-  var header = new Container("header");
-  var infobox = new Infobox(sidebar, linkScale);
-  var tabs = new Tabs();
-  var overview = new Container();
-  var legend = new Legend(language);
-  var newnodeslist = new SimpleNodelist("new", "firstseen", _.t("node.new"));
-  var lostnodeslist = new SimpleNodelist("lost", "lastseen", _.t("node.missing"));
-  var nodelist = new Nodelist();
-  var linklist = new Linklist(linkScale);
-  var statistics = new Proportions(fanout);
-  var about = new About(config.devicePicturesSource, config.devicePicturesLicense);
+  let header = Container("header");
+  let infobox = Infobox(sidebar, linkScale);
+  let tabs = Tabs();
+  let overview = Container();
+  let legend = Legend(language);
+  let newnodeslist = SimpleNodelist("new", "firstseen", _.t("node.new"));
+  let lostnodeslist = SimpleNodelist("lost", "lastseen", _.t("node.missing"));
+  let nodelist = Nodelist();
+  let linklist = Linklist(linkScale);
+  let statistics = Proportions(fanout);
+  let about = About(config.devicePicturesSource, config.devicePicturesLicense);
 
   fanoutUnfiltered.add(legend);
   fanoutUnfiltered.add(newnodeslist);
@@ -127,11 +133,11 @@ export const Gui = function (language) {
   overview.add(newnodeslist);
   overview.add(lostnodeslist);
 
-  var filterGui = new FilterGui(fanout);
+  let filterGui = FilterGui(fanout);
   fanout.watchFilters(filterGui);
   header.add(filterGui);
 
-  var hostnameFilter = new HostnameFilter();
+  let hostnameFilter = HostnameFilter();
   fanout.addFilter(hostnameFilter);
 
   sidebar.add(tabs);

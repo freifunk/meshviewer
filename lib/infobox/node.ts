@@ -4,7 +4,6 @@ import { SortTable } from "../sorttable";
 import * as helper from "../utils/helper";
 import nodef, { Neighbour, Node as NodeData, NodeId } from "../utils/node";
 import { NodeInfo } from "../config_default";
-import { interpolate } from "d3-interpolate";
 
 function showStatImg(nodeInfo: NodeInfo, node: NodeData) {
   let config = window.config;
@@ -42,12 +41,7 @@ function showDevicePictures(pictures: string, device: NodeData) {
   return helper.showDevicePicture(V, pictures, subst);
 }
 
-export function Node(
-  el: HTMLElement,
-  node: NodeData,
-  linkScale: ReturnType<typeof interpolate>,
-  nodeDict: { [k: NodeId]: NodeData },
-) {
+export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any, nodeDict: { [k: NodeId]: NodeData }) {
   let _ = window._;
   let config = window.config;
   let router = window.router;

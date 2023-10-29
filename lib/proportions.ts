@@ -8,7 +8,11 @@ import { Moment } from "moment";
 import { Node } from "./utils/node";
 
 export const Proportions = function (filterManager: ReturnType<typeof DataDistributor>) {
-  let self = this;
+  let self = {
+    setData: undefined,
+    render: undefined,
+    renderSingle: undefined,
+  };
   let config = window.config;
   let _ = window._;
   let scale = d3Interpolate.interpolate(config.forceGraph.tqFrom, config.forceGraph.tqTo);

@@ -1,5 +1,7 @@
-export const About = function (picturesSource: string, picturesLicense: string) {
-  this.render = function render(d) {
+import { CanRender } from "./container";
+
+export const About = function (picturesSource: string, picturesLicense: string): CanRender {
+  function render(d: HTMLElement) {
     let _ = window._;
     d.innerHTML =
       _.t("sidebar.aboutInfo") +
@@ -59,5 +61,9 @@ export const About = function (picturesSource: string, picturesLicense: string) 
       "<p>The source code is available at " +
       '<a href="https://github.com/freifunk/meshviewer">' +
       "https://github.com/freifunk/meshviewer</a>.</p>";
+  }
+
+  return {
+    render: render,
   };
 };

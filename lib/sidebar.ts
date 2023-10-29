@@ -1,7 +1,15 @@
 import { CanRender } from "./container";
 
 export const Sidebar = function (el: HTMLElement) {
-  let self = this;
+  let self = {
+    getWidth: undefined,
+    add: undefined,
+    ensureVisible: undefined,
+    hide: undefined,
+    reveal: undefined,
+    container: undefined,
+    button: undefined,
+  };
   let _ = window._;
 
   // Needed to avoid render blocking

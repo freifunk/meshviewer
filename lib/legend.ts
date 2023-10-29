@@ -3,7 +3,10 @@ import { Language } from "./utils/language";
 import { ObjectsLinksAndNodes } from "./datadistributor";
 
 export const Legend = function (language: ReturnType<typeof Language>) {
-  let self = this;
+  let self = {
+    setData: undefined,
+    render: undefined,
+  };
   let stats = document.createTextNode("");
   let timestamp = document.createTextNode("");
 

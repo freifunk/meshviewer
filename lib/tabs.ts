@@ -1,7 +1,10 @@
 import { CanRender } from "./container";
 
 export const Tabs = function () {
-  let self = this;
+  let self = {
+    add: undefined,
+    render: undefined,
+  };
 
   let tabs = document.createElement("ul");
   tabs.classList.add("tabs");

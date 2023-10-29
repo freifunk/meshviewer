@@ -109,7 +109,7 @@ export const main = () => {
       });
     })
     .then(function (nodesData) {
-      let gui = new Gui(language);
+      let gui = Gui(language);
       gui.setData(nodesData);
       router.setData(nodesData);
       router.resolve();
