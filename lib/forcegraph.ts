@@ -7,21 +7,33 @@ import * as d3Timer from "d3-timer";
 import * as d3Zoom from "d3-zoom";
 
 import math from "./utils/math";
-import draw from "./forcegraph/draw";
+import draw, { MapLink } from "./forcegraph/draw";
+import { Sidebar } from "./sidebar";
+import { ClientPointEvent } from "d3-selection";
+import { ObjectsLinksAndNodes } from "./datadistributor";
+import { Link, Node } from "./utils/node";
 
-export const ForceGraph = function (linkScale, sidebar) {
-  let self = {};
-  let el; // Element to display graph in
-  let canvas;
-  let ctx; // Canvas rendering context
-  let force;
-  let forceLink;
+export const ForceGraph = function (linkScale: (t: any) => any, sidebar: ReturnType<typeof Sidebar>) {
+  let self = {
+    setData: undefined,
+    resetView: undefined,
+    gotoNode: undefined,
+    gotoLink: undefined,
+    gotoLocation: undefined,
+    destroy: undefined,
+    render: undefined,
+  };
+  let el: HTMLElement; // Element to display graph in
+  let canvas: HTMLCanvasElement;
+  let ctx: CanvasRenderingContext2D;
+  let force: d3Force.Simulation<d3Force.SimulationNodeDatum, undefined> | null;
+  let forceLink: d3Force.Force<d3Force.SimulationNodeDatum, undefined> & { links?: (links: any) => any };
 
   let transform = d3Zoom.zoomIdentity;
   let intNodes = [];
   let dictNodes = {};
   let intLinks = [];
-  let movetoTimer;
+  let movetoTimer: NodeJS.Timeout;
   let initial = 1.8;
 
   let NODE_RADIUS_DRAG = 10;
@@ -42,13 +54,16 @@ export const ForceGraph = function (linkScale, sidebar) {
     draw.setMaxArea(canvas.width, canvas.height);
   }
 
-  function transformPosition(p) {
+  function transformPosition(p: { k: number; x: number; y: number }) {
+    // @ts-ignore
     transform.x = p.x;
+    // @ts-ignore
     transform.y = p.y;
+    // @ts-ignore
     transform.k = p.k;
   }
 
-  function moveTo(callback, forceMove) {
+  function moveTo(callback: () => number[], forceMove?: boolean) {
     clearTimeout(movetoTimer);
     if (!forceMove && force && force.alpha() > 0.3) {
       movetoTimer = setTimeout(function timerOfMoveTo() {
@@ -60,10 +75,11 @@ export const ForceGraph = function (linkScale, sidebar) {
     let x = result[0];
     let y = result[1];
     let k = result[2];
-    let end = { k: k };
-
-    end.x = (canvas.width + sidebar.getWidth()) / 2 - x * k;
-    end.y = canvas.height / 2 - y * k;
+    let end = {
+      k: k,
+      x: (canvas.width + sidebar.getWidth()) / 2 - x * k,
+      y: canvas.height / 2 - y * k,
+    };
 
     let start = { x: transform.x, y: transform.y, k: transform.k };
 
@@ -81,25 +97,26 @@ export const ForceGraph = function (linkScale, sidebar) {
     });
   }
 
-  function onClick(event) {
+  function onClick(event: Event & ClientPointEvent) {
     if (event.defaultPrevented) {
       return;
     }
 
-    let e = transform.invert([event.clientX, event.clientY]);
-    let node = force.find(e[0], e[1], NODE_RADIUS_SELECT);
+    let click = transform.invert([event.clientX, event.clientY]);
+    let point = { x: click[0], y: click[1] };
+    let node = force.find(point.x, point.y, NODE_RADIUS_SELECT);
+    let router = window.router;
 
     if (node !== undefined) {
+      // @ts-ignore
       router.fullUrl({ node: node.o.node_id });
       return;
     }
 
-    e = { x: e[0], y: e[1] };
-
-    let closedLink;
+    let closedLink: MapLink;
     let radius = LINK_RADIUS_SELECT;
-    intLinks.forEach(function (link) {
-      let distance = math.distanceLink(e, link.source, link.target);
+    intLinks.forEach(function (link: MapLink) {
+      let distance = math.distanceLink(point, link.source, link.target);
       if (distance < radius) {
         closedLink = link;
         radius = distance;
@@ -129,15 +146,18 @@ export const ForceGraph = function (linkScale, sidebar) {
   forceLink = d3Force
     .forceLink()
     .distance(function (node) {
+      // @ts-ignore
       if (node.o.type.indexOf("vpn") === 0) {
         return 0;
       }
       return 75;
     })
     .strength(function (node) {
+      // @ts-ignore
       if (node.o.type.indexOf("vpn") === 0) {
         return 0.02;
       }
+      // @ts-ignore
       return Math.max(0.5, node.o.source_tq);
     });
 
@@ -202,7 +222,7 @@ export const ForceGraph = function (linkScale, sidebar) {
     redraw();
   });
 
-  self.setData = function setData(data) {
+  self.setData = function setData(data: ObjectsLinksAndNodes) {
     intNodes = data.nodes.all.map(function (nodeData) {
       let node = dictNodes[nodeData.node_id];
       if (!node) {
@@ -248,7 +268,7 @@ export const ForceGraph = function (linkScale, sidebar) {
     }, true);
   };
 
-  self.gotoNode = function gotoNode(nodeData) {
+  self.gotoNode = function gotoNode(nodeData: Node) {
     moveTo(function calcToNode() {
       draw.setHighlight({ type: "node", id: nodeData.node_id });
       let node = dictNodes[nodeData.node_id];
@@ -259,7 +279,7 @@ export const ForceGraph = function (linkScale, sidebar) {
     });
   };
 
-  self.gotoLink = function gotoLink(linkData) {
+  self.gotoLink = function gotoLink(linkData: Link[]) {
     moveTo(function calcToLink() {
       draw.setHighlight({ type: "link", id: linkData[0].id });
       let link = intLinks.find(function (link) {
@@ -286,7 +306,7 @@ export const ForceGraph = function (linkScale, sidebar) {
     }
   };
 
-  self.render = function render(d) {
+  self.render = function render(d: HTMLElement) {
     d.appendChild(el);
     resizeCanvas();
   };

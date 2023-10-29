@@ -52,19 +52,20 @@ export const Gui = function (language: ReturnType<typeof Language>) {
     content = null;
   }
 
-  function addContent(map: typeof Map) {
+  function addContent(mapViewComponent: typeof Map | typeof ForceGraph) {
     removeContent();
 
-    content = map(linkScale, sidebar, buttons);
+    // @ts-ignore
+    content = mapViewComponent(linkScale, sidebar, buttons);
     content.render(contentDiv);
 
     fanout.add(content);
     router.addTarget(content);
   }
 
-  function mkView(map: typeof Map) {
+  function mkView(mapViewComponent: typeof Map | typeof ForceGraph) {
     return function () {
-      addContent(map);
+      addContent(mapViewComponent);
     };
   }
 
