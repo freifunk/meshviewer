@@ -1,7 +1,7 @@
-@mixin icon($name, $code, $prefix: 'ion-') {
+@mixin icon($name, $code, $prefix: "ion-") {
   .#{$prefix}#{$name} {
     &::before {
-      content: '#{$code}';
+      content: "#{$code}";
     }
   }
 }

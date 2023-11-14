@@ -19,7 +19,7 @@
   overflow: hidden;
 
   .leaflet-control-attribution {
-    background: transparentize($color-white, .3);
+    background: transparentize($color-white, 0.3);
     margin: 0;
   }
 
@@ -72,18 +72,20 @@
     height: 1.8em;
     line-height: 1.95;
     margin-right: 16px;
-    opacity: .9;
+    opacity: 0.9;
     text-align: center;
-    transition: background-color .5s, color .5s;
+    transition:
+      background-color 0.5s,
+      color 0.5s;
     width: 1.8em;
 
     @media screen and (max-width: map-get($grid-breakpoints, lg) - 1) {
       margin-right: -2px;
-      transform: scale(.8);
+      transform: scale(0.8);
     }
 
     &::before {
-      content: '\f229';
+      content: "\f229";
       font-family: $font-family-icons;
       speak: none;
       text-rendering: auto;
@@ -249,7 +251,7 @@
 
   .leaflet-popup {
     opacity: 0;
-    transition: opacity .2s linear;
+    transition: opacity 0.2s linear;
   }
 
   .leaflet-map-pane {
@@ -265,7 +267,7 @@
 
 .leaflet-zoom-anim {
   .leaflet-zoom-animated {
-    transition: transform .25s cubic-bezier(0, 0, .25, 1);
+    transition: transform 0.25s cubic-bezier(0, 0, 0.25, 1);
     will-change: transform;
   }
 
@@ -345,7 +347,7 @@
     border-radius: 0;
     box-shadow: none;
     margin: 0;
-    opacity: .8;
+    opacity: 0.8;
   }
 
   .leaflet-control-layers-list {
@@ -372,17 +374,17 @@
     &::before {
       border: 1px solid $color-primary;
       border-radius: 50%;
-      content: ' ';
+      content: " ";
       height: 10px;
       margin: 0 0 0 -18px;
       position: absolute;
-      transition: background .3s;
+      transition: background 0.3s;
       width: 10px;
     }
 
     &:hover {
       &::before {
-        background: transparentize($color-primary, .7);
+        background: transparentize($color-primary, 0.7);
       }
     }
   }
@@ -422,7 +424,7 @@
   &::before {
     background: transparent;
     border: 6px solid transparent;
-    content: '';
+    content: "";
     pointer-events: none;
     position: absolute;
   }
@@ -486,7 +488,7 @@
 }
 
 .leaflet-control-layers-list {
-  background: transparentize($color-white, .1);
+  background: transparentize($color-white, 0.1);
   color: $color-gray-dark;
   padding: 10px;
 
@@ -496,14 +498,14 @@
 }
 
 .leaflet-control-zoom {
-  opacity: .7;
+  opacity: 0.7;
   right: 16px;
   top: 65px;
 
   @media screen and (max-width: map-get($grid-breakpoints, lg) - 1) {
     right: calc(100vw - 50px);
     top: -10px;
-    transform: scale(.8);
+    transform: scale(0.8);
   }
 
   a {
@@ -514,7 +516,9 @@
     font-size: 40px;
     height: 46px;
     text-align: center;
-    transition: background-color .5s, color .5s;
+    transition:
+      background-color 0.5s,
+      color 0.5s;
     width: 46px;
 
     &:hover {

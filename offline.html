@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Meshviewer Loading</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+    <link rel="icon" href="./favicon.ico" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon-180x180.png" sizes="180x180" />
+    <link rel="mask-icon" href="./mask-icon.svg" color="#FFFFFF" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <script src="lib/offline.ts" type="module"></script>
+  </head>
+  <body>
+    <div class="loader">
+      <p>
+        You are Offline!<br />
+        <img inline src="assets/logo.svg" class="spinner" alt="Loading ..." />
+        <br />
+        No connection available.
+        <br />
+        <br />
+        <button onclick="location.reload(true)" class="btn text" aria-label="Try to reload">Try to reload</button><br />
+      </p>
+      <noscript>
+        <strong>JavaScript required</strong>
+      </noscript>
+    </div>
+  </body>
+</html>

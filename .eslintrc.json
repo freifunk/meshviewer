@@ -1,0 +1,17 @@
+{
+  "root": true,
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "env": {
+    "browser": true,
+    "es2020": true,
+    "node": true
+  },
+  "extends": ["eslint:recommended", "prettier"],
+  "rules": {
+    "no-undef": "off",
+    "no-prototype-builtins": "off",
+    "no-useless-escape": "off"
+  }
+}
