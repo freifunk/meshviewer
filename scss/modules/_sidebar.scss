@@ -2,7 +2,7 @@
   box-sizing: border-box;
   left: 0;
   position: absolute;
-  transition: left .5s;
+  transition: left 0.5s;
   width: $sidebar-width;
   z-index: 1005;
 
@@ -74,7 +74,7 @@
   }
 
   .container {
-    background: transparentize($color-white, .03);
+    background: transparentize($color-white, 0.03);
     border-right: 1px solid darken($color-white, 10%);
     min-height: 100vh;
     overflow-y: visible;
@@ -86,7 +86,7 @@
 
   @media screen and (max-width: map-get($grid-breakpoints, xl) - 1) {
     background: $color-white;
-    font-size: .8em;
+    font-size: 0.8em;
     margin: 0;
     width: $sidebar-width-small;
 
@@ -123,12 +123,15 @@
   left: $sidebar-width + 2 * $button-distance;
   position: fixed;
   top: $button-distance;
-  transition: left .5s, color .5s, transform .5s;
+  transition:
+    left 0.5s,
+    color 0.5s,
+    transform 0.5s;
   z-index: 1010;
 
   &::before {
-    content: '\f124';
-    padding-right: .125em;
+    content: "\f124";
+    padding-right: 0.125em;
   }
 
   &[aria-label] {

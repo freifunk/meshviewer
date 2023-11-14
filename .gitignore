@@ -1,4 +1,21 @@
-node_modules/
-build/
-config.js
+# Generic cache files
+*~
+.~*
+*.tmp
+*.temp
+*.DS_Store
+.*.swp
+*.out
+*.cache
+Thumbs.db
+
+# IDE files
+/.idea
+
+# Project files
+/node_modules
+/build
+/config.json
 *.zip
+/dev-dist
+/public/config.json

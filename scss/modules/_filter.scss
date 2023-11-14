@@ -1,7 +1,7 @@
 .filters {
   display: flex;
   flex-wrap: wrap;
-  font-size: .83em;
+  font-size: 0.83em;
   padding: 0 8px 8px;
 
   li {
@@ -59,7 +59,7 @@
       width: 100%;
 
       &:focus {
-        background: transparentize($color-primary, .95);
+        background: transparentize($color-primary, 0.95);
       }
     }
 

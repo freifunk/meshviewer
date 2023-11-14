@@ -1,5 +1,5 @@
 .tabs {
-  background: transparentize($color-black, .98);
+  background: transparentize($color-black, 0.98);
   border: 0 solid darken($color-white, 10%);
   border-bottom-width: 1px;
   display: flex;
@@ -10,10 +10,10 @@
 
   li {
     -webkit-flex: 1 1 auto;
-    color: transparentize($color-black, .5);
+    color: transparentize($color-black, 0.5);
     cursor: pointer;
     flex: 1 1 auto;
-    padding: 1.3em .5em 1em;
+    padding: 1.3em 0.5em 1em;
     text-align: center;
     text-transform: uppercase;
 
