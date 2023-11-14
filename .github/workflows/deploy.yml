@@ -9,7 +9,7 @@ jobs:
       fail-fast: false
       matrix:
         target: [webfrontend03, webfrontend04, webfrontend05, webfrontend06]
-        node-version: [12.x]
+        node-version: [20.x]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm install
-      - run: npm run gulp
+      - run: npm run build
       - run: cp config.json build/
       - name: rsync deployments
         uses: burnett01/rsync-deployments@5.2
