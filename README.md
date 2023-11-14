@@ -1,4 +1,5 @@
 # Meshviewer
+
 [![Build Status](https://img.shields.io/github/workflow/status/freifunkMUC/meshviewer/Build%20Meshviewer?style=flat-square)](https://github.com/freifunkMUC/meshviewer/actions?query=workflow%3A%22Build+Meshviewer%22)
 [![Release](https://img.shields.io/github/v/release/freifunkMUC/meshviewer?style=flat-square)](https://github.com/freifunkMUC/meshviewer/releases)
 [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/freifunkMUC/meshviewer/develop.svg?style=flat-square)](https://scrutinizer-ci.com/g/freifunkMUC/meshviewer/?branch=develop)
@@ -9,7 +10,9 @@ Meshviewer is an online visualization app to represent nodes and links on a map 
 ** This is a fork of https://github.com/freifunkMUC/meshviewer with some adjustments **
 
 ## Installation
+
 This fork of the new meshviewer has a new installation method:
+
 - Go to the [release page](https://github.com/freifunkMUC/meshviewer/releases) and download the current build
 - Let your webserver serve this build
 - Add a config.json to the webdir (based on config.example.json)
