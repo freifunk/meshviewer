@@ -1,5 +1,5 @@
 ### Build stage for the website frontend
-FROM --platform=$BUILDPLATFORM node:20 as build
+FROM --platform=$BUILDPLATFORM node:20-bullseye-slim as build
 RUN apt-get update && \
 apt-get install -y python
 WORKDIR /code
