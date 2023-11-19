@@ -334,8 +334,12 @@
          "name": "FFMUC Freising"
       },
       {
-         "domain": "ffmuc_ffdon_test",
-         "name": "Freifunk Donau-Ries Test"
+         "domain": "ffwert_city",
+         "name": "Freifunk Wertingen - City"
+      },
+      {
+         "domain": "ffwert_events",
+         "name": "Freifunk Wertingen - Events"
       },
       {
          "domain": "ffmuc_unifi_respondd_fallback",
