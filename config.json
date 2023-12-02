@@ -282,6 +282,18 @@
          "name": "Unknown Domain"
       },
       {
+         "domain": "ffdon_mitte",
+         "name": "Freifunk Donau-Ries - Mitte"
+      },
+      {
+         "domain": "ffdon_nordwest",
+         "name": "Freifunk Donau-Ries - Nordwest"
+      },
+      {
+         "domain": "ffdon_sued",
+         "name": "Freifunk Donau-Ries - Süd"
+      },
+      {
          "domain": "ffmuc_muc_cty",
          "name": "FFMUC München Stadt"
       },
