@@ -17,7 +17,7 @@
     "sass": "^1.69.3",
     "typescript": "^5.2.2",
     "vite": "^4.4.9",
-    "vite-plugin-pwa": "^0.16.5"
+    "vite-plugin-pwa": "^0.17.3"
   },
   "dependencies": {
     "d3-collection": "^1.0.7",
