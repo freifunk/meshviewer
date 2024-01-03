@@ -283,91 +283,79 @@
       },
       {
          "domain": "ffdon_mitte",
-         "name": "Freifunk Donau-Ries - Mitte"
+         "name": "Donau-Ries - Mitte"
       },
       {
          "domain": "ffdon_nordwest",
-         "name": "Freifunk Donau-Ries - Nordwest"
+         "name": "Donau-Ries - Nordwest"
       },
       {
          "domain": "ffdon_sued",
-         "name": "Freifunk Donau-Ries - Süd"
+         "name": "Donau-Ries - Süd"
       },
       {
          "domain": "ffmuc_muc_cty",
-         "name": "FFMUC München Stadt"
+         "name": "München - Stadt"
       },
       {
          "domain": "ffmuc_muc_nord",
-         "name": "FFMUC München Nord"
+         "name": "München - Nord"
       },
       {
          "domain": "ffmuc_muc_ost",
-         "name": "FFMUC München Ost"
+         "name": "München - Ost"
       },
       {
          "domain": "ffmuc_muc_sued",
-         "name": "FFMUC München Süd"
+         "name": "München - Süd"
       },
       {
          "domain": "ffmuc_muc_west",
-         "name": "FFMUC München West"
+         "name": "München - West"
       },
       {
          "domain": "ffmuc_uml_nord",
-         "name": "FFMUC Umland Nord"
+         "name": "Umland - Nord"
       },
       {
          "domain": "ffmuc_uml_ost",
-         "name": "FFMUC Umland Ost"
+         "name": "Umland - Ost"
       },
       {
          "domain": "ffmuc_uml_sued",
-         "name": "FFMUC Umland Süd"
+         "name": "Umland - Süd"
       },
       {
          "domain": "ffmuc_uml_west",
-         "name": "FFMUC Umland West"
+         "name": "Umland - West"
       },
       {
          "domain": "ffmuc_welt",
-         "name": "FFMUC Welt"
+         "name": "Welt"
       },
       {
          "domain": "ffmuc_augsburg",
-         "name": "FFMUC Augsburg"
+         "name": "Augsburg"
       },
       {
          "domain": "ffmuc_gauting",
-         "name": "FFMUC Gauting"
+         "name": "Gauting"
       },
       {
          "domain": "ffmuc_freising",
-         "name": "FFMUC Freising"
+         "name": "Freising"
       },
       {
          "domain": "ffwert_city",
-         "name": "Freifunk Wertingen - City"
+         "name": "Wertingen - City"
       },
       {
          "domain": "ffwert_events",
-         "name": "Freifunk Wertingen - Events"
+         "name": "Wertingen - Events"
       },
       {
          "domain": "ffmuc_unifi_respondd_fallback",
-         "name": "FFMUC UniFi Fallback"
-      },
-      {
-         "domain": "ffmuc",
-         "name": "FFMUC (alt)"
-      },
-      {
-         "domain": "ffmuc_umland",
-         "name": "FFMUC Umland (alt)"
-      },
-      {
-         "domain": "ffmuc_welcome",
-         "name": "FFMUC Welcome (alt)"
+         "name": "UniFi"
       }
    ],
    "linkList": [
