@@ -61,9 +61,9 @@ export const GenericNodeFilter = function (
   }
 
   return {
-    run: run,
-    setRefresh: setRefresh,
-    render: render,
-    getKey: getKey,
+    run,
+    setRefresh,
+    render,
+    getKey,
   };
 };

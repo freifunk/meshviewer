@@ -16,7 +16,7 @@ export interface MapLink extends Point {
   color_to: string;
 }
 
-let self = {
+const self = {
   drawNode: undefined,
   drawLink: undefined,
   setCTX: undefined,

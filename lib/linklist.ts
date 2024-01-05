@@ -45,7 +45,7 @@ export const Linklist = function (linkScale: (t: any) => any): CanRender & CanSe
   let _ = window._;
   let router = window.router;
   let table = SortTable(headings, 3, renderRow);
-  let self = {
+  const self = {
     render: undefined,
     setData: undefined,
   };

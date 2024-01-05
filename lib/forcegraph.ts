@@ -14,7 +14,7 @@ import { ObjectsLinksAndNodes } from "./datadistributor";
 import { Link, Node } from "./utils/node";
 
 export const ForceGraph = function (linkScale: (t: any) => any, sidebar: ReturnType<typeof Sidebar>) {
-  let self = {
+  const self = {
     setData: undefined,
     resetView: undefined,
     gotoNode: undefined,
@@ -55,7 +55,7 @@ export const ForceGraph = function (linkScale: (t: any) => any, sidebar: ReturnT
   }
 
   function transformPosition(p: { k: number; x: number; y: number }) {
-    // @ts-ignore
+    // @ts-ignore To fix those some further refactoring is needed or else the nodes jump around when clicking near them
     transform.x = p.x;
     // @ts-ignore
     transform.y = p.y;

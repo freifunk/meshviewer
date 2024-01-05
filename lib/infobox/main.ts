@@ -7,7 +7,7 @@ import { TargetLocation } from "../utils/router";
 import { ObjectsLinksAndNodes } from "../datadistributor";
 
 export const Main = function (sidebar: ReturnType<typeof Sidebar>, linkScale: (t: any) => any) {
-  let self = {
+  const self = {
     resetView: undefined,
     gotoNode: undefined,
     gotoLink: undefined,

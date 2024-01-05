@@ -1,7 +1,7 @@
 import { CanRender } from "./container";
 
 export const Sidebar = function (el: HTMLElement) {
-  let self = {
+  const self = {
     getWidth: undefined,
     add: undefined,
     ensureVisible: undefined,

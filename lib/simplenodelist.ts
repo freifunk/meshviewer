@@ -6,7 +6,7 @@ import { ObjectsLinksAndNodes } from "./datadistributor";
 import { Node } from "./utils/node";
 
 export const SimpleNodelist = function (nodesState: string, field: string, title: string) {
-  let self = {
+  const self = {
     render: undefined,
     setData: undefined,
   };

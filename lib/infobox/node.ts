@@ -126,7 +126,7 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
     ]);
   }
 
-  let self = {
+  const self = {
     render: undefined,
     setData: undefined,
   };

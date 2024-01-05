@@ -4,7 +4,7 @@ import { Filter } from "../datadistributor";
 
 export const HostnameFilter = function (): CanRender & Filter {
   let refreshFunctions: (() => any)[] = [];
-  let timer: NodeJS.Timeout;
+  let timer: ReturnType<typeof setTimeout>;
   let input = document.createElement("input");
 
   function refresh() {
@@ -36,8 +36,8 @@ export const HostnameFilter = function (): CanRender & Filter {
   }
 
   return {
-    run: run,
-    setRefresh: setRefresh,
-    render: render,
+    run,
+    setRefresh,
+    render,
   };
 };

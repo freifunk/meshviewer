@@ -20,7 +20,7 @@ import * as helper from "./utils/helper";
 import { Language } from "./utils/language";
 
 export const Gui = function (language: ReturnType<typeof Language>) {
-  let self = {
+  const self = {
     setData: undefined,
   };
   let content: ReturnType<typeof Map>;
@@ -55,7 +55,6 @@ export const Gui = function (language: ReturnType<typeof Language>) {
   function addContent(mapViewComponent: typeof Map | typeof ForceGraph) {
     removeContent();
 
-    // @ts-ignore
     content = mapViewComponent(linkScale, sidebar, buttons);
     content.render(contentDiv);
 

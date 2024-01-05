@@ -12,7 +12,7 @@ export const SortTable = function (
   sortIndex: number,
   renderRow: (element: any, i: number, all: []) => any,
 ) {
-  let self = { el: undefined, setData: undefined };
+  const self = { el: undefined, setData: undefined };
   let data: any[];
   let sortReverse = false;
   self.el = document.createElement("table");

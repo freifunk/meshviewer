@@ -59,7 +59,7 @@ let headings: Heading[] = [
 export const Nodelist = function (): CanSetData & CanRender {
   let _ = window._;
   let router = window.router;
-  let self = {
+  const self = {
     render: undefined,
     setData: undefined,
   };

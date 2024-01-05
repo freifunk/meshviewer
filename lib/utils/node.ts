@@ -64,7 +64,7 @@ export interface Node {
   autoupdater: Autoupdater;
 }
 
-let self = {
+const self = {
   showStatus: undefined,
   showGeoURI: undefined,
   showGateway: undefined,
