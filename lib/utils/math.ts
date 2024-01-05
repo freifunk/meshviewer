@@ -1,4 +1,4 @@
-let self = {
+const self = {
   distance: undefined,
   distancePoint: undefined,
   distanceLink: undefined,

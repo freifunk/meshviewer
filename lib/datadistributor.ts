@@ -128,11 +128,11 @@ export const DataDistributor = function () {
   }
 
   return {
-    add: add,
-    remove: remove,
-    setData: setData,
-    addFilter: addFilter,
-    removeFilter: removeFilter,
-    watchFilters: watchFilters,
+    add,
+    remove,
+    setData,
+    addFilter,
+    removeFilter,
+    watchFilters,
   };
 };

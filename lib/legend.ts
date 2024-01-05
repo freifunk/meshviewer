@@ -3,7 +3,7 @@ import { Language } from "./utils/language";
 import { ObjectsLinksAndNodes } from "./datadistributor";
 
 export const Legend = function (language: ReturnType<typeof Language>) {
-  let self = {
+  const self = {
     setData: undefined,
     render: undefined,
   };

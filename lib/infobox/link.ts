@@ -24,7 +24,7 @@ function showStatImg(images: HTMLElement[], linkInfo: LinkInfo, link: LinkData, 
 }
 
 export const Link = function (el: HTMLElement, linkData: LinkData[], linkScale: (t: any) => any) {
-  let self = {
+  const self = {
     render: undefined,
     setData: undefined,
   };

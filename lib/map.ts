@@ -17,7 +17,7 @@ let options = {
 };
 
 export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typeof Sidebar>, buttons: HTMLElement) {
-  let self = {
+  const self = {
     setData: undefined,
     resetView: undefined,
     gotoNode: undefined,

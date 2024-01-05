@@ -38,7 +38,7 @@ export const FilterGui = function (distributor: ReturnType<typeof DataDistributo
   }
 
   return {
-    render: render,
-    filtersChanged: filtersChanged,
+    render,
+    filtersChanged,
   };
 };

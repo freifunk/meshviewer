@@ -71,8 +71,8 @@ export const Language = function () {
   }
 
   return {
-    init: init,
-    getLocale: getLocale,
-    languageSelect: languageSelect,
+    init,
+    getLocale,
+    languageSelect,
   };
 };

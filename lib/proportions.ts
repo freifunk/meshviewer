@@ -8,7 +8,7 @@ import { Moment } from "moment";
 import { Node } from "./utils/node";
 
 export const Proportions = function (filterManager: ReturnType<typeof DataDistributor>) {
-  let self = {
+  const self = {
     setData: undefined,
     render: undefined,
     renderSingle: undefined,

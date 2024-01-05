@@ -64,6 +64,6 @@ export const About = function (picturesSource: string, picturesLicense: string):
   }
 
   return {
-    render: render,
+    render,
   };
 };

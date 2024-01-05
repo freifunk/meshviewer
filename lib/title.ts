@@ -1,7 +1,7 @@
 import { Link, Node } from "./utils/node";
 
 export const Title = function () {
-  let self = {
+  const self = {
     resetView: undefined,
     gotoNode: undefined,
     gotoLink: undefined,

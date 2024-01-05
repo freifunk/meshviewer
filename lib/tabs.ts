@@ -1,7 +1,7 @@
 import { CanRender } from "./container";
 
 export const Tabs = function () {
-  let self = {
+  const self = {
     add: undefined,
     render: undefined,
   };

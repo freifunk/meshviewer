@@ -11,7 +11,7 @@ export const Container = function (tag?: string): CanRender & CanAdd {
     tag = "div";
   }
 
-  let self = {
+  const self = {
     add: undefined,
     render: undefined,
   };
