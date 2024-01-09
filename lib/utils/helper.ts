@@ -2,6 +2,7 @@ import { Moment } from "moment";
 import { snabbdomBundle as sv } from "snabbdom/snabbdom.bundle";
 import { VNode } from "snabbdom/vnode";
 import { Map } from "leaflet";
+import { _ } from "./language";
 import { Node } from "./node";
 import { LinkInfo, NodeInfo } from "../config_default";
 
@@ -124,7 +125,6 @@ export const showTq = function showTq(tq: number) {
 };
 
 export const attributeEntry = function attributeEntry(V: typeof sv, children: VNode[], label: string, value: string) {
-  let _ = window._;
   if (value !== undefined) {
     if (typeof value !== "object") {
       value = V.h("td", value);
@@ -135,7 +135,6 @@ export const attributeEntry = function attributeEntry(V: typeof sv, children: VN
 };
 
 export const showStat = function showStat(V: typeof sv, linkInfo: LinkInfo | NodeInfo, subst: ReplaceMapping) {
-  let _ = window._;
   let content = V.h("img", {
     attrs: {
       src: listReplace(linkInfo.image, subst),

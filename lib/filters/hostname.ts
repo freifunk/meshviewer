@@ -1,3 +1,4 @@
+import { _ } from "../utils/language";
 import { Node } from "../utils/node";
 import { CanRender } from "../container";
 import { Filter } from "../datadistributor";
@@ -25,7 +26,6 @@ export const HostnameFilter = function (): CanRender & Filter {
   }
 
   function render(el: HTMLElement) {
-    let _ = window._;
     input.type = "search";
     input.placeholder = _.t("sidebar.nodeFilter");
     input.setAttribute("aria-label", _.t("sidebar.nodeFilter"));

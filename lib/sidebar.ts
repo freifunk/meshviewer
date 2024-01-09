@@ -1,3 +1,4 @@
+import { _ } from "./utils/language";
 import { CanRender } from "./container";
 
 export const Sidebar = function (el: HTMLElement) {
@@ -10,7 +11,6 @@ export const Sidebar = function (el: HTMLElement) {
     container: undefined,
     button: undefined,
   };
-  let _ = window._;
 
   // Needed to avoid render blocking
   let gridBreakpoints = {

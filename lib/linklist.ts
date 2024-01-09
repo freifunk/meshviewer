@@ -1,4 +1,5 @@
 import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
+import { _ } from "./utils/language";
 import { Heading, SortTable } from "./sorttable";
 import * as helper from "./utils/helper";
 import { Link } from "./utils/node";
@@ -42,7 +43,6 @@ let headings: Heading[] = [
 ];
 
 export const Linklist = function (linkScale: (t: any) => any): CanRender & CanSetData {
-  let _ = window._;
   let router = window.router;
   let table = SortTable(headings, 3, renderRow);
   const self = {

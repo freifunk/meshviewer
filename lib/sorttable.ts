@@ -1,4 +1,5 @@
 import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
+import { _ } from "./utils/language";
 
 export interface Heading {
   name: string;
@@ -31,7 +32,6 @@ export const SortTable = function (
   }
 
   function updateView() {
-    let _ = window._;
     let children = [];
 
     if (data.length !== 0) {

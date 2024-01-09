@@ -1,4 +1,5 @@
 import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
+import { _ } from "./utils/language";
 import { Heading, SortTable } from "./sorttable";
 import * as helper from "./utils/helper";
 import { Node } from "./utils/node";
@@ -57,7 +58,6 @@ let headings: Heading[] = [
 ];
 
 export const Nodelist = function (): CanSetData & CanRender {
-  let _ = window._;
   let router = window.router;
   const self = {
     render: undefined,

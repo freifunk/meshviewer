@@ -5,6 +5,8 @@ import { Router } from "./router";
 
 export type LanguageCode = string;
 
+export let _: Polyglot & { phrases?: { [k: string]: any } };
+
 export const Language = function () {
   let router: ReturnType<typeof Router>;
   let config = globalThis.config;
@@ -42,7 +44,6 @@ export const Language = function () {
   }
 
   function setTranslation(translationJson: { [k: string]: any }) {
-    let _ = window._;
     _.extend(translationJson);
 
     if (moment.locale(_.locale()) !== _.locale()) {
@@ -64,8 +65,7 @@ export const Language = function () {
   function init(routing: ReturnType<typeof Router>) {
     router = routing;
     /** global: _ */
-    window._ = new Polyglot({ locale: getLocale(routing.getLang()), allowMissing: true });
-    let _ = window._;
+    _ = new Polyglot({ locale: getLocale(routing.getLang()), allowMissing: true });
     helper.getJSON("locale/" + _.locale() + ".json?" + config.cacheBreaker).then(setTranslation);
     document.querySelector("html").setAttribute("lang", _.locale());
   }

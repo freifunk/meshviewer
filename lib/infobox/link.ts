@@ -1,10 +1,10 @@
 import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
+import { _ } from "../utils/language";
 import * as helper from "../utils/helper";
 import { LinkInfo } from "../config_default";
 import { Link as LinkData } from "../utils/node";
 
 function showStatImg(images: HTMLElement[], linkInfo: LinkInfo, link: LinkData, time: string) {
-  let _ = window._;
   let subst: ReplaceMapping = {
     "{SOURCE_ID}": link.source.node_id,
     "{SOURCE_NAME}": link.source.hostname.replace(/[^a-z0-9\-]/gi, "_"),
@@ -36,7 +36,6 @@ export const Link = function (el: HTMLElement, linkData: LinkData[], linkScale: 
   el.appendChild(images);
 
   self.render = function render() {
-    let _ = window._;
     let config = window.config;
     let router = window.router;
     let children = [];

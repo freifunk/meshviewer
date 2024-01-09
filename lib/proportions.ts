@@ -1,5 +1,6 @@
 import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
 import * as d3Interpolate from "d3-interpolate";
+import { _ } from "./utils/language";
 import { DataDistributor, Filter, ObjectsLinksAndNodes } from "./datadistributor";
 import { GenericNodeFilter } from "./filters/genericnode";
 import * as helper from "./utils/helper";
@@ -14,7 +15,6 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     renderSingle: undefined,
   };
   let config = window.config;
-  let _ = window._;
   let scale = d3Interpolate.interpolate(config.forceGraph.tqFrom, config.forceGraph.tqTo);
   let time: Moment;
 

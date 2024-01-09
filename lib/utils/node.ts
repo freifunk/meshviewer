@@ -1,5 +1,6 @@
 import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
 import moment, { Moment } from "moment";
+import { _ } from "./language";
 import * as helper from "./helper";
 
 export type LinkId = string;
@@ -90,7 +91,6 @@ function showBar(value: string, width: number, warning: boolean) {
 }
 
 self.showStatus = function showStatus(node: Node) {
-  let _ = window._;
   return V.h(
     "td",
     { props: { className: node.is_online ? "online" : "offline" } },
@@ -117,7 +117,6 @@ self.showGeoURI = function showGeoURI(data: Node) {
 };
 
 self.showGateway = function showGateway(node: Node) {
-  let _ = window._;
   return node.is_gateway ? _.t("yes") : undefined;
 };
 
@@ -176,7 +175,6 @@ self.showClients = function showClients(node: Node) {
   if (!node.is_online) {
     return undefined;
   }
-  let _ = window._;
   let localClients = self.countLocalClients(node);
 
   let clients = [
@@ -228,7 +226,6 @@ self.showIPs = function showIPs(node: Node) {
 };
 
 self.showAutoupdate = function showAutoupdate(node: Node) {
-  let _ = window._;
   return node.autoupdater.enabled
     ? _.t("node.activated", { branch: node.autoupdater.branch })
     : _.t("node.deactivated");

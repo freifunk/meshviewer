@@ -1,3 +1,4 @@
+import { _ } from "../utils/language";
 import { CanFiltersChanged, DataDistributor, Filter } from "../datadistributor";
 import { CanRender } from "../container";
 
@@ -16,7 +17,6 @@ export const FilterGui = function (distributor: ReturnType<typeof DataDistributo
     }
 
     filters.forEach(function (filter: Filter & CanRender) {
-      let _ = window._;
       let li = document.createElement("li");
       container.appendChild(li);
       filter.render(li);

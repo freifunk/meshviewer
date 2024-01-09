@@ -1,3 +1,4 @@
+import { _ } from "./utils/language";
 import { CanRender } from "./container";
 
 export const Tabs = function () {
@@ -36,7 +37,6 @@ export const Tabs = function () {
   }
 
   self.add = function add(title: string, child: CanRender) {
-    let _ = window._;
     let li = document.createElement("li");
     li.textContent = _.t(title);
     li.onclick = switchTab;
