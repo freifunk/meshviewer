@@ -1,3 +1,4 @@
+import { _ } from "./utils/language";
 import * as helper from "./utils/helper";
 import { Language } from "./utils/language";
 import { ObjectsLinksAndNodes } from "./datadistributor";
@@ -11,7 +12,6 @@ export const Legend = function (language: ReturnType<typeof Language>) {
   let timestamp = document.createTextNode("");
 
   self.setData = function setData(data: ObjectsLinksAndNodes) {
-    let _ = window._;
     let totalNodes = Object.keys(data.nodeDict).length;
     let totalOnlineNodes = data.nodes.online.length;
     let totalClients = helper.sum(

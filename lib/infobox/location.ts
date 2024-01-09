@@ -1,8 +1,8 @@
+import { _ } from "../utils/language";
 import * as helper from "../utils/helper";
 import { TargetLocation } from "../utils/router";
 
 export const location = function (el: HTMLElement, position: TargetLocation) {
-  let _ = window._;
   let config = window.config;
   let sidebarTitle = document.createElement("h2");
   sidebarTitle.textContent = _.t("location.location");

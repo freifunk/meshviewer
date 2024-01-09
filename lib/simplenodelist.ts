@@ -1,6 +1,7 @@
 import moment from "moment";
 import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
 
+import { _ } from "./utils/language";
 import * as helper from "./utils/helper";
 import { ObjectsLinksAndNodes } from "./datadistributor";
 import { Node } from "./utils/node";
@@ -41,7 +42,6 @@ export const SimpleNodelist = function (nodesState: string, field: string, title
     }
 
     let items = nodeList.map(function (node: Node) {
-      let _ = window._;
       let router = window.router;
       let td0Content = "";
       if (helper.hasLocation(node)) {

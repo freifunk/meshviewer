@@ -1,8 +1,8 @@
+import { _ } from "./utils/language";
 import { CanRender } from "./container";
 
 export const About = function (picturesSource: string, picturesLicense: string): CanRender {
   function render(d: HTMLElement) {
-    let _ = window._;
     d.innerHTML =
       _.t("sidebar.aboutInfo") +
       "<h4>" +

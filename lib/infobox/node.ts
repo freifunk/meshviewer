@@ -1,4 +1,5 @@
 import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
+import { _ } from "../utils/language";
 
 import { SortTable } from "../sorttable";
 import * as helper from "../utils/helper";
@@ -7,7 +8,6 @@ import { NodeInfo } from "../config_default";
 
 function showStatImg(nodeInfo: NodeInfo, node: NodeData) {
   let config = window.config;
-  let _ = window._;
   let subst = {
     "{NODE_ID}": node.node_id,
     "{NODE_NAME}": node.hostname.replace(/[^a-z0-9\-]/gi, "_"),
@@ -42,7 +42,6 @@ function showDevicePictures(pictures: string, device: NodeData) {
 }
 
 export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any, nodeDict: { [k: NodeId]: NodeData }) {
-  let _ = window._;
   let config = window.config;
   let router = window.router;
 

@@ -1,6 +1,7 @@
 import moment from "moment";
 import * as L from "leaflet";
 
+import { _ } from "./utils/language";
 import { Router } from "./utils/router";
 import { Gui } from "./gui";
 import { Language } from "./utils/language";
@@ -96,7 +97,6 @@ export const main = () => {
       return new Promise(function (resolve, reject) {
         let count = 0;
         (function waitForLanguage() {
-          let _ = window._;
           if (Object.keys(_.phrases).length > 0) {
             resolve(nodesData);
           } else if (count > 500) {

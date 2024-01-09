@@ -1,3 +1,4 @@
+import { _ } from "../utils/language";
 import { Link } from "./link";
 import { Node } from "./node";
 import { location } from "./location";
@@ -39,7 +40,6 @@ export const Main = function (sidebar: ReturnType<typeof Sidebar>, linkScale: (t
     // @ts-ignore
     el.destroy = destroy;
 
-    let _ = window._;
     let router = window.router;
     let closeButton = document.createElement("button");
     closeButton.classList.add("close");

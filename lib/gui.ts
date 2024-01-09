@@ -1,5 +1,5 @@
 import { interpolate } from "d3-interpolate";
-
+import { _ } from "./utils/language";
 import { About } from "./about";
 import { Container } from "./container";
 import { DataDistributor } from "./datadistributor";
@@ -27,7 +27,6 @@ export const Gui = function (language: ReturnType<typeof Language>) {
   let contentDiv: HTMLDivElement;
   let router = window.router;
   let config = window.config;
-  let _ = window._;
 
   let linkScale = interpolate(config.map.tqFrom, config.map.tqTo);
   let sidebar: ReturnType<typeof Sidebar>;
