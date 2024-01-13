@@ -315,19 +315,19 @@
       },
       {
          "domain": "ffmuc_uml_nord",
-         "name": "Umland - Nord"
+         "name": "Bayern - Südnord"
       },
       {
          "domain": "ffmuc_uml_ost",
-         "name": "Umland - Ost"
+         "name": "Bayern - Südost"
       },
       {
          "domain": "ffmuc_uml_sued",
-         "name": "Umland - Süd"
+         "name": "Bayern - Südsüd"
       },
       {
          "domain": "ffmuc_uml_west",
-         "name": "Umland - West"
+         "name": "Bayern - Südwest"
       },
       {
          "domain": "ffmuc_welt",
