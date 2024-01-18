@@ -19,7 +19,7 @@ It is recommended to use the latest release:
 - Clone this repository
 - Run `npm install`
 - Place your config file in `public/config.json`.
-  You can copy the example config for testing/development: `cp config.example.json public`.
+  You can copy the example config for testing/development: `cp config.example.json public/config.json`.
 - Run `npm run build`
 - A production build can then be found in [`/build`](./build)
 
