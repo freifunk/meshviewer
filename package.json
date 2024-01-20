@@ -47,7 +47,7 @@
     "node-polyglot": "2.5.0",
     "promise-polyfill": "^8.2.0",
     "rbush": "^3.0.1",
-    "snabbdom": "^0.7.4"
+    "snabbdom": "^3.6.0"
   },
   "scripts": {
     "dev": "vite",
