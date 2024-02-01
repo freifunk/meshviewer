@@ -29,7 +29,7 @@
     "@types/d3-interpolate": "^3.0.3",
     "@types/d3-selection": "^3.0.8",
     "@types/d3-timer": "^3.0.1",
-    "@types/d3-zoom": "^3.0.6",
+    "@types/d3-zoom": "^3.0.8",
     "@types/leaflet": "^1.7.1",
     "@types/node-polyglot": "^2.4.4",
     "@types/rbush": "^3.0.1",
