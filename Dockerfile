@@ -4,7 +4,7 @@ RUN apt-get update && \
 apt-get install -y python3
 WORKDIR /code
 COPY . ./
-RUN npm ci --no-audit --prefer-offline
+RUN npm install
 RUN npm run build
 
 FROM nginx:1.25.4-alpine
