@@ -1,7 +1,7 @@
 ### Build stage for the website frontend
 FROM --platform=$BUILDPLATFORM node:20-bookworm-slim as build
 RUN apt-get update && \
-apt-get install -y python
+apt-get install -y python3
 WORKDIR /code
 COPY . ./
 RUN npm ci --no-audit --prefer-offline
