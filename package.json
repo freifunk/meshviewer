@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^6.21.0",
-    "@vite-pwa/assets-generator": "^0.0.10",
+    "@vite-pwa/assets-generator": "^0.2.4",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "prettier": "3.2.5",
@@ -19,7 +19,7 @@
     "typescript": "^5.4.3",
     "vite": "^5.2.7",
     "vite-plugin-checker": "^0.6.4",
-    "vite-plugin-pwa": "^0.17.5"
+    "vite-plugin-pwa": "^0.19.7"
   },
   "dependencies": {
     "@types/d3-collection": "^1.0.13",
