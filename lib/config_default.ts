@@ -62,6 +62,7 @@ export interface Link {
 export interface MapLayer {
   name: string;
   url: string;
+  type?: string;
   config: GridLayerOptions & {
     start?: number; // Hour
     end?: number; // Hour
