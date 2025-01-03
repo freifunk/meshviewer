@@ -167,7 +167,9 @@ export interface Config {
   linkInfos: LinkInfo[];
   nodeInfos: NodeInfo[];
   deprecation_enabled: boolean;
+  eol: string[];
   deprecated: string[];
+  eol_text?: string;
   deprecation_text?: string;
   domainNames: Domain[];
   node_custom: string; // Custom node replacement regex
@@ -358,7 +360,7 @@ export const config: Config = {
       fillOpacity: 0.2,
     },
   },
-  deprecated: [
+  eol: [
     "A5-V11",
     "AP121",
     "AP121U",
@@ -450,7 +452,16 @@ export const config: Config = {
     "VoCore 8M",
     "VoCore 16M",
   ],
+  deprecated: [
+    "TP-LINK RE305",
+    "TP-Link RE305 v1",
+    "TP-LINK RE355",
+    "TP-Link RE355 v1",
+    "TP-LINK RE450",
+    "TP-Link RE450 v1",
+  ],
   deprecation_enabled: true,
+  eol_text: undefined,
   deprecation_text: undefined,
   domainNames: [],
   globalInfos: [],
