@@ -20,8 +20,7 @@ jobs:
       - name: Setup QEMU
         uses: docker/setup-qemu-action@v3
       - name: Setup Docker buildx
-        uses: docker/setup-buildx-action@v2
-        with:
+        uses: docker/setup-buildx-action@v3
       - name: Retrieve author data
         run: |
           echo AUTHOR=$(curl -sSL ${{ github.event.repository.owner.url }} | jq -r '.name') >> $GITHUB_ENV
