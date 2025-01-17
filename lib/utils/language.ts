@@ -1,7 +1,7 @@
 import moment from "moment";
-import * as helper from "./helper";
+import * as helper from "./helper.js";
 import Polyglot from "node-polyglot";
-import { Router } from "./router";
+import { Router } from "./router.js";
 
 export type LanguageCode = string;
 

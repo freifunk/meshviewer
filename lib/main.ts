@@ -1,12 +1,12 @@
 import moment from "moment";
 import * as L from "leaflet";
 
-import { _ } from "./utils/language";
-import { Router } from "./utils/router";
-import { Gui } from "./gui";
-import { Language } from "./utils/language";
-import * as helper from "./utils/helper";
-import { Link } from "./utils/node";
+import { _ } from "./utils/language.js";
+import { Router } from "./utils/router.js";
+import { Gui } from "./gui.js";
+import { Language } from "./utils/language.js";
+import * as helper from "./utils/helper.js";
+import { Link } from "./utils/node.js";
 
 export const main = () => {
   function handleData(data: { links: Link[]; nodes: Node[]; timestamp: string }[]) {

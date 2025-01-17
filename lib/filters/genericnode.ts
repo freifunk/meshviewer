@@ -1,7 +1,7 @@
-import * as helper from "../utils/helper";
-import { Filter } from "../datadistributor";
-import { CanRender } from "../container";
-import { Node } from "../utils/node";
+import * as helper from "../utils/helper.js";
+import { Filter } from "../datadistributor.js";
+import { CanRender } from "../container.js";
+import { Node } from "../utils/node.js";
 
 export const GenericNodeFilter = function (
   name: string,

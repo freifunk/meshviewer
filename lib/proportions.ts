@@ -1,12 +1,14 @@
-import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
+import { classModule, eventListenersModule, h, init, propsModule, styleModule } from "snabbdom";
 import * as d3Interpolate from "d3-interpolate";
-import { _ } from "./utils/language";
-import { DataDistributor, Filter, ObjectsLinksAndNodes } from "./datadistributor";
-import { GenericNodeFilter } from "./filters/genericnode";
-import * as helper from "./utils/helper";
-import { compare } from "./utils/version";
+import { _ } from "./utils/language.js";
+import { DataDistributor, Filter, ObjectsLinksAndNodes } from "./datadistributor.js";
+import { GenericNodeFilter } from "./filters/genericnode.js";
+import * as helper from "./utils/helper.js";
+import { compare } from "./utils/version.js";
 import { Moment } from "moment";
-import { Node } from "./utils/node";
+import { Node } from "./utils/node.js";
+
+const patch = init([classModule, propsModule, styleModule, eventListenersModule]);
 
 export const Proportions = function (filterManager: ReturnType<typeof DataDistributor>) {
   const self = {
@@ -58,7 +60,7 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     };
   }
 
-  function fillTable(name: string, table: HTMLTableElement | undefined, data: any[][]) {
+  function fillTable(name: string, table: HTMLTableElement | undefined, data: any[][]): HTMLTableElement {
     if (!table) {
       table = document.createElement("table");
     }
@@ -75,12 +77,12 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
 
       let filter = GenericNodeFilter(_.t(name), data[2], data[0], data[3]);
 
-      let a = V.h("a", { on: { click: addFilter(filter) } }, data[0]);
+      let a = h("a", { on: { click: addFilter(filter) } }, data[0]);
 
-      let th = V.h("th", a);
-      let td = V.h(
+      let th = h("th", a);
+      let td = h(
         "td",
-        V.h(
+        h(
           "span",
           {
             style: {
@@ -92,10 +94,10 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
         ),
       );
 
-      return V.h("tr", [th, td]);
+      return h("tr", [th, td]);
     });
-    let tableNew = V.h("table", { props: { className: "proportion" } }, items);
-    return V.patch(table, tableNew);
+    let tableNew = h("table", { props: { className: "proportion" } }, items);
+    return patch(table, tableNew) as unknown as HTMLTableElement;
   }
 
   self.setData = function setData(data: ObjectsLinksAndNodes) {
@@ -228,10 +230,10 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
         "{LOCALE}": _.locale(),
       };
       config.globalInfos.forEach(function (globalInfo) {
-        img.push(V.h("h2", globalInfo.name));
-        img.push(helper.showStat(V, globalInfo, subst));
+        img.push(h("h2", globalInfo.name));
+        img.push(helper.showStat(globalInfo, subst));
       });
-      V.patch(images, V.h("div", img));
+      patch(images, h("div", img));
     }
   };
 

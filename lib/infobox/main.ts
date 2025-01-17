@@ -1,11 +1,11 @@
-import { _ } from "../utils/language";
-import { Link } from "./link";
-import { Node } from "./node";
-import { location } from "./location";
-import { Link as LinkData, Node as NodeData, NodeId } from "../utils/node";
-import { Sidebar } from "../sidebar";
-import { TargetLocation } from "../utils/router";
-import { ObjectsLinksAndNodes } from "../datadistributor";
+import { _ } from "../utils/language.js";
+import { Link } from "./link.js";
+import { Node } from "./node.js";
+import { location } from "./location.js";
+import { Link as LinkData, Node as NodeData, NodeId } from "../utils/node.js";
+import { Sidebar } from "../sidebar.js";
+import { TargetLocation } from "../utils/router.js";
+import { ObjectsLinksAndNodes } from "../datadistributor.js";
 
 export const Main = function (sidebar: ReturnType<typeof Sidebar>, linkScale: (t: any) => any) {
   const self = {

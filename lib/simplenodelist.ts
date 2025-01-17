@@ -1,10 +1,12 @@
 import moment from "moment";
-import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
+import { classModule, eventListenersModule, h, init, propsModule, styleModule, VNode } from "snabbdom";
 
-import { _ } from "./utils/language";
-import * as helper from "./utils/helper";
-import { ObjectsLinksAndNodes } from "./datadistributor";
-import { Node } from "./utils/node";
+import { _ } from "./utils/language.js";
+import * as helper from "./utils/helper.js";
+import { ObjectsLinksAndNodes } from "./datadistributor.js";
+import { Node } from "./utils/node.js";
+
+const patch = init([classModule, propsModule, styleModule, eventListenersModule]);
 
 export const SimpleNodelist = function (nodesState: string, field: string, title: string) {
   const self = {
@@ -37,18 +39,18 @@ export const SimpleNodelist = function (nodesState: string, field: string, title
 
       tbody = document.createElement("tbody");
       // @ts-ignore
-      tbody.last = V.h("tbody");
+      tbody.last = h("tbody");
       table.appendChild(tbody);
     }
 
     let items = nodeList.map(function (node: Node) {
       let router = window.router;
-      let td0Content = "";
+      let td0Content: null | VNode = null;
       if (helper.hasLocation(node)) {
-        td0Content = V.h("span", { props: { className: "icon ion-location", title: _.t("location.location") } });
+        td0Content = h("span", { props: { className: "icon ion-location", title: _.t("location.location") } });
       }
 
-      let td1Content = V.h(
+      let td1Content = h(
         "a",
         {
           props: {
@@ -64,11 +66,11 @@ export const SimpleNodelist = function (nodesState: string, field: string, title
         node.hostname,
       );
 
-      return V.h("tr", [V.h("td", td0Content), V.h("td", td1Content), V.h("td", moment(node[field]).from(data.now))]);
+      return h("tr", [h("td", td0Content), h("td", td1Content), h("td", moment(node[field]).from(data.now))]);
     });
 
-    let tbodyNew = V.h("tbody", items);
-    tbody = V.patch(tbody, tbodyNew);
+    let tbodyNew = h("tbody", items);
+    tbody = patch(tbody, tbodyNew) as unknown as HTMLTableSectionElement;
   };
 
   return self;

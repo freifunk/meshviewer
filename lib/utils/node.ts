@@ -1,7 +1,7 @@
-import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
+import { h } from "snabbdom";
 import moment, { Moment } from "moment";
-import { _ } from "./language";
-import * as helper from "./helper";
+import { _ } from "./language.js";
+import * as helper from "./helper.js";
 
 export type LinkId = string;
 
@@ -82,16 +82,16 @@ const self = {
 };
 
 function showBar(value: string, width: number, warning: boolean) {
-  return V.h("span", { props: { className: "bar" + (warning ? " warning" : "") } }, [
-    V.h("span", {
+  return h("span", { props: { className: "bar" + (warning ? " warning" : "") } }, [
+    h("span", {
       style: { width: width * 100 + "%" },
     }),
-    V.h("label", value),
+    h("label", value),
   ]);
 }
 
 self.showStatus = function showStatus(node: Node) {
-  return V.h(
+  return h(
     "td",
     { props: { className: node.is_online ? "online" : "offline" } },
     _.t(node.is_online ? "node.lastOnline" : "node.lastOffline", {
@@ -106,9 +106,9 @@ self.showGeoURI = function showGeoURI(data: Node) {
     return undefined;
   }
 
-  return V.h(
+  return h(
     "td",
-    V.h(
+    h(
       "a",
       { props: { href: "geo:" + data.location.latitude + "," + data.location.longitude } },
       Number(data.location.latitude.toFixed(6)) + ", " + Number(data.location.longitude.toFixed(6)),
@@ -178,33 +178,33 @@ self.showClients = function showClients(node: Node) {
   let localClients = self.countLocalClients(node);
 
   let clients = [
-    V.h("span", [
+    h("span", [
       node.clients > 0 ? node.clients : _.t("none"),
-      V.h("br"),
-      V.h("i", { props: { className: "ion-people", title: _.t("node.clients") } }),
+      h("br"),
+      h("i", { props: { className: "ion-people", title: _.t("node.clients") } }),
     ]),
-    V.h("span", { props: { className: "legend-24ghz" } }, [
+    h("span", { props: { className: "legend-24ghz" } }, [
       node.clients_wifi24,
-      V.h("br"),
-      V.h("span", { props: { className: "symbol", title: "2,4 GHz" } }),
+      h("br"),
+      h("span", { props: { className: "symbol", title: "2,4 GHz" } }),
     ]),
-    V.h("span", { props: { className: "legend-5ghz" } }, [
+    h("span", { props: { className: "legend-5ghz" } }, [
       node.clients_wifi5,
-      V.h("br"),
-      V.h("span", { props: { className: "symbol", title: "5 GHz" } }),
+      h("br"),
+      h("span", { props: { className: "symbol", title: "5 GHz" } }),
     ]),
-    V.h("span", { props: { className: "legend-others" } }, [
+    h("span", { props: { className: "legend-others" } }, [
       node.clients_other,
-      V.h("br"),
-      V.h("span", { props: { className: "symbol", title: _.t("others") } }),
+      h("br"),
+      h("span", { props: { className: "symbol", title: _.t("others") } }),
     ]),
-    V.h("span", [
+    h("span", [
       localClients > 0 ? localClients : _.t("none"),
-      V.h("br"),
-      V.h("i", { props: { className: "ion-share-alt", title: _.t("node.localClients") } }),
+      h("br"),
+      h("i", { props: { className: "ion-share-alt", title: _.t("node.localClients") } }),
     ]),
   ];
-  return V.h("td", { props: { className: "clients" } }, clients);
+  return h("td", { props: { className: "clients" } }, clients);
 };
 
 self.showIPs = function showIPs(node: Node) {
@@ -213,16 +213,16 @@ self.showIPs = function showIPs(node: Node) {
   ips.sort();
   ips.forEach(function (ip, i) {
     if (i > 0) {
-      string.push(V.h("br"));
+      string.push(h("br"));
     }
 
     if (ip.indexOf("fe80:") !== 0) {
-      string.push(V.h("a", { props: { href: "http://[" + ip + "]/", target: "_blank" } }, ip));
+      string.push(h("a", { props: { href: "http://[" + ip + "]/", target: "_blank" } }, ip));
     } else {
       string.push(ip);
     }
   });
-  return V.h("td", string);
+  return h("td", string);
 };
 
 self.showAutoupdate = function showAutoupdate(node: Node) {

@@ -1,8 +1,8 @@
 import * as L from "leaflet";
 import RBush from "rbush";
-import * as helper from "../utils/helper";
-import { Node } from "../utils/node";
-import { ObjectsLinksAndNodes } from "../datadistributor";
+import * as helper from "../utils/helper.js";
+import { Node } from "../utils/node.js";
+import { ObjectsLinksAndNodes } from "../datadistributor.js";
 import { Coords } from "leaflet";
 
 export const ClientLayer = L.GridLayer.extend({

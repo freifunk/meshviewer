@@ -1,6 +1,6 @@
-import { _ } from "../utils/language";
-import * as helper from "../utils/helper";
-import { TargetLocation } from "../utils/router";
+import { _ } from "../utils/language.js";
+import * as helper from "../utils/helper.js";
+import { TargetLocation } from "../utils/router.js";
 
 export const location = function (el: HTMLElement, position: TargetLocation) {
   let config = window.config;

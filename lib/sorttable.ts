@@ -1,5 +1,5 @@
-import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
-import { _ } from "./utils/language";
+import { classModule, eventListenersModule, h, init, propsModule, styleModule } from "snabbdom";
+import { _ } from "./utils/language.js";
 
 export interface Heading {
   name: string;
@@ -7,6 +7,8 @@ export interface Heading {
   reverse?: Boolean;
   class?: string;
 }
+
+const patch = init([classModule, propsModule, styleModule, eventListenersModule]);
 
 export const SortTable = function (
   headings: Heading[],
@@ -53,7 +55,7 @@ export const SortTable = function (
           properties.className += sortReverse ? " sort-up" : " sort-down";
         }
 
-        return V.h("th", { props: properties }, name);
+        return h("th", { props: properties }, name);
       });
 
       let links = data.slice(0).sort(headings[sortIndex].sort);
@@ -62,12 +64,12 @@ export const SortTable = function (
         links = links.reverse();
       }
 
-      children.push(V.h("thead", V.h("tr", th)));
-      children.push(V.h("tbody", links.map(renderRow)));
+      children.push(h("thead", h("tr", th)));
+      children.push(h("tbody", links.map(renderRow)));
     }
 
-    let elNew = V.h("table", children);
-    self.el = V.patch(self.el, elNew);
+    let elNew = h("table", children);
+    patch(self.el, elNew);
   }
 
   self.setData = function setData(d: any[]) {

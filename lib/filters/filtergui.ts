@@ -1,6 +1,6 @@
-import { _ } from "../utils/language";
-import { CanFiltersChanged, DataDistributor, Filter } from "../datadistributor";
-import { CanRender } from "../container";
+import { _ } from "../utils/language.js";
+import { CanFiltersChanged, DataDistributor, Filter } from "../datadistributor.js";
+import { CanRender } from "../container.js";
 
 export const FilterGui = function (distributor: ReturnType<typeof DataDistributor>): CanFiltersChanged & CanRender {
   let container = document.createElement("ul");
