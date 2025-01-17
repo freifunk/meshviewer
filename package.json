@@ -11,7 +11,6 @@
   },
   "devDependencies": {
     "@typescript-eslint/parser": "^6.17.0",
-    "@vite-pwa/assets-generator": "^0.0.10",
     "eslint": "^8.51.0",
     "eslint-config-prettier": "^9.1.0",
     "prettier": "3.0.3",
