@@ -1,5 +1,5 @@
-import { LanguageCode } from "./utils/language";
-import { Node, NodeId } from "./utils/node";
+import { LanguageCode } from "./utils/language.js";
+import { Node, NodeId } from "./utils/node.js";
 import { GeoJSONOptions, GridLayerOptions, LatLngBoundsExpression } from "leaflet";
 import { GeoJsonObject } from "geojson";
 

@@ -1,10 +1,9 @@
 import { Moment } from "moment";
-import { snabbdomBundle as sv } from "snabbdom/snabbdom.bundle";
-import { VNode } from "snabbdom/vnode";
+import { h, VNode } from "snabbdom";
 import { Map } from "leaflet";
-import { _ } from "./language";
-import { Node } from "./node";
-import { LinkInfo, NodeInfo } from "../config_default";
+import { _ } from "./language.js";
+import { Node } from "./node.js";
+import { LinkInfo, NodeInfo } from "../config_default.js";
 
 export const get = function get(url: string) {
   return new Promise(function (resolve, reject) {
@@ -124,18 +123,18 @@ export const showTq = function showTq(tq: number) {
   return (tq * 100).toFixed(0) + "%";
 };
 
-export const attributeEntry = function attributeEntry(V: typeof sv, children: VNode[], label: string, value: string) {
+export function attributeEntry(children: VNode[], label: string, value: string | VNode) {
   if (value !== undefined) {
     if (typeof value !== "object") {
-      value = V.h("td", value);
+      value = h("td", value);
     }
 
-    children.push(V.h("tr", [V.h("th", _.t(label)), value]));
+    children.push(h("tr", [h("th", _.t(label)), value]));
   }
-};
+}
 
-export const showStat = function showStat(V: typeof sv, linkInfo: LinkInfo | NodeInfo, subst: ReplaceMapping) {
-  let content = V.h("img", {
+export function showStat(linkInfo: LinkInfo | NodeInfo, subst: ReplaceMapping): HTMLElement {
+  let content = h("img", {
     attrs: {
       src: listReplace(linkInfo.image, subst),
       width: linkInfo.width,
@@ -145,9 +144,9 @@ export const showStat = function showStat(V: typeof sv, linkInfo: LinkInfo | Nod
   });
 
   if (linkInfo.href) {
-    return V.h(
+    return h(
       "div",
-      V.h(
+      h(
         "a",
         {
           attrs: {
@@ -158,17 +157,17 @@ export const showStat = function showStat(V: typeof sv, linkInfo: LinkInfo | Nod
         },
         content,
       ),
-    );
+    ) as unknown as HTMLElement;
   }
-  return V.h("div", content);
-};
+  return h("div", content) as unknown as HTMLElement;
+}
 
-export const showDevicePicture = function showDevicePicture(V: typeof sv, pictures: string, subst: ReplaceMapping) {
+export const showDevicePicture = function showDevicePicture(pictures: string, subst: ReplaceMapping) {
   if (!pictures) {
     return null;
   }
 
-  return V.h("img", {
+  return h("img", {
     attrs: { src: listReplace(pictures, subst), class: "hw-img" },
     on: {
       // hide non-existent images

@@ -1,5 +1,5 @@
-import { NodeFilter } from "./filters/nodefilter";
-import { Link, Node, NodeId } from "./utils/node";
+import { NodeFilter } from "./filters/nodefilter.js";
+import { Link, Node, NodeId } from "./utils/node.js";
 import { Moment } from "moment";
 
 export interface CanSetData {

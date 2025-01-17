@@ -1,4 +1,4 @@
 import "../scss/main.scss";
-import { load } from "./load";
+import { load } from "./load.js";
 
 load();

@@ -1,7 +1,7 @@
-import { _ } from "./utils/language";
-import * as helper from "./utils/helper";
-import { Language } from "./utils/language";
-import { ObjectsLinksAndNodes } from "./datadistributor";
+import { _ } from "./utils/language.js";
+import * as helper from "./utils/helper.js";
+import { Language } from "./utils/language.js";
+import { ObjectsLinksAndNodes } from "./datadistributor.js";
 
 export const Legend = function (language: ReturnType<typeof Language>) {
   const self = {

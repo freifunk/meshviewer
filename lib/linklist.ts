@@ -1,10 +1,10 @@
-import { snabbdomBundle as V } from "snabbdom/snabbdom.bundle";
-import { _ } from "./utils/language";
-import { Heading, SortTable } from "./sorttable";
-import * as helper from "./utils/helper";
-import { Link } from "./utils/node";
-import { CanSetData, ObjectsLinksAndNodes } from "./datadistributor";
-import { CanRender } from "./container";
+import { h } from "snabbdom";
+import { _ } from "./utils/language.js";
+import { Heading, SortTable } from "./sorttable.js";
+import * as helper from "./utils/helper.js";
+import { Link } from "./utils/node.js";
+import { CanSetData, ObjectsLinksAndNodes } from "./datadistributor.js";
+import { CanRender } from "./container.js";
 
 function linkName(link: Link) {
   return (link.source ? link.source.hostname : link.id) + " – " + link.target.hostname;
@@ -52,7 +52,7 @@ export const Linklist = function (linkScale: (t: any) => any): CanRender & CanSe
 
   function renderRow(link: Link) {
     let td1Content = [
-      V.h(
+      h(
         "a",
         {
           props: {
@@ -68,23 +68,23 @@ export const Linklist = function (linkScale: (t: any) => any): CanRender & CanSe
       ),
     ];
 
-    return V.h("tr", [
-      V.h(
+    return h("tr", [
+      h(
         "td",
-        V.h("span", {
+        h("span", {
           props: {
             className: "icon ion-" + (link.type.indexOf("wifi") === 0 ? "wifi" : "share-alt"),
             title: _.t(link.type),
           },
         }),
       ),
-      V.h("td", td1Content),
-      V.h(
+      h("td", td1Content),
+      h(
         "td",
         { style: { color: linkScale((link.source_tq + link.target_tq) / 2) } },
         helper.showTq(link.source_tq) + " - " + helper.showTq(link.target_tq),
       ),
-      V.h("td", helper.showDistance(link)),
+      h("td", helper.showDistance(link)),
     ]);
   }
 

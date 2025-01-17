@@ -1,5 +1,5 @@
-import { config as defaultConfig } from "./config_default";
-import { main } from "./main";
+import { config as defaultConfig } from "./config_default.js";
+import { main } from "./main.js";
 
 export const load = async () => {
   const configResponse = await fetch("config.json");

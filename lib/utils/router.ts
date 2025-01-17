@@ -1,6 +1,6 @@
 import Navigo from "navigo";
-import { Language } from "./language";
-import { Link, NodeId } from "./node";
+import { Language } from "./language.js";
+import { Link, NodeId } from "./node.js";
 import { Moment } from "moment";
 
 export interface Objects {

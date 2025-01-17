@@ -1,23 +1,23 @@
 import { interpolate } from "d3-interpolate";
-import { _ } from "./utils/language";
-import { About } from "./about";
-import { Container } from "./container";
-import { DataDistributor } from "./datadistributor";
-import { ForceGraph } from "./forcegraph";
-import { Legend } from "./legend";
-import { Linklist } from "./linklist";
-import { Nodelist } from "./nodelist";
-import { Map } from "./map";
-import { Proportions } from "./proportions";
-import { SimpleNodelist } from "./simplenodelist";
-import { Sidebar } from "./sidebar";
-import { Tabs } from "./tabs";
-import { Title } from "./title";
-import { Main as Infobox } from "./infobox/main";
-import { FilterGui } from "./filters/filtergui";
-import { HostnameFilter } from "./filters/hostname";
-import * as helper from "./utils/helper";
-import { Language } from "./utils/language";
+import { _ } from "./utils/language.js";
+import { About } from "./about.js";
+import { Container } from "./container.js";
+import { DataDistributor } from "./datadistributor.js";
+import { ForceGraph } from "./forcegraph.js";
+import { Legend } from "./legend.js";
+import { Linklist } from "./linklist.js";
+import { Nodelist } from "./nodelist.js";
+import { Map } from "./map.js";
+import { Proportions } from "./proportions.js";
+import { SimpleNodelist } from "./simplenodelist.js";
+import { Sidebar } from "./sidebar.js";
+import { Tabs } from "./tabs.js";
+import { Title } from "./title.js";
+import { Main as Infobox } from "./infobox/main.js";
+import { FilterGui } from "./filters/filtergui.js";
+import { HostnameFilter } from "./filters/hostname.js";
+import * as helper from "./utils/helper.js";
+import { Language } from "./utils/language.js";
 
 export const Gui = function (language: ReturnType<typeof Language>) {
   const self = {

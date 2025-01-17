@@ -1,4 +1,4 @@
-import { Link, Node } from "./utils/node";
+import { Link, Node } from "./utils/node.js";
 
 export const Title = function () {
   const self = {

@@ -1,7 +1,7 @@
-import { _ } from "../utils/language";
-import { Node } from "../utils/node";
-import { CanRender } from "../container";
-import { Filter } from "../datadistributor";
+import { _ } from "../utils/language.js";
+import { Node } from "../utils/node.js";
+import { CanRender } from "../container.js";
+import { Filter } from "../datadistributor.js";
 
 export const HostnameFilter = function (): CanRender & Filter {
   let refreshFunctions: (() => any)[] = [];

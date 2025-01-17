@@ -1,5 +1,5 @@
-import { _ } from "./utils/language";
-import { CanRender } from "./container";
+import { _ } from "./utils/language.js";
+import { CanRender } from "./container.js";
 
 export const About = function (picturesSource: string, picturesLicense: string): CanRender {
   function render(d: HTMLElement) {
