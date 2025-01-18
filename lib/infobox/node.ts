@@ -8,7 +8,7 @@ import { NodeInfo } from "../config_default.js";
 
 const patch = init([classModule, propsModule, styleModule, eventListenersModule]);
 
-function showStatImg(nodeInfo: NodeInfo, node: NodeData) {
+function showStatImg(nodeInfo: NodeInfo, node: NodeData): HTMLDivElement {
   let config = window.config;
   let subst = {
     "{NODE_ID}": node.node_id,
@@ -199,14 +199,11 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
 
     let devicePictures = showDevicePictures(config.devicePictures, node);
     let devicePicturesContainerData = {
-      attrs: {
+      props: {
         class: "hw-img-container",
       },
     };
-    devicePicture = patch(
-      devicePicture,
-      devicePictures ? h("div", devicePicturesContainerData, devicePictures) : h("div"),
-    ) as unknown as HTMLDivElement;
+    patch(devicePicture, devicePictures ? h("div", devicePicturesContainerData, devicePictures) : h("div"));
 
     let children = [];
 
@@ -237,9 +234,8 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
     children.push(h("tr", [h("th", _.t("node.gateway")), showGateway(node)]));
 
     let elNew = h("table", children);
-    table = patch(table, elNew) as unknown as HTMLTableElement;
-    // @ts-ignore
-    table.elm.classList.add("attributes");
+    patch(table, elNew);
+    table.classList.add("attributes");
 
     patch(neighbours, h("h3", _.t("node.link", node.neighbours.length) + " (" + node.neighbours.length + ")"));
     if (node.neighbours.length > 0) {
@@ -253,7 +249,7 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
         img.push(h("h4", nodeInfo.name) as unknown as HTMLElement);
         img.push(showStatImg(nodeInfo, node));
       });
-      images = patch(images, h("div", img)) as unknown as HTMLDivElement;
+      patch(images, h("div", img));
     }
   };
 

@@ -70,7 +70,7 @@ export const SimpleNodelist = function (nodesState: string, field: string, title
     });
 
     let tbodyNew = h("tbody", items);
-    tbody = patch(tbody, tbodyNew) as unknown as HTMLTableSectionElement;
+    patch(tbody, tbodyNew);
   };
 
   return self;

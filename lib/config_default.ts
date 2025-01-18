@@ -42,16 +42,17 @@ export interface Domain {
   domain: string;
 }
 
-export interface LinkInfo {
+interface Info {
   name: string;
   title: string;
   href: string;
-  image: string;
-  width: string;
-  height: string;
+  image?: string;
+  width?: string;
+  height?: string;
 }
 
-export type NodeInfo = LinkInfo;
+export type LinkInfo = Info;
+export type NodeInfo = Info;
 
 export interface Link {
   title: string;

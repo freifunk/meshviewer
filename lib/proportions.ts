@@ -1,4 +1,4 @@
-import { classModule, eventListenersModule, h, init, propsModule, styleModule } from "snabbdom";
+import { classModule, eventListenersModule, h, init, propsModule, styleModule, toVNode } from "snabbdom";
 import * as d3Interpolate from "d3-interpolate";
 import { _ } from "./utils/language.js";
 import { DataDistributor, Filter, ObjectsLinksAndNodes } from "./datadistributor.js";
@@ -97,7 +97,8 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
       return h("tr", [th, td]);
     });
     let tableNew = h("table", { props: { className: "proportion" } }, items);
-    return patch(table, tableNew) as unknown as HTMLTableElement;
+    patch(table, tableNew);
+    return table;
   }
 
   self.setData = function setData(data: ObjectsLinksAndNodes) {
@@ -243,12 +244,10 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
       h2.classList.add("proportion-header");
       h2.textContent = _.t(heading);
       h2.onclick = function onclick() {
-        // @ts-ignore
-        table.elm.classList.toggle("hide");
+        table.classList.toggle("hide");
       };
       el.appendChild(h2);
-      // @ts-ignore
-      el.appendChild(table.elm);
+      el.appendChild(table);
     }
   };
   return self;
