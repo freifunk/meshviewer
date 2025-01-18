@@ -101,8 +101,8 @@ export const Nodelist = function (): CanSetData & CanRender {
     let h2 = document.createElement("h2");
     h2.textContent = _.t("node.all");
     d.appendChild(h2);
-    table.el.elm.classList.add("node-list");
-    d.appendChild(table.el.elm);
+    table.el.classList.add("node-list");
+    d.appendChild(table.el);
   };
 
   self.setData = function setData(nodesData: ObjectsLinksAndNodes) {

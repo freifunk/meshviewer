@@ -92,8 +92,8 @@ export const Linklist = function (linkScale: (t: any) => any): CanRender & CanSe
     let h2 = document.createElement("h2");
     h2.textContent = _.t("node.links");
     d.appendChild(h2);
-    table.el.elm.classList.add("link-list");
-    d.appendChild(table.el.elm);
+    table.el.classList.add("link-list");
+    d.appendChild(table.el);
   };
 
   self.setData = function setData(d: ObjectsLinksAndNodes) {

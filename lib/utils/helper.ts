@@ -133,9 +133,9 @@ export function attributeEntry(children: VNode[], label: string, value: string |
   }
 }
 
-export function showStat(linkInfo: LinkInfo | NodeInfo, subst: ReplaceMapping): HTMLElement {
+export function showStat(linkInfo: LinkInfo, subst: ReplaceMapping): HTMLDivElement {
   let content = h("img", {
-    attrs: {
+    props: {
       src: listReplace(linkInfo.image, subst),
       width: linkInfo.width,
       height: linkInfo.height,
@@ -149,7 +149,7 @@ export function showStat(linkInfo: LinkInfo | NodeInfo, subst: ReplaceMapping): 
       h(
         "a",
         {
-          attrs: {
+          props: {
             href: listReplace(linkInfo.href, subst),
             target: "_blank",
             title: listReplace(linkInfo.title, subst),
@@ -157,9 +157,9 @@ export function showStat(linkInfo: LinkInfo | NodeInfo, subst: ReplaceMapping): 
         },
         content,
       ),
-    ) as unknown as HTMLElement;
+    ) as unknown as HTMLDivElement;
   }
-  return h("div", content) as unknown as HTMLElement;
+  return h("div", content) as unknown as HTMLDivElement;
 }
 
 export const showDevicePicture = function showDevicePicture(pictures: string, subst: ReplaceMapping) {
@@ -168,7 +168,7 @@ export const showDevicePicture = function showDevicePicture(pictures: string, su
   }
 
   return h("img", {
-    attrs: { src: listReplace(pictures, subst), class: "hw-img" },
+    props: { src: listReplace(pictures, subst), class: "hw-img" },
     on: {
       // hide non-existent images
       error: function (e: any) {

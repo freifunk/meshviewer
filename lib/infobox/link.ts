@@ -44,7 +44,7 @@ export const Link = function (el: HTMLElement, linkData: LinkData[], linkScale: 
     let img = [];
     let time = linkData[0].target.lastseen.format("DDMMYYYYHmmss");
 
-    header = patch(
+    patch(
       header,
       h(
         "div",
@@ -66,7 +66,7 @@ export const Link = function (el: HTMLElement, linkData: LinkData[], linkScale: 
           ),
         ]),
       ),
-    ) as unknown as HTMLDivElement;
+    );
 
     helper.attributeEntry(
       children,
@@ -104,9 +104,9 @@ export const Link = function (el: HTMLElement, linkData: LinkData[], linkScale: 
     }
 
     let elNew = h("table", children);
-    let pTable = patch(table, elNew);
-    (pTable.elm as unknown as HTMLElement).classList.add("attributes");
-    images = patch(images, h("div", img)) as unknown as HTMLDivElement;
+    patch(table, elNew);
+    table.classList.add("attributes");
+    patch(images, h("div", img));
   };
 
   self.setData = function setData(data: { links: LinkData[] }) {
