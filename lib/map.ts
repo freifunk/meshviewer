@@ -47,7 +47,7 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
 
   function mapActiveArea() {
     map.setActiveArea({
-      position: "absolute",
+      position: "relative",
       left: sidebar.getWidth() + "px",
       right: 0,
       top: 0,
