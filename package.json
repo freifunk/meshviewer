@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@types/d3-collection": "^1.0.12",
-    "@types/d3-drag": "^3.0.5",
+    "@types/d3-drag": "^3.0.7",
     "@types/d3-ease": "^3.0.1",
     "@types/d3-force": "^3.0.7",
     "@types/d3-interpolate": "^3.0.3",
