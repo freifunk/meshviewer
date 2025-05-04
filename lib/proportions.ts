@@ -1,12 +1,16 @@
-import { classModule, eventListenersModule, h, init, propsModule, styleModule, toVNode } from "snabbdom";
 import * as d3Interpolate from "d3-interpolate";
-import { _ } from "./utils/language.js";
+import { Moment } from "moment";
+import { classModule, eventListenersModule, h, init, propsModule, styleModule, VNode } from "snabbdom";
 import { DataDistributor, Filter, ObjectsLinksAndNodes } from "./datadistributor.js";
 import { GenericNodeFilter } from "./filters/genericnode.js";
 import * as helper from "./utils/helper.js";
-import { compare } from "./utils/version.js";
-import { Moment } from "moment";
+import { _ } from "./utils/language.js";
 import { Node } from "./utils/node.js";
+
+type TableNode = {
+  element: HTMLTableElement;
+  vnode?: VNode;
+};
 
 const patch = init([classModule, propsModule, styleModule, eventListenersModule]);
 
@@ -20,16 +24,7 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
   let scale = d3Interpolate.interpolate(config.forceGraph.tqFrom, config.forceGraph.tqTo);
   let time: Moment;
 
-  let statusTable: HTMLTableElement;
-  let fwTable: HTMLTableElement;
-  let baseTable: HTMLTableElement;
-  let depTable: HTMLTableElement;
-  let hwTable: HTMLTableElement;
-  let geoTable: HTMLTableElement;
-  let autoTable: HTMLTableElement;
-  let gatewayTable: HTMLTableElement;
-  let gateway6Table: HTMLTableElement;
-  let domainTable: HTMLTableElement;
+  let tables: Record<string, TableNode> = {};
 
   function count(nodes: Node[], key: string[], f?: (k: any) => any) {
     let dict = {};
@@ -60,10 +55,11 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     };
   }
 
-  function fillTable(name: string, table: HTMLTableElement | undefined, data: any[][]): HTMLTableElement {
-    if (!table) {
-      table = document.createElement("table");
-    }
+  function fillTable(name: string, table: TableNode | undefined, data: any[][]): TableNode {
+    let tableNode: TableNode = table ?? {
+      element: document.createElement("table"),
+      vnode: undefined,
+    };
 
     let max = Math.max.apply(
       Math,
@@ -97,8 +93,8 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
       return h("tr", [th, td]);
     });
     let tableNew = h("table", { props: { className: "proportion" } }, items);
-    patch(table, tableNew);
-    return table;
+    tableNode.vnode = patch(tableNode.vnode ?? tableNode.element, tableNew);
+    return tableNode;
   }
 
   self.setData = function setData(data: ObjectsLinksAndNodes) {
@@ -150,60 +146,78 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
       return d;
     });
 
-    statusTable = fillTable(
+    tables.status = fillTable(
       "node.status",
-      statusTable,
+      tables.status,
       statusDict.sort(function (a, b) {
         return b[1] - a[1];
       }),
     );
-    fwTable = fillTable("node.firmware", fwTable, fwDict.sort(compare));
-    baseTable = fillTable("node.baseversion", baseTable, baseDict.sort(compare));
-    depTable = fillTable(
+
+    tables.firmware = fillTable(
+      "node.firmware",
+      tables.firmware,
+      fwDict.sort(function (a, b) {
+        return b[1] - a[1];
+      }),
+    );
+
+    tables.baseversion = fillTable(
+      "node.baseversion",
+      tables.baseversion,
+      baseDict.sort(function (a, b) {
+        return b[1] - a[1];
+      }),
+    );
+
+    tables.deprecationStatus = fillTable(
       "node.deprecationStatus",
-      depTable,
+      tables.deprecationStatus,
       deprecationDict.sort(function (a, b) {
         return b[1] - a[1];
       }),
     );
-    hwTable = fillTable(
+
+    tables.hardware = fillTable(
       "node.hardware",
-      hwTable,
+      tables.hardware,
       hwDict.sort(function (a, b) {
         return b[1] - a[1];
       }),
     );
-    geoTable = fillTable(
+
+    tables.visible = fillTable(
       "node.visible",
-      geoTable,
+      tables.visible,
       geoDict.sort(function (a, b) {
         return b[1] - a[1];
       }),
     );
-    autoTable = fillTable(
+
+    tables.update = fillTable(
       "node.update",
-      autoTable,
+      tables.update,
       autoDict.sort(function (a, b) {
         return b[1] - a[1];
       }),
     );
-    gatewayTable = fillTable(
+    tables.gateway = fillTable(
       "node.selectedGatewayIPv4",
-      gatewayTable,
+      tables.gateway,
       gatewayDict.sort(function (a, b) {
         return b[1] - a[1];
       }),
     );
-    gateway6Table = fillTable(
+    tables.gateway6 = fillTable(
       "node.selectedGatewayIPv6",
-      gateway6Table,
+      tables.gateway6,
       gateway6Dict.sort(function (a, b) {
         return b[1] - a[1];
       }),
     );
-    domainTable = fillTable(
+    tables.domain = fillTable(
       "node.domain",
-      domainTable,
+      tables.domain,
       domainDict.sort(function (a, b) {
         return b[1] - a[1];
       }),
@@ -211,16 +225,16 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
   };
 
   self.render = function render(el: HTMLElement) {
-    self.renderSingle(el, "node.status", statusTable);
-    self.renderSingle(el, "node.firmware", fwTable);
-    self.renderSingle(el, "node.baseversion", baseTable);
-    self.renderSingle(el, "node.deprecationStatus", depTable);
-    self.renderSingle(el, "node.hardware", hwTable);
-    self.renderSingle(el, "node.visible", geoTable);
-    self.renderSingle(el, "node.update", autoTable);
-    self.renderSingle(el, "node.selectedGatewayIPv4", gatewayTable);
-    self.renderSingle(el, "node.selectedGatewayIPv6", gateway6Table);
-    self.renderSingle(el, "node.domain", domainTable);
+    self.renderSingle(el, "node.status", tables.status.element);
+    self.renderSingle(el, "node.firmware", tables.firmware.element);
+    self.renderSingle(el, "node.baseversion", tables.baseversion.element);
+    self.renderSingle(el, "node.deprecationStatus", tables.deprecationStatus.element);
+    self.renderSingle(el, "node.hardware", tables.hardware.element);
+    self.renderSingle(el, "node.visible", tables.visible.element);
+    self.renderSingle(el, "node.update", tables.update.element);
+    self.renderSingle(el, "node.selectedGatewayIPv4", tables.gateway.element);
+    self.renderSingle(el, "node.selectedGatewayIPv6", tables.gateway6.element);
+    self.renderSingle(el, "node.domain", tables.domain.element);
 
     if (config.globalInfos) {
       let images = document.createElement("div");
