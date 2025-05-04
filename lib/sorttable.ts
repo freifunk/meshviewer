@@ -1,4 +1,4 @@
-import { classModule, eventListenersModule, h, init, propsModule, styleModule } from "snabbdom";
+import { classModule, eventListenersModule, h, init, propsModule, styleModule, VNode } from "snabbdom";
 import { _ } from "./utils/language.js";
 
 export interface Heading {
@@ -22,6 +22,8 @@ export const SortTable = function (
   let data: any[];
   let sortReverse = false;
   self.el = document.createElement("table");
+
+  let vnode: VNode = null;
 
   function sortTable(i: number) {
     sortReverse = i === sortIndex ? !sortReverse : false;
@@ -72,7 +74,7 @@ export const SortTable = function (
     }
 
     let elNew = h("table", children);
-    patch(self.el, elNew);
+    vnode = patch(vnode ?? self.el, elNew);
   }
 
   self.setData = function setData(d: any[]) {
