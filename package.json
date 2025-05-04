@@ -19,7 +19,7 @@
     "typescript": "^5.7.2",
     "vite": "^6.3.4",
     "vite-plugin-checker": "^0.6.4",
-    "vite-plugin-pwa": "^0.21.2"
+    "vite-plugin-pwa": "^1.0.0"
   },
   "dependencies": {
     "@types/d3-collection": "^1.0.13",
