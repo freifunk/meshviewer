@@ -1,4 +1,4 @@
-import { classModule, eventListenersModule, h, init, propsModule, styleModule } from "snabbdom";
+import { classModule, eventListenersModule, h, init, propsModule, styleModule, VNode } from "snabbdom";
 import { _ } from "../utils/language.js";
 import * as helper from "../utils/helper.js";
 import { LinkInfo } from "../config_default.js";
@@ -30,12 +30,10 @@ export const Link = function (el: HTMLElement, linkData: LinkData[], linkScale: 
     render: undefined,
     setData: undefined,
   };
-  let header = document.createElement("div");
-  let table = document.createElement("table");
-  let images = document.createElement("div");
-  el.appendChild(header);
-  el.appendChild(table);
-  el.appendChild(images);
+
+  let container = document.createElement("div");
+  el.appendChild(container);
+  let containerVnode: VNode | undefined;
 
   self.render = function render() {
     let config = window.config;
@@ -44,8 +42,7 @@ export const Link = function (el: HTMLElement, linkData: LinkData[], linkScale: 
     let img = [];
     let time = linkData[0].target.lastseen.format("DDMMYYYYHmmss");
 
-    patch(
-      header,
+    let newContainer = h("div", [
       h(
         "div",
         h("h2", [
@@ -66,7 +63,7 @@ export const Link = function (el: HTMLElement, linkData: LinkData[], linkScale: 
           ),
         ]),
       ),
-    );
+    ]);
 
     helper.attributeEntry(
       children,
@@ -103,10 +100,10 @@ export const Link = function (el: HTMLElement, linkData: LinkData[], linkScale: 
       });
     }
 
-    let elNew = h("table", children);
-    patch(table, elNew);
-    table.classList.add("attributes");
-    patch(images, h("div", img));
+    newContainer.children.push(h("table", { props: { className: "attributes" } }, children));
+    newContainer.children.push(h("div", img));
+
+    containerVnode = patch(containerVnode ?? container, newContainer);
   };
 
   self.setData = function setData(data: { links: LinkData[] }) {
