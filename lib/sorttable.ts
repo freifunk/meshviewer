@@ -14,16 +14,16 @@ export const SortTable = function (
   headings: Heading[],
   sortIndex: number,
   renderRow: (element: any, i: number, all: []) => any,
+  className: string[] = [],
 ) {
   const self: {
     el: HTMLElement;
+    vnode: VNode;
     setData: (data: any[]) => void;
-  } = { el: undefined, setData: undefined };
+  } = { el: undefined, setData: undefined, vnode: null };
   let data: any[];
   let sortReverse = false;
   self.el = document.createElement("table");
-
-  let vnode: VNode = null;
 
   function sortTable(i: number) {
     sortReverse = i === sortIndex ? !sortReverse : false;
@@ -73,8 +73,8 @@ export const SortTable = function (
       children.push(h("tbody", links.map(renderRow)));
     }
 
-    let elNew = h("table", children);
-    vnode = patch(vnode ?? self.el, elNew);
+    let elNew = h("table", { props: { className } }, children);
+    self.vnode = patch(self.vnode ?? self.el, elNew);
   }
 
   self.setData = function setData(d: any[]) {

@@ -1,4 +1,4 @@
-import { h, classModule, eventListenersModule, init, propsModule, styleModule } from "snabbdom";
+import { h, classModule, eventListenersModule, init, propsModule, styleModule, VNode } from "snabbdom";
 import { _ } from "../utils/language.js";
 
 import { SortTable } from "../sorttable.js";
@@ -131,11 +131,7 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
     render: undefined,
     setData: undefined,
   };
-  let header = document.createElement("h2");
-  let devicePicture = document.createElement("div");
-  let table = document.createElement("table");
-  let images = document.createElement("div");
-  let neighbours = document.createElement("h3");
+
   let headings = [
     {
       name: "",
@@ -178,34 +174,28 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
       reverse: true,
     },
   ];
-  let tableNeighbour = SortTable(headings, 1, renderNeighbourRow);
 
-  // Prepare deprecation warning. At first not displayed, text follows later
-  let deprecation = document.createElement("div");
-  deprecation.setAttribute("class", "deprecated");
-  deprecation.setAttribute("style", "display: none;");
-  deprecation.innerHTML = "<div>" + (config.deprecation_text || _.t("deprecation")) + "</div>";
+  let container = document.createElement("div");
+  el.appendChild(container);
+  let containerVnode: VNode | undefined;
 
-  el.appendChild(header);
-  el.appendChild(devicePicture);
-  el.appendChild(deprecation);
-  el.appendChild(table);
-  el.appendChild(neighbours);
-  el.appendChild(tableNeighbour.el);
-  el.appendChild(images);
+  let tableNeighbour = SortTable(headings, 1, renderNeighbourRow, ["node-links"]);
 
   self.render = function render() {
-    patch(header, h("h2", node.hostname));
+    let newContainer = h("div", [h("h2", node.hostname)]);
 
-    let devicePictures = showDevicePictures(config.devicePictures, node);
+    // Device picture
+    let devicePictures: VNode = showDevicePictures(config.devicePictures, node);
     let devicePicturesContainerData = {
       props: {
-        class: "hw-img-container",
+        className: "hw-img-container",
       },
     };
-    patch(devicePicture, devicePictures ? h("div", devicePicturesContainerData, devicePictures) : h("div"));
+    newContainer.children.push(devicePictures ? h("div", devicePicturesContainerData, devicePictures) : h("div"));
 
-    let children = [];
+    let attributeTable = h("table", { props: { className: "attributes" } }, []);
+
+    let showDeprecation = false;
 
     config.nodeAttr.forEach(function (row) {
       let field = node[String(row.value)];
@@ -218,7 +208,7 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
       if (config.deprecation_enabled) {
         if (row.name === "node.hardware") {
           if (config.deprecated && field && config.deprecated.includes(field)) {
-            deprecation.setAttribute("style", "display: block;");
+            showDeprecation = true;
           }
         }
       }
@@ -227,30 +217,40 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
         if (typeof field !== "object") {
           field = h("td", field);
         }
-        children.push(h("tr", [row.name !== undefined ? h("th", _.t(row.name)) : null, field]));
+        attributeTable.children.push(h("tr", [row.name !== undefined ? h("th", _.t(row.name)) : null, field]));
       }
     });
+    attributeTable.children.push(h("tr", [h("th", _.t("node.gateway")), showGateway(node)]));
 
-    children.push(h("tr", [h("th", _.t("node.gateway")), showGateway(node)]));
-
-    let elNew = h("table", children);
-    patch(table, elNew);
-    table.classList.add("attributes");
-
-    patch(neighbours, h("h3", _.t("node.link", node.neighbours.length) + " (" + node.neighbours.length + ")"));
-    if (node.neighbours.length > 0) {
-      tableNeighbour.setData(node.neighbours);
-      tableNeighbour.el.classList.add("node-links");
+    // Deprecation warning
+    if (showDeprecation) {
+      // Add deprecation warning to the container
+      newContainer.children.push(
+        h("div", { props: { className: "deprecated" } }, [h("div", config.deprecation_text || _.t("deprecation"))]),
+      );
     }
 
+    // Attributes
+    newContainer.children.push(attributeTable);
+
+    // // Neighbors
+    newContainer.children.push(h("h3", _.t("node.link", node.neighbours.length) + " (" + node.neighbours.length + ")"));
+    if (node.neighbours.length > 0) {
+      tableNeighbour.setData(node.neighbours);
+      newContainer.children.push(tableNeighbour.vnode);
+    }
+
+    // // Images
     if (config.nodeInfos) {
       let img = [];
       config.nodeInfos.forEach(function (nodeInfo) {
         img.push(h("h4", nodeInfo.name) as unknown as HTMLElement);
         img.push(showStatImg(nodeInfo, node));
       });
-      patch(images, h("div", img));
+      newContainer.children.push(h("div", img));
     }
+
+    containerVnode = patch(containerVnode ?? container, newContainer);
   };
 
   self.setData = function setData(data: { nodeDict: { [x: NodeId]: NodeData } }) {
