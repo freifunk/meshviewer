@@ -1,6 +1,10 @@
 type Version = { epoch: number; upstream: string; debian: string };
 
 const Version = function (v: string) {
+  // remove leading "v" or "V" if present
+  if (v.startsWith("v") || v.startsWith("V")) {
+    v = v.slice(1);
+  }
   let versionResult = /^[a-zA-Z]?([0-9]*(?=:))?:(.*)/.exec(v);
   let version = versionResult && versionResult[2] ? versionResult[2] : v;
   let versionParts = version.split("-");
@@ -21,9 +25,6 @@ Version.prototype.compare = function (b: Version) {
 };
 
 Version.prototype.charCode = function (c: string) {
-  // the lower the character code the lower the version.
-  // if (c === '~') {return 0;} // tilde sort before anything
-  // else
   if (/[a-zA-Z]/.test(c)) {
     return c.charCodeAt(0) - "A".charCodeAt(0) + 1;
   } else if (/[.:+-:]/.test(c)) {
@@ -90,8 +91,8 @@ Version.prototype.compareStrings = function (a: string, b: string) {
   return 0;
 };
 
-export const compare = (a: any[], b: any[]) => {
-  let va = new Version(a[0]);
-  let vb = new Version(b[0]);
+export const compare = (a: string, b: string) => {
+  let va = new Version(a);
+  let vb = new Version(b);
   return vb.compare(va);
 };
