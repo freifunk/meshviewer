@@ -168,7 +168,8 @@ export const showDevicePicture = function showDevicePicture(pictures: string, su
   }
 
   return h("img", {
-    props: { src: listReplace(pictures, subst), class: "hw-img" },
+    props: { src: listReplace(pictures, subst) },
+    class: { "hw-img": true },
     on: {
       // hide non-existent images
       error: function (e: any) {
