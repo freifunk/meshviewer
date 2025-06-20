@@ -226,7 +226,13 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
     if (showDeprecation) {
       // Add deprecation warning to the container
       newContainer.children.push(
-        h("div", { props: { className: "deprecated" } }, [h("div", config.deprecation_text || _.t("deprecation"))]),
+        h("div", { props: { className: "deprecated" } }, [
+          h("div", {
+            props: {
+              innerHTML: config.deprecation_text || _.t("deprecation"),
+            },
+          }),
+        ]),
       );
     }
 
