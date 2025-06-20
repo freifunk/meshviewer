@@ -8,7 +8,7 @@ $color-map-background: #0d151c;
 
 $color-online: lighten($color-online, 25%);
 
-html {
+.theme_night {
   //@import 'modules/base';
   body,
   textarea,
@@ -87,10 +87,6 @@ html {
     .container {
       background: transparentize($color-white, 0.03);
       border-right: 1px solid darken($color-white, 10%);
-    }
-
-    img {
-      filter: invert(100%);
     }
 
     @media screen and (max-width: map-get($grid-breakpoints, xl) - 1) {
