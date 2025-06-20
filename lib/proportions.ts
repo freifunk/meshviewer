@@ -6,6 +6,7 @@ import { GenericNodeFilter } from "./filters/genericnode.js";
 import * as helper from "./utils/helper.js";
 import { _ } from "./utils/language.js";
 import { Node } from "./utils/node.js";
+import { compare } from "./utils/version.js";
 
 type TableNode = {
   element: HTMLTableElement;
@@ -111,6 +112,14 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
       return null;
     }
 
+    function sortVersionCountAndName(a, b) {
+      // descending by count
+      if (b[1] !== a[1]) {
+        return b[1] - a[1];
+      }
+      return compare(a[0], b[0]);
+    }
+
     let gatewayDict = count(nodes, ["gateway"], hostnameOfNodeID);
     let gateway6Dict = count(nodes, ["gateway6"], hostnameOfNodeID);
 
@@ -154,21 +163,9 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
       }),
     );
 
-    tables.firmware = fillTable(
-      "node.firmware",
-      tables.firmware,
-      fwDict.sort(function (a, b) {
-        return b[1] - a[1];
-      }),
-    );
+    tables.firmware = fillTable("node.firmware", tables.firmware, fwDict.sort(sortVersionCountAndName));
 
-    tables.baseversion = fillTable(
-      "node.baseversion",
-      tables.baseversion,
-      baseDict.sort(function (a, b) {
-        return b[1] - a[1];
-      }),
-    );
+    tables.baseversion = fillTable("node.baseversion", tables.baseversion, baseDict.sort(sortVersionCountAndName));
 
     tables.deprecationStatus = fillTable(
       "node.deprecationStatus",
