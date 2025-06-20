@@ -146,15 +146,20 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
       map.setZoom(map.options.maxZoom);
     }
 
-    let style: Element & { media?: string } = document.querySelector('.css-mode:not([media="not"])');
-    if (style && e.layer.options.mode !== "" && !style.classList.contains(e.layer.options.mode)) {
-      style.media = "not";
-      labelLayer.updateLayer();
-    }
-    if (e.layer.options.mode) {
-      let newStyle: Element & { media?: string } = document.querySelector(".css-mode." + e.layer.options.mode);
-      newStyle.media = "";
-      newStyle.appendChild(document.createTextNode(""));
+    let html_tag: Element = document.querySelector("html");
+    let class_list = html_tag.classList;
+    class_list.forEach(function (item) {
+      if (item.startsWith("theme_")) {
+        class_list.remove(item);
+      }
+    });
+    if (
+      html_tag &&
+      e.layer.options.mode &&
+      e.layer.options.mode !== "" &&
+      !html_tag.classList.contains(e.layer.options.mode)
+    ) {
+      class_list.add("theme_" + e.layer.options.mode);
       labelLayer.updateLayer();
     }
   });
