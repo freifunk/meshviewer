@@ -39,10 +39,12 @@ export const About = function (picturesSource: string, picturesLicense: string):
           })
         : "") +
       "<h3>Feel free to contribute!</h3>" +
-      "<p>Please support this meshviewer-fork by opening issues or sending pull requests!</p>" +
+      "<p>Please support the meshviewer by opening issues or sending pull requests!</p>" +
       '<p><a href="https://github.com/freifunk/meshviewer">' +
       "https://github.com/freifunk/meshviewer</a></p>" +
-      '<p>Fork maintained by <a href="https://ffm.freifunk.net" target="_blank">Freifunk Frankfurt</a></p>' +
+      "<p>Version: " +
+      __APP_VERSION__ +
+      "</p>" +
       "<h3>AGPL 3</h3>" +
       "<p>Copyright (C) Milan Pässler</p>" +
       "<p>Copyright (C) Nils Schneider</p>" +

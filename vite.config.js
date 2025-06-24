@@ -2,6 +2,7 @@ import { resolve } from "path";
 import { defineConfig } from "vite";
 import { checker } from "vite-plugin-checker";
 import { VitePWA } from "vite-plugin-pwa";
+import pkg from "./package.json";
 
 export default defineConfig({
   base: "./",
@@ -9,6 +10,9 @@ export default defineConfig({
     alias: {
       "@fonts": resolve(__dirname, "assets/fonts"),
     },
+  },
+  define: {
+    __APP_VERSION__: JSON.stringify(pkg.version),
   },
   build: {
     outDir: "build",
