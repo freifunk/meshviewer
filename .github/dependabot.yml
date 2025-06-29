@@ -8,6 +8,7 @@ updates:
     schedule:
       # Check for updates to GitHub Actions every weekday
       interval: "monthly"
+      prefix: "actions"
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
@@ -21,4 +22,4 @@ updates:
       interval: "monthly"
     commit-message:
       # Prefix all commit messages with "npm: "
-      prefix: "npm"
+      prefix: "docker"
