@@ -138,28 +138,29 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
     labelLayer.redraw();
   });
 
-  map.on("baselayerchange", function (e) {
-    map.options.maxZoom = e.layer.options.maxZoom;
-    clientLayer.options.maxZoom = map.options.maxZoom;
-    labelLayer.options.maxZoom = map.options.maxZoom;
-    if (map.getZoom() > map.options.maxZoom) {
-      map.setZoom(map.options.maxZoom);
+  map.on("baselayerchange", function (e: any & { name: string }) {
+    const selectedLayer = baseLayers[e.name];
+    if (selectedLayer && selectedLayer.options.maxZoom !== undefined) {
+      const maxZoom = selectedLayer.options.maxZoom;
+      map.options.maxZoom = maxZoom;
+      clientLayer.options.maxZoom = maxZoom;
+      labelLayer.options.maxZoom = maxZoom;
+
+      if (map.getZoom() > maxZoom) {
+        map.setZoom(maxZoom);
+      }
     }
 
     let html_tag: Element = document.querySelector("html");
     let class_list = html_tag.classList;
+    const mode = selectedLayer?.options?.mode;
     class_list.forEach(function (item) {
       if (item.startsWith("theme_")) {
         class_list.remove(item);
       }
     });
-    if (
-      html_tag &&
-      e.layer.options.mode &&
-      e.layer.options.mode !== "" &&
-      !html_tag.classList.contains(e.layer.options.mode)
-    ) {
-      class_list.add("theme_" + e.layer.options.mode);
+    if (html_tag && mode && mode !== "" && !html_tag.classList.contains(mode)) {
+      class_list.add("theme_" + mode);
       labelLayer.updateLayer();
     }
   });
