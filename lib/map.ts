@@ -1,4 +1,5 @@
 import * as L from "leaflet";
+import "@maplibre/maplibre-gl-leaflet";
 
 import { ClientLayer } from "./map/clientlayer.js";
 import { LabelLayer } from "./map/labellayer.js";
@@ -46,7 +47,7 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
 
   function mapActiveArea() {
     map.setActiveArea({
-      position: "absolute",
+      position: "relative",
       left: sidebar.getWidth() + "px",
       right: 0,
       top: 0,
@@ -83,13 +84,18 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
   let layers = config.mapLayers.map(function (layer) {
     return {
       name: layer.name,
-      layer: L.tileLayer(
-        layer.url.replace(
-          "{format}",
-          document.createElement("canvas").toDataURL("image/webp").indexOf("data:image/webp") === 0 ? "webp" : "png",
-        ),
-        layer.config,
-      ),
+      layer:
+        layer.type == "vector"
+          ? L.maplibreGL({ style: layer.url })
+          : L.tileLayer(
+              layer.url.replace(
+                "{format}",
+                document.createElement("canvas").toDataURL("image/webp").indexOf("data:image/webp") === 0
+                  ? "webp"
+                  : "png",
+              ),
+              layer.config,
+            ),
     };
   });
 
