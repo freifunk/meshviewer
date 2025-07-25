@@ -99,8 +99,7 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
   }
 
   self.setData = function setData(data: ObjectsLinksAndNodes) {
-    let onlineNodes = data.nodes.online;
-    let nodes = onlineNodes.concat(data.nodes.lost);
+    let nodes = data.nodes.all;
     time = data.timestamp;
 
     function hostnameOfNodeID(nodeid: string | null) {
