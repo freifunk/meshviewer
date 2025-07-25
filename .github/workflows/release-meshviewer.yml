@@ -21,7 +21,7 @@ jobs:
       - run: "cd build; zip -r ../meshviewer-build.zip .; cd .."
       - name: Create and Upload Release Asset
         id: create_release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8 # v2.3.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
