@@ -28,6 +28,7 @@ export default defineConfig({
     new VitePWA({
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg,ttf,woff,woff2}"],
+        navigateFallbackDenylist: [new RegExp(".*\.json")],
       },
       manifest: {
         name: "Meshviewer",
