@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "es2020",
     "allowJs": true,
     "module": "NodeNext",
     "moduleResolution": "NodeNext"
