@@ -24,7 +24,7 @@
   }
 
   @media screen and (max-width: map-get($grid-breakpoints, lg) - 1) {
-    height: calc(100vh - 150px);
+    height: 80vh;
     min-height: 240px;
     position: relative;
     width: auto;
