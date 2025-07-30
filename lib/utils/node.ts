@@ -135,7 +135,7 @@ self.showUptime = function showUptime(node: Node) {
 };
 
 self.showFirstSeen = function showFirstSeen(node: Node) {
-  return node.firstseen.fromNow(true);
+  return moment.utc(node.firstseen).local().fromNow();
 };
 
 self.showLoad = function showLoad(node: Node) {

@@ -87,9 +87,9 @@
       "d": "einem Tag",
       "dd": "%d Tagen",
       "M": "einem Monat",
-      "MM": "%d Monate",
+      "MM": "%d Monaten",
       "y": "einem Jahr",
-      "yy": "%d Jahre"
+      "yy": "%d Jahren"
     }
   },
   "yes": "ja",
