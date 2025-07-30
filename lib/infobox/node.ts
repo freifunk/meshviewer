@@ -196,6 +196,7 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
     let attributeTable = h("table", { props: { className: "attributes" } }, []);
 
     let showDeprecation = false;
+    let showEol = false;
 
     config.nodeAttr.forEach(function (row) {
       let field = node[String(row.value)];
@@ -207,7 +208,9 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
       // Check if device is in list of deprecated devices. If so, display the deprecation warning
       if (config.deprecation_enabled) {
         if (row.name === "node.hardware") {
-          if (config.deprecated && field && config.deprecated.includes(field)) {
+          if (config.eol && field && config.eol.includes(field)) {
+            showEol = true;
+          } else if (config.deprecated && field && config.deprecated.includes(field)) {
             showDeprecation = true;
           }
         }
@@ -223,7 +226,18 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
     attributeTable.children.push(h("tr", [h("th", _.t("node.gateway")), showGateway(node)]));
 
     // Deprecation warning
-    if (showDeprecation) {
+    if (showEol) {
+      // Add eol warning to the container
+      newContainer.children.push(
+        h("div", { props: { className: "eol" } }, [
+          h("div", {
+            props: {
+              innerHTML: config.eol_text || _.t("eol"),
+            },
+          }),
+        ]),
+      );
+    } else if (showDeprecation) {
       // Add deprecation warning to the container
       newContainer.children.push(
         h("div", { props: { className: "deprecated" } }, [
