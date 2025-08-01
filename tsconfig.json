@@ -2,8 +2,9 @@
   "compilerOptions": {
     "target": "es2020",
     "allowJs": true,
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext"
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "esModuleInterop": true
   },
   "include": ["lib"]
 }
