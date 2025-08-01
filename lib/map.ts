@@ -47,8 +47,8 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
 
   function mapActiveArea() {
     map.setActiveArea({
-      position: "relative",
-      left: sidebar.getWidth() + "px",
+      position: "absolute",
+      left: 0,
       right: 0,
       top: 0,
       bottom: 0,
@@ -86,7 +86,7 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
       name: layer.name,
       layer:
         layer.type == "vector"
-          ? L.maplibreGL({ style: layer.url })
+          ? L.maplibreGL({ style: layer.url, attributionControl: { customAttribution: layer.config.attribution } })
           : L.tileLayer(
               layer.url.replace(
                 "{format}",
