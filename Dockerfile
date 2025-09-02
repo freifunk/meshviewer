@@ -16,7 +16,7 @@ COPY . .
 
 RUN npm run lint && npm run build
 
-FROM nginx:1.29.0-alpine
+FROM nginx:1.29.1-alpine
 COPY --from=build /code/build/ /usr/share/nginx/html
 COPY --from=build /code/config.example.json /usr/share/nginx/html/
 EXPOSE 80
