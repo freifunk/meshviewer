@@ -17,7 +17,7 @@
     "prettier": "^3.6.2",
     "sass": "^1.77.8",
     "typescript": "^5.8.3",
-    "vite": "^6.3.6",
+    "vite": "^7.1.5",
     "vite-plugin-checker": "^0.10.3",
     "vite-plugin-pwa": "^1.0.3"
   },
