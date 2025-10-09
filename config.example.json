@@ -12,6 +12,14 @@
         "maxZoom": 19,
         "attribution": "<a href='https://github.com/freifunk/meshviewer/issues' target='_blank'>Report Bug</a> | Map data &copy; <a href\"http://openstreetmap.org\">OpenStreetMap</a> contributor"
       }
+    },
+    {
+      "name": "BaseMap.de (Vektor)",
+      "url": "https://sgx.geodatenzentrum.de/gdz_basemapworld_vektor/styles/bm_web_wld_col.json",
+      "type": "vector",
+      "config": {
+        "attribution": "&copy; basemap.de / <a href='https://www.bkg.bund.de'>BKG</a> (2025) <a href='https://creativecommons.org/licenses/by/4.0/'>CC BY 4.0</a>; Datenquellen: &copy; GeoBasis-DE / <a href='https://www.bkg.bund.de'>BKG</a> (2025) <a href='https://creativecommons.org/licenses/by/4.0/'>CC BY 4.0</a>; außerhalb Deutschlands: &copy; <a href='https://www.openstreetmap.org/copyright'>Open Street Map Mitwirkende ODbL v. 1.0</a> ; © <a href='https://openmaptiles.org/'>OpenMapTiles</a>"
+      }
     }
   ],
   "fixedCenter": [
