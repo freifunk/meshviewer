@@ -1,0 +1,7 @@
+services:
+  meshviewer:
+    image: ghcr.io/freifunk/meshviewer:latest
+    volumes:
+      - ./public/config.json:/usr/share/nginx/html/config.json
+    ports:
+      - "8080:80"
