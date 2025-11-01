@@ -1,5 +1,5 @@
 ### Build stage for the website frontend
-FROM --platform=$BUILDPLATFORM node:24-bookworm-slim AS build
+FROM --platform=$BUILDPLATFORM node:25-bookworm-slim AS build
 RUN apt-get update && apt-get install -y python3 --no-install-recommends && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
