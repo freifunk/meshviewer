@@ -1,5 +1,5 @@
 import { Moment } from "moment";
-import { h, VNode } from "snabbdom";
+import { h, Props, VNode, VNodeChildren, VNodeData } from "snabbdom";
 import { Map } from "leaflet";
 import { _ } from "./language.js";
 import { Node } from "./node.js";
@@ -134,14 +134,19 @@ export function attributeEntry(children: VNode[], label: string, value: string |
 }
 
 export function showStat(linkInfo: LinkInfo, subst: ReplaceMapping): HTMLDivElement {
-  let content = h("img", {
-    props: {
-      src: listReplace(linkInfo.image, subst),
-      width: linkInfo.width,
-      height: linkInfo.height,
-      alt: _.t("loading", { name: linkInfo.name }),
-    },
-  });
+  let content: VNode;
+  if (linkInfo.image) {
+    content = h("img", {
+      props: {
+        src: listReplace(linkInfo.image, subst),
+        width: linkInfo.width,
+        height: linkInfo.height,
+        alt: _.t("loading", { name: linkInfo.name }),
+      },
+    });
+  } else {
+    content = h("p", listReplace(linkInfo.title, subst));
+  }
 
   if (linkInfo.href) {
     return h(
