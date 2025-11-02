@@ -13,7 +13,7 @@
   "devDependencies": {
     "@types/node": "^24.9.2",
     "@typescript-eslint/parser": "^8.43.0",
-    "eslint": "^9.36.0",
+    "eslint": "^9.39.0",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.6.2",
     "sass": "^1.77.8",
