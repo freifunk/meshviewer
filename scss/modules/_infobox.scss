@@ -1,3 +1,5 @@
+@use "variables";
+
 .infobox {
   .clients,
   .gateway {
@@ -29,8 +31,8 @@
 
   input,
   textarea {
-    border: 1px solid $color-gray-light;
-    font-family: $font-family-monospace;
+    border: 1px solid variables.$color-gray-light;
+    font-family: variables.$font-family-monospace;
     font-size: 1.15em;
     line-height: 1.67em;
     margin-right: 0.7em;

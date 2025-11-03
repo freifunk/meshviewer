@@ -1,6 +1,9 @@
+@use "sass:color";
+@use "variables";
+
 .tabs {
-  background: transparentize($color-black, 0.98);
-  border: 0 solid darken($color-white, 10%);
+  background: color.adjust(variables.$color-black, $alpha: -0.98);
+  border: 0 solid color.adjust(variables.$color-white, $lightness: -10%);
   border-bottom-width: 1px;
   display: flex;
   display: -webkit-flex;
@@ -10,7 +13,7 @@
 
   li {
     -webkit-flex: 1 1 auto;
-    color: transparentize($color-black, 0.5);
+    color: color.adjust(variables.$color-black, $alpha: -0.5);
     cursor: pointer;
     flex: 1 1 auto;
     padding: 1.3em 0.5em 1em;
@@ -18,12 +21,12 @@
     text-transform: uppercase;
 
     &:hover {
-      color: $color-black;
+      color: variables.$color-black;
     }
   }
 
   .visible {
-    border-bottom: 2px solid $color-primary;
-    color: $color-primary;
+    border-bottom: 2px solid variables.$color-primary;
+    color: variables.$color-primary;
   }
 }

@@ -1,8 +1,10 @@
+@use "sass:color";
+@use "sass:map";
 $color-white: #fff !default;
 $color-black: #000 !default;
 
-$color-gray-light: darken($color-white, 30%) !default;
-$color-gray-dark: lighten($color-black, 20%) !default;
+$color-gray-light: color.adjust($color-white, $lightness: -30%) !default;
+$color-gray-dark: color.adjust($color-black, $lightness: 20%) !default;
 
 $color-primary: #dc0067 !default;
 
@@ -46,8 +48,8 @@ $grid-breakpoints: (
 
 // 45% sidebar - based on viewport
 // In lib/sidebar to avoid render blocking onload
-$sidebar-width: map-get($grid-breakpoints, xl) * 0.45 !default;
-$sidebar-width-small: map-get($grid-breakpoints, lg) * 0.45 !default;
+$sidebar-width: map.get($grid-breakpoints, xl) * 0.45 !default;
+$sidebar-width-small: map.get($grid-breakpoints, lg) * 0.45 !default;
 
 // En/disable included font
 $use-included-font: 1 !default;

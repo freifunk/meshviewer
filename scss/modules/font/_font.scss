@@ -1,4 +1,7 @@
-@if $use-included-font == 1 {
-  @include load-font("Assistant", "Light", 300, normal);
-  @include load-font("Assistant", "Bold", 700, normal);
+@use "../../mixins/font";
+@use "../variables";
+
+@if variables.$use-included-font == 1 {
+  @include font.load-font("Assistant", "Light", 300, normal);
+  @include font.load-font("Assistant", "Bold", 700, normal);
 }

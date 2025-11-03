@@ -1,7 +1,11 @@
+@use "sass:string";
+@use "../../scss/mixins/icon" as icon;
+@use "../../scss/modules/variables" as variables;
+
 // Needed for standalone scss
 // @import 'icon-mixin';
 
-$cache-breaker: unique-id();
+$cache-breaker: string.unique-id();
 
 @font-face {
   font-family: "ionicons";
@@ -17,7 +21,7 @@ $cache-breaker: unique-id();
 [class*=" ion-"] {
   &::before {
     display: inline-block;
-    font-family: $font-family-icons;
+    font-family: variables.$font-family-icons;
     font-style: normal;
     font-variant: normal;
     font-weight: normal;
@@ -29,26 +33,26 @@ $cache-breaker: unique-id();
   }
 }
 
-@include icon("chevron-left", "\f124");
-@include icon("chevron-right", "\f125");
-@include icon("pin", "\f3a3");
-@include icon("wifi", "\f25c");
-@include icon("eye", "\f133");
-@include icon("up-b", "\f10d");
-@include icon("down-b", "\f104");
-@include icon("locate", "\f2e9");
-@include icon("close", "\f2d7");
-@include icon("location", "\f456");
-@include icon("layer", "\f229");
-@include icon("filter", "\f38B");
-@include icon("connection-bars", "\f274");
-@include icon("share-alt", "\f3ac");
-@include icon("clipboard", "\f376");
-@include icon("people", "\f39e");
-@include icon("person", "\f3a0");
-@include icon("time", "\f3b3");
-@include icon("arrow-resize", "\f264");
-@include icon("arrow-left-c", "\f108");
-@include icon("arrow-right-c", "\f10b");
-@include icon("full-enter", "\e901");
-@include icon("full-exit", "\e900");
+@include icon.icon("chevron-left", "\f124");
+@include icon.icon("chevron-right", "\f125");
+@include icon.icon("pin", "\f3a3");
+@include icon.icon("wifi", "\f25c");
+@include icon.icon("eye", "\f133");
+@include icon.icon("up-b", "\f10d");
+@include icon.icon("down-b", "\f104");
+@include icon.icon("locate", "\f2e9");
+@include icon.icon("close", "\f2d7");
+@include icon.icon("location", "\f456");
+@include icon.icon("layer", "\f229");
+@include icon.icon("filter", "\f38B");
+@include icon.icon("connection-bars", "\f274");
+@include icon.icon("share-alt", "\f3ac");
+@include icon.icon("clipboard", "\f376");
+@include icon.icon("people", "\f39e");
+@include icon.icon("person", "\f3a0");
+@include icon.icon("time", "\f3b3");
+@include icon.icon("arrow-resize", "\f264");
+@include icon.icon("arrow-left-c", "\f108");
+@include icon.icon("arrow-right-c", "\f10b");
+@include icon.icon("full-enter", "\e901");
+@include icon.icon("full-exit", "\e900");

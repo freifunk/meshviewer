@@ -1,16 +1,20 @@
+@use "sass:color";
+@use "sass:map";
+@use "variables";
+
 .sidebar {
   box-sizing: border-box;
   left: 0;
   position: absolute;
   transition: left 0.5s;
-  width: $sidebar-width;
+  width: variables.$sidebar-width;
   z-index: 1005;
 
   &.hidden {
-    left: -$sidebar-width - $button-distance;
+    left: -(variables.$sidebar-width) - variables.$button-distance;
 
     .sidebarhandle {
-      left: $button-distance;
+      left: variables.$button-distance;
       transform: scale(-1, 1);
 
       &[aria-label] {
@@ -20,7 +24,7 @@
       }
     }
 
-    @media screen and (max-width: map-get($grid-breakpoints, lg) - 1) {
+    @media screen and (max-width: map.get(variables.$grid-breakpoints, lg) - 1) {
       width: auto;
     }
   }
@@ -30,7 +34,7 @@
   }
 
   img {
-    padding: 0 $button-distance 1em;
+    padding: 0 variables.$button-distance 1em;
     box-sizing: border-box;
   }
 
@@ -74,8 +78,8 @@
   }
 
   .container {
-    background: transparentize($color-white, 0.03);
-    border-right: 1px solid darken($color-white, 10%);
+    background: color.adjust(variables.$color-white, $alpha: -0.03);
+    border-right: 1px solid color.adjust(variables.$color-white, $lightness: -10%);
     min-height: 100vh;
     overflow-y: visible;
 
@@ -84,14 +88,14 @@
     }
   }
 
-  @media screen and (max-width: map-get($grid-breakpoints, xl) - 1) {
-    background: $color-white;
+  @media screen and (max-width: map.get(variables.$grid-breakpoints, xl) - 1) {
+    background: variables.$color-white;
     font-size: 0.8em;
     margin: 0;
-    width: $sidebar-width-small;
+    width: variables.$sidebar-width-small;
 
     .sidebarhandle {
-      left: $sidebar-width-small + $button-distance;
+      left: variables.$sidebar-width-small + variables.$button-distance;
     }
 
     .container,
@@ -101,7 +105,7 @@
     }
   }
 
-  @media screen and (max-width: map-get($grid-breakpoints, lg) - 1) {
+  @media screen and (max-width: map.get(variables.$grid-breakpoints, lg) - 1) {
     height: auto;
     min-height: 0;
     position: static;
@@ -120,9 +124,9 @@
 }
 
 .sidebarhandle {
-  left: $sidebar-width + 2 * $button-distance;
+  left: variables.$sidebar-width + 2 * variables.$button-distance;
   position: fixed;
-  top: $button-distance;
+  top: variables.$button-distance;
   transition:
     left 0.5s,
     color 0.5s,
@@ -142,9 +146,9 @@
 }
 
 .online {
-  color: $color-new;
+  color: variables.$color-new;
 }
 
 .offline {
-  color: $color-offline;
+  color: variables.$color-offline;
 }

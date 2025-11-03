@@ -1,26 +1,29 @@
+@use "sass:color";
+@use "variables";
+
 .bar {
-  background: mix($color-new, $color-white, 60%);
+  background: color.mix(variables.$color-new, variables.$color-white, 60%);
   display: block;
   height: 1.4em;
   position: relative;
 
   &.warning {
-    background: mix($color-offline, $color-white, 60%);
+    background: color.mix(variables.$color-offline, variables.$color-white, 60%);
 
     span {
-      background: $color-offline;
+      background: variables.$color-offline;
     }
   }
 
   span {
-    background: $color-new;
+    background: variables.$color-new;
     display: inline-block;
     height: 1.4em;
     max-width: 100%;
   }
 
   label {
-    color: $color-white;
+    color: variables.$color-white;
     font-weight: bold;
     position: absolute;
     right: 0.5em;

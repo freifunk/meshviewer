@@ -1,3 +1,6 @@
+@use "sass:map";
+@use "variables";
+
 .content {
   height: 100vh;
   position: fixed;
@@ -6,16 +9,16 @@
   .buttons {
     direction: rtl;
     position: absolute;
-    right: $button-distance;
-    top: $button-distance;
+    right: variables.$button-distance;
+    top: variables.$button-distance;
     unicode-bidi: bidi-override;
     z-index: 1001;
 
     button {
-      margin-left: $button-distance;
+      margin-left: variables.$button-distance;
     }
 
-    @media screen and (max-width: map-get($grid-breakpoints, lg) - 1) {
+    @media screen and (max-width: map.get(variables.$grid-breakpoints, lg) - 1) {
       right: 0.1rem;
       top: 0;
       transform: scale(0.8);
@@ -23,7 +26,7 @@
     }
   }
 
-  @media screen and (max-width: map-get($grid-breakpoints, lg) - 1) {
+  @media screen and (max-width: map.get(variables.$grid-breakpoints, lg) - 1) {
     height: 80vh;
     min-height: 240px;
     position: relative;
