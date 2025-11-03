@@ -16,7 +16,7 @@ variables.$color-online: color.adjust(variables.$color-online, $lightness: 25%);
   textarea,
   input {
     background: variables.$color-white;
-    color: color.adjust(variables.$color-black, $lightness: 100);
+    color: color.adjust(variables.$color-black, $lightness: 100%);
   }
 
   header {
@@ -46,14 +46,14 @@ variables.$color-online: color.adjust(variables.$color-online, $lightness: 25%);
 
   .leaflet-control-container {
     .leaflet-control-layers-toggle {
-      background: color.adjust(variables.$color-white, $lightness: 10);
+      background: color.adjust(variables.$color-white, $lightness: 10%);
       color: variables.$color-black;
     }
   }
 
   .leaflet-control-zoom {
     a {
-      background: color.adjust(variables.$color-white, $lightness: 10);
+      background: color.adjust(variables.$color-white, $lightness: 10%);
       color: variables.$color-black;
 
       &:hover {
@@ -125,7 +125,7 @@ variables.$color-online: color.adjust(variables.$color-online, $lightness: 25%);
 
   //@import 'modules/button';
   button {
-    background: color.adjust(variables.$color-white, $lightness: 10);
+    background: color.adjust(variables.$color-white, $lightness: 10%);
     color: variables.$color-black;
 
     &:hover {

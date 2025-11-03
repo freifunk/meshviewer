@@ -1,6 +1,6 @@
 @use "sass:string";
-@use "../../mixins/icon";
-@use "../variables";
+@use "../../scss/mixins/icon" as icon;
+@use "../../scss/modules/variables" as variables;
 
 // Needed for standalone scss
 // @import 'icon-mixin';
