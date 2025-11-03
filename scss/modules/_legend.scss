@@ -1,3 +1,6 @@
+@use "sass:color";
+@use "variables";
+
 header {
   h1 {
     display: inline-block;
@@ -7,12 +10,12 @@ header {
 .language-switch {
   background: transparent;
   border: 0;
-  color: $color-black;
+  color: variables.$color-black;
   float: right;
   margin: 20px 16px 0 0;
 
   option {
-    background: $color-white;
+    background: variables.$color-white;
   }
 }
 
@@ -39,38 +42,38 @@ header {
 // Dot looks compared to thin font a bit darker - lighten it 10%
 .legend-new {
   .symbol {
-    background-color: lighten($color-new, 10%);
+    background-color: color.adjust(variables.$color-new, $lightness: 10%);
   }
 }
 
 .legend-online {
   .symbol {
-    background-color: lighten($color-online, 10%);
+    background-color: color.adjust(variables.$color-online, $lightness: 10%);
   }
 }
 
 .legend-offline {
   .symbol {
-    background-color: lighten($color-offline, 10%);
+    background-color: color.adjust(variables.$color-offline, $lightness: 10%);
   }
 }
 
 .legend-24ghz {
   .symbol {
-    background-color: $color-24ghz;
+    background-color: variables.$color-24ghz;
   }
 }
 
 .legend-5ghz {
   .symbol {
-    background-color: $color-5ghz;
+    background-color: variables.$color-5ghz;
   }
 }
 
 .legend-uplink {
   .symbol {
-    background-color: lighten($color-online, 50%);
-    border-color: lighten($color-online, 10%);
+    background-color: color.adjust(variables.$color-online, $lightness: 50%);
+    border-color: color.adjust(variables.$color-online, $lightness: 10%);
     border-style: solid;
     border-width: 0.27em;
     height: 0.47em;
@@ -80,6 +83,6 @@ header {
 
 .legend-others {
   .symbol {
-    background-color: $color-others;
+    background-color: variables.$color-others;
   }
 }

@@ -1,11 +1,14 @@
+@use "sass:color";
+@use "variables";
+
 button {
-  background: $color-white;
+  background: variables.$color-white;
   border: 0;
   border-radius: 0.9em;
-  color: $color-black;
+  color: variables.$color-black;
   cursor: pointer;
-  font-family: $font-family-icons;
-  font-size: $button-font-size;
+  font-family: variables.$font-family-icons;
+  font-size: variables.$button-font-size;
   height: 1.8em;
   line-height: 1.95;
   opacity: 0.7;
@@ -18,38 +21,38 @@ button {
   width: 1.8em;
 
   &.text {
-    background: $color-primary;
-    border: 1px solid $color-primary;
+    background: variables.$color-primary;
+    border: 1px solid variables.$color-primary;
     border-radius: 0;
-    color: $color-white;
+    color: variables.$color-white;
     font: inherit;
     line-height: initial;
     padding: 0 20px;
     width: auto;
 
     &:hover {
-      background: $color-white;
+      background: variables.$color-white;
     }
   }
 
   &.active,
   &:focus {
-    box-shadow: 0 0 0 2px $color-primary;
+    box-shadow: 0 0 0 2px variables.$color-primary;
   }
 
   &:hover {
-    color: $color-primary;
+    color: variables.$color-primary;
   }
 
   // Tooltip
   &[data-tooltip] {
     &::after {
-      background: $color-black;
+      background: variables.$color-black;
       border-radius: 3px;
-      color: $color-white;
+      color: variables.$color-white;
       content: attr(data-tooltip);
-      font-family: $font-family;
-      font-size: $font-size;
+      font-family: variables.$font-family;
+      font-size: variables.$font-size;
       padding: 0 12px;
       position: absolute;
       transform: translate(45px, 52px);
@@ -68,12 +71,12 @@ button {
   &.close {
     background-color: transparent;
     border-radius: 0;
-    color: transparentize($color-black, 0.5);
+    color: color.adjust(variables.$color-black, $alpha: -0.5);
     float: right;
-    font-size: $button-font-size;
+    font-size: variables.$button-font-size;
     height: auto;
     line-height: 1.2;
-    margin: $button-distance;
+    margin: variables.$button-distance;
     width: auto;
   }
 }
@@ -84,12 +87,12 @@ button {
   button {
     &[aria-label] {
       &::after {
-        background: $color-black;
+        background: variables.$color-black;
         border-radius: 3px;
-        color: $color-white;
+        color: variables.$color-white;
         content: attr(aria-label);
-        font-family: $font-family;
-        font-size: $font-size;
+        font-family: variables.$font-family;
+        font-size: variables.$font-size;
         padding: 0 12px;
         position: absolute;
         transform: translate(45px, 52px);

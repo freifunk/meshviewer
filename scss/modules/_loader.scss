@@ -1,5 +1,7 @@
+@use "variables";
+
 .loader {
-  color: $color-primary;
+  color: variables.$color-primary;
   font-size: 1.8em;
   line-height: 2;
   margin: 30vh auto;

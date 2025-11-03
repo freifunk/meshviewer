@@ -1,61 +1,63 @@
 // Overwrite normal style (colors)
-@import "modules/variables";
-@import "custom/variables";
+@use "sass:color";
+@use "sass:map";
+@use "modules/variables";
+@use "custom/variables" as variables2;
 
-$color-white: #1c1c13;
-$color-black: #fefefe;
-$color-map-background: #0d151c;
+variables.$color-white: #1c1c13;
+variables.$color-black: #fefefe;
+variables.$color-map-background: #0d151c;
 
-$color-online: lighten($color-online, 25%);
+variables.$color-online: color.adjust(variables.$color-online, $lightness: 25%);
 
 .theme_night {
   //@import 'modules/base';
   body,
   textarea,
   input {
-    background: $color-white;
-    color: lighten($color-black, 100);
+    background: variables.$color-white;
+    color: color.adjust(variables.$color-black, $lightness: 100);
   }
 
   header {
-    background: transparentize($color-black, 0.98);
-    border-bottom-color: lighten($color-white, 10%);
+    background: color.adjust(variables.$color-black, $alpha: -0.98);
+    border-bottom-color: color.adjust(variables.$color-white, $lightness: 10%);
   }
 
   a {
-    color: $color-online;
+    color: variables.$color-online;
     text-decoration: none;
 
     &:focus {
-      color: darken($color-online, 15%);
+      color: color.adjust(variables.$color-online, $lightness: -15%);
     }
   }
 
   //@import 'modules/leaflet';
   .leaflet-container {
-    background: $color-map-background;
+    background: variables.$color-map-background;
   }
 
   .leaflet-label {
     &.leaflet-label-right {
-      background-color: $color-white;
+      background-color: variables.$color-white;
     }
   }
 
   .leaflet-control-container {
     .leaflet-control-layers-toggle {
-      background: lighten($color-white, 10);
-      color: $color-black;
+      background: color.adjust(variables.$color-white, $lightness: 10);
+      color: variables.$color-black;
     }
   }
 
   .leaflet-control-zoom {
     a {
-      background: lighten($color-white, 10);
-      color: $color-black;
+      background: color.adjust(variables.$color-white, $lightness: 10);
+      color: variables.$color-black;
 
       &:hover {
-        background: $color-white;
+        background: variables.$color-white;
       }
     }
   }
@@ -67,17 +69,17 @@ $color-online: lighten($color-online, 25%);
   }
 
   .language-switch {
-    color: $color-black;
+    color: variables.$color-black;
 
     option {
-      background: $color-white;
+      background: variables.$color-white;
     }
   }
 
   //@import 'modules/filter';
   .filter-node {
     input {
-      color: $color-black;
+      color: variables.$color-black;
     }
   }
 
@@ -85,54 +87,54 @@ $color-online: lighten($color-online, 25%);
   .sidebar {
     .infobox,
     .container {
-      background: transparentize($color-white, 0.03);
-      border-right: 1px solid darken($color-white, 10%);
+      background: color.adjust(variables.$color-white, $alpha: -0.03);
+      border-right: 1px solid color.adjust(variables.$color-white, $lightness: -10%);
     }
 
-    @media screen and (max-width: map-get($grid-breakpoints, xl) - 1) {
-      background: $color-white;
+    @media screen and (max-width: map.get(variables.$grid-breakpoints, xl) - 1) {
+      background: variables.$color-white;
     }
   }
 
   //@import 'modules/tabs';
   .tabs {
-    background: transparentize($color-black, 0.98);
-    border-bottom-color: lighten($color-white, 10%);
+    background: color.adjust(variables.$color-black, $alpha: -0.98);
+    border-bottom-color: color.adjust(variables.$color-white, $lightness: 10%);
 
     li {
-      color: transparentize($color-black, 0.5);
+      color: color.adjust(variables.$color-black, $alpha: -0.5);
 
       &:hover {
-        color: $color-black;
+        color: variables.$color-black;
       }
     }
   }
 
   //@import 'modules/node';
   .bar {
-    background: mix($color-new, $color-white, 60%);
+    background: color.mix(variables.$color-new, variables.$color-white, 60%);
 
     &.warning {
-      background: mix($color-offline, $color-white, 60%);
+      background: color.mix(variables.$color-offline, variables.$color-white, 60%);
     }
 
     label {
-      color: $color-white;
+      color: variables.$color-white;
     }
   }
 
   //@import 'modules/button';
   button {
-    background: lighten($color-white, 10);
-    color: $color-black;
+    background: color.adjust(variables.$color-white, $lightness: 10);
+    color: variables.$color-black;
 
     &:hover {
-      background: $color-white;
+      background: variables.$color-white;
     }
 
     &.close {
       background: transparent;
-      color: transparentize($color-black, 0.5);
+      color: color.adjust(variables.$color-black, $alpha: -0.5);
     }
   }
 }

@@ -1,3 +1,7 @@
+@use "sass:color";
+@use "sass:map";
+@use "variables";
+
 .leaflet-pane,
 .leaflet-tile,
 .leaflet-marker-icon,
@@ -14,12 +18,12 @@
 }
 
 .leaflet-container {
-  background: $color-gray-light;
+  background: variables.$color-gray-light;
   outline: 0;
   overflow: hidden;
 
   .leaflet-control-attribution {
-    background: transparentize($color-white, 0.3);
+    background: color.adjust(variables.$color-white, $alpha: -0.3);
     margin: 0;
   }
 
@@ -64,9 +68,9 @@
   }
 
   .leaflet-control-layers-toggle {
-    background: $color-white;
+    background: variables.$color-white;
     border-radius: 50%;
-    color: $color-black;
+    color: variables.$color-black;
     display: block;
     font-size: 1.6rem;
     height: 1.8em;
@@ -79,14 +83,14 @@
       color 0.5s;
     width: 1.8em;
 
-    @media screen and (max-width: map-get($grid-breakpoints, lg) - 1) {
+    @media screen and (max-width: map.get(variables.$grid-breakpoints, lg) - 1) {
       margin-right: -2px;
       transform: scale(0.8);
     }
 
     &::before {
       content: "\f229";
-      font-family: $font-family-icons;
+      font-family: variables.$font-family-icons;
       speak: none;
       text-rendering: auto;
     }
@@ -372,7 +376,7 @@
     padding: 5px 0 8px 20px;
 
     &::before {
-      border: 1px solid $color-primary;
+      border: 1px solid variables.$color-primary;
       border-radius: 50%;
       content: " ";
       height: 10px;
@@ -384,7 +388,7 @@
 
     &:hover {
       &::before {
-        background: transparentize($color-primary, 0.7);
+        background: color.adjust(variables.$color-primary, $alpha: -0.7);
       }
     }
   }
@@ -392,17 +396,17 @@
   &:checked {
     + span {
       &::before {
-        background: $color-primary;
+        background: variables.$color-primary;
       }
     }
   }
 }
 
 .leaflet-tooltip {
-  background-color: $color-white;
-  border: 1px solid $color-primary;
+  background-color: variables.$color-white;
+  border: 1px solid variables.$color-primary;
   border-radius: 2px;
-  color: $color-primary;
+  color: variables.$color-primary;
   font-size: 12px;
   line-height: 1.2;
   padding: 6px;
@@ -434,7 +438,7 @@
   margin-top: 6px;
 
   &::before {
-    border-bottom-color: $color-white;
+    border-bottom-color: variables.$color-white;
     margin-left: -6px;
     margin-top: -12px;
     top: 0;
@@ -445,7 +449,7 @@
   margin-top: -6px;
 
   &::before {
-    border-top-color: $color-white;
+    border-top-color: variables.$color-white;
     bottom: 0;
     margin-bottom: -12px;
   }
@@ -463,7 +467,7 @@
   margin-left: -6px;
 
   &::before {
-    border-left-color: $color-white;
+    border-left-color: variables.$color-white;
     margin-right: -12px;
     right: 0;
   }
@@ -473,7 +477,7 @@
   margin-left: 6px;
 
   &::before {
-    border-right-color: $color-white;
+    border-right-color: variables.$color-white;
     left: 0;
     margin-left: -12px;
   }
@@ -488,8 +492,8 @@
 }
 
 .leaflet-control-layers-list {
-  background: transparentize($color-white, 0.1);
-  color: $color-gray-dark;
+  background: color.adjust(variables.$color-white, $alpha: -0.1);
+  color: variables.$color-gray-dark;
   padding: 10px;
 
   label {
@@ -502,16 +506,16 @@
   right: 16px;
   top: 65px;
 
-  @media screen and (max-width: map-get($grid-breakpoints, lg) - 1) {
+  @media screen and (max-width: map.get(variables.$grid-breakpoints, lg) - 1) {
     right: calc(100vw - 50px);
     top: -10px;
     transform: scale(0.8);
   }
 
   a {
-    background: $color-white;
+    background: variables.$color-white;
     border-radius: 5px 5px 0 0;
-    color: $color-black;
+    color: variables.$color-black;
     display: block;
     font-size: 40px;
     height: 46px;
@@ -522,12 +526,12 @@
     width: 46px;
 
     &:hover {
-      color: $color-primary;
+      color: variables.$color-primary;
     }
 
     + a {
       border-radius: 0 0 5px 5px;
-      border-top: 1px solid $color-gray-light;
+      border-top: 1px solid variables.$color-gray-light;
     }
   }
 }

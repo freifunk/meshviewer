@@ -1,22 +1,25 @@
+@use "sass:color";
+@use "variables";
+
 body {
   -webkit-tap-highlight-color: transparent;
-  background: $color-white;
-  color: $color-black;
-  font-family: $font-family;
-  font-size: $font-size;
+  background: variables.$color-white;
+  color: variables.$color-black;
+  font-family: variables.$font-family;
+  font-size: variables.$font-size;
   overflow: hidden;
   overflow-y: scroll;
 }
 
 header {
-  background: transparentize($color-black, 0.98);
-  border-bottom: 1px solid darken($color-white, 10%);
+  background: color.adjust(variables.$color-black, $alpha: -0.98);
+  border-bottom: 1px solid color.adjust(variables.$color-white, $lightness: -10%);
 }
 
 textarea,
 input {
   background: transparent;
-  color: $color-black, 100;
+  color: variables.$color-black, 100;
 }
 
 h1,
@@ -42,15 +45,15 @@ h3 {
 h1,
 h2,
 h3 {
-  padding-left: $button-distance;
-  padding-right: $button-distance;
+  padding-left: variables.$button-distance;
+  padding-right: variables.$button-distance;
 }
 
 p,
 pre,
 ul,
 h4 {
-  padding: 0 $button-distance 1em;
+  padding: 0 variables.$button-distance 1em;
 }
 
 img {
@@ -59,11 +62,11 @@ img {
 }
 
 a {
-  color: $color-online;
+  color: variables.$color-online;
   text-decoration: none;
 
   &:focus {
-    color: darken($color-online, 15%);
+    color: color.adjust(variables.$color-online, $lightness: -15%);
   }
 }
 
@@ -92,19 +95,19 @@ strong {
 }
 
 .deprecation_base {
-  padding-left: $button-distance;
-  padding-right: $button-distance;
+  padding-left: variables.$button-distance;
+  padding-right: variables.$button-distance;
 
   div {
     border-radius: 5px;
-    color: $color-white;
+    color: variables.$color-white;
     font-size: 110%;
     font-weight: bold;
     padding: 10px;
     text-align: center;
 
     a {
-      color: $color-white;
+      color: variables.$color-white;
       text-decoration: underline;
 
       &:hover {
@@ -118,14 +121,14 @@ strong {
 .deprecated {
   @extend .deprecation_base;
   div {
-    background: $color-warning;
+    background: variables.$color-warning;
   }
 }
 
 .eol {
   @extend .deprecation_base;
   div {
-    background: $color-error;
+    background: variables.$color-error;
   }
 }
 
