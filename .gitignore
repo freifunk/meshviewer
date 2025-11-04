@@ -15,7 +15,6 @@ Thumbs.db
 # Project files
 /node_modules
 /build
-/config.json
 *.zip
 /dev-dist
 /public/config.json

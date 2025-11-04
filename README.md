@@ -14,40 +14,20 @@ It is recommended to use the latest release:
 - Let your webserver serve this build
 - Add a config.json to the webdir (based on config.example.json)
 
-### Build yourself
+## Docker Deployment
 
-- Clone this repository
-- Run `npm install`
-- Place your config file in `public/config.json`.
-  You can copy the example config for testing/development: `cp config.example.json public/config.json`.
-- Run `npm run build`
-- A production build can then be found in [`/build`](./build)
+Using the GitHub Container Registry (GHCR) you can get the latest dockerized release with `docker compose`.
 
-Hint: You can start a development server with `npm run dev`
+Put your config.json into the public folder and run the following to deploy a meshviewer:
 
-### Build and run using Docker
-
-Static local test instance:
-
-```bash
-docker run -it --rm -u $(id -u):$(id -g) -v "$PWD":/app -w /app node npm install
-docker run -it --rm -u $(id -u):$(id -g) -v "$PWD":/app -w /app node npm run build
-docker run -it --rm -v "$PWD/build":/usr/share/nginx/html -p 8080:80 --name nginx nginx
+```
+docker compose pull
+docker compose up -d
 ```
 
 The map is reachable at [localhost:8080](http://localhost:8080).
-You have to copy `config.example.json` to `public/config.json`:
 
-Start a development environment:
-
-```bash
-docker run -it --rm --name meshviewer-dev \
-  -u $(id -u):$(id -g) \
-  -v "$PWD":/app -w /app \
-  -e NODE_ENV=development \
-  -p 5173:5173 \
-  node npm run dev -- --host 0.0.0.0
-```
+Hint: Instead of the latest release `ghcr.io/freifunk/meshviewer:latest` one can also use version tags for a specific version or `main` for the latest unreleased commits.
 
 ## Configuration
 
@@ -59,9 +39,10 @@ Both the deprecation and the EOL warning can be turned off with `"deprecation_en
 
 You can insert custom HTML into the deprecation and eol warning via `"deprecation_text":""` and `"eol_text":""` respectively.
 
-## Development
+## Development & Building
 
 To contribute to the project by developing new features, have a look at our [development documentation](DEVELOPMENT.md).
+This also includes instructions on building this project.
 
 ## History
 
