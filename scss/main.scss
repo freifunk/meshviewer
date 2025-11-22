@@ -3,8 +3,8 @@
 @use "custom/variables" as variables2;
 
 // Mixins
-@use "mixins/icon";
-@use "mixins/font";
+@use "./mixins/icon";
+@use "./mixins/font";
 
 // Add modules
 @use "modules/reset";
