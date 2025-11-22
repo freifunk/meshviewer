@@ -19,3 +19,4 @@ Thumbs.db
 *.zip
 /dev-dist
 /public/config.json
+pnpm-lock.yaml

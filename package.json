@@ -55,11 +55,11 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "npm run lint:prettier && npm run lint:eslint",
-    "lint:eslint": "./node_modules/.bin/eslint .",
-    "lint:prettier": "./node_modules/.bin/prettier --check .",
+    "lint:eslint": "eslint .",
+    "lint:prettier": "npx prettier --check .",
     "lint:fix": "npm run lint:fix:prettier && npm run lint:fix:eslint",
-    "lint:fix:eslint": "./node_modules/.bin/eslint --fix .",
-    "lint:fix:prettier": "./node_modules/.bin/prettier --log-level warn --write .",
+    "lint:fix:eslint": "eslint --fix .",
+    "lint:fix:prettier": "npx prettier --log-level warn --write .",
     "generate-pwa-assets": "pwa-assets-generator --preset minimal assets/logo.svg"
   },
   "browserslist": [

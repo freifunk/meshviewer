@@ -83,7 +83,10 @@ export const About = function (picturesSource: string, picturesLicense: string):
       // uplink uses the online uplink color if provided
       setSymbolColor(
         ".legend-uplink .symbol",
-        icon?.["online.uplink"]?.fillColor || icon?.["online.uplink"]?.color || icon?.online?.fillColor || icon?.online?.color,
+        icon?.["online.uplink"]?.fillColor ||
+          icon?.["online.uplink"]?.color ||
+          icon?.online?.fillColor ||
+          icon?.online?.color,
       );
 
       // client colors
@@ -94,7 +97,6 @@ export const About = function (picturesSource: string, picturesLicense: string):
     } catch (e) {
       // ignore if config not present
     }
-
   }
 
   return {
