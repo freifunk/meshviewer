@@ -63,6 +63,44 @@ export const About = function (picturesSource: string, picturesLicense: string):
       "<p>The source code is available at " +
       '<a href="https://github.com/freifunk/meshviewer">' +
       "https://github.com/freifunk/meshviewer</a>.</p>";
+    // Apply configured colors to legend symbols so the About dialog matches the map
+    applyConfigColors(d);
+  }
+
+  function applyConfigColors(d: HTMLElement) {
+    try {
+      const cfg: any = (globalThis as any).config;
+      if (!cfg) return;
+
+      const setBg = (selector: string, color?: string) => {
+        if (!color) return;
+        const el = d.querySelector(selector) as HTMLElement;
+        if (el) el.style.backgroundColor = color;
+      };
+
+      if (cfg.icon) {
+        setBg('.legend-new .symbol', cfg.icon.new?.fillColor || cfg.icon.new?.color);
+        setBg('.legend-online .symbol', cfg.icon.online?.fillColor || cfg.icon.online?.color);
+        setBg('.legend-offline .symbol', cfg.icon.offline?.fillColor || cfg.icon.offline?.color);
+
+        const uplinkEl = d.querySelector('.legend-uplink .symbol') as HTMLElement;
+        if (uplinkEl) {
+          const upl = cfg.icon['online.uplink'] || cfg.icon['new.uplink'] || {};
+          const upFill = upl.fillColor || upl.color || cfg.icon.online?.fillColor || cfg.icon.online?.color;
+          const upBorder = cfg.icon.online?.color || cfg.icon.online?.fillColor;
+          if (upFill) uplinkEl.style.backgroundColor = upFill;
+          if (upBorder) uplinkEl.style.borderColor = upBorder;
+        }
+      }
+
+      if (cfg.client) {
+        setBg('.legend-24ghz .symbol', cfg.client.wifi24);
+        setBg('.legend-5ghz .symbol', cfg.client.wifi5);
+        setBg('.legend-others .symbol', cfg.client.other);
+      }
+    } catch (e) {
+      // ignore errors
+    }
   }
 
   return {
