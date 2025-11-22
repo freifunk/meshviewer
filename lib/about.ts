@@ -79,13 +79,13 @@ export const About = function (picturesSource: string, picturesLicense: string):
       };
 
       if (cfg.icon) {
-        setBg('.legend-new .symbol', cfg.icon.new?.fillColor || cfg.icon.new?.color);
-        setBg('.legend-online .symbol', cfg.icon.online?.fillColor || cfg.icon.online?.color);
-        setBg('.legend-offline .symbol', cfg.icon.offline?.fillColor || cfg.icon.offline?.color);
+        setBg(".legend-new .symbol", cfg.icon.new?.fillColor || cfg.icon.new?.color);
+        setBg(".legend-online .symbol", cfg.icon.online?.fillColor || cfg.icon.online?.color);
+        setBg(".legend-offline .symbol", cfg.icon.offline?.fillColor || cfg.icon.offline?.color);
 
-        const uplinkEl = d.querySelector('.legend-uplink .symbol') as HTMLElement;
+        const uplinkEl = d.querySelector(".legend-uplink .symbol") as HTMLElement;
         if (uplinkEl) {
-          const upl = cfg.icon['online.uplink'] || cfg.icon['new.uplink'] || {};
+          const upl = cfg.icon["online.uplink"] || cfg.icon["new.uplink"] || {};
           const upFill = upl.fillColor || upl.color || cfg.icon.online?.fillColor || cfg.icon.online?.color;
           const upBorder = cfg.icon.online?.color || cfg.icon.online?.fillColor;
           if (upFill) uplinkEl.style.backgroundColor = upFill;
@@ -94,9 +94,9 @@ export const About = function (picturesSource: string, picturesLicense: string):
       }
 
       if (cfg.client) {
-        setBg('.legend-24ghz .symbol', cfg.client.wifi24);
-        setBg('.legend-5ghz .symbol', cfg.client.wifi5);
-        setBg('.legend-others .symbol', cfg.client.other);
+        setBg(".legend-24ghz .symbol", cfg.client.wifi24);
+        setBg(".legend-5ghz .symbol", cfg.client.wifi5);
+        setBg(".legend-others .symbol", cfg.client.other);
       }
     } catch (e) {
       // ignore errors
