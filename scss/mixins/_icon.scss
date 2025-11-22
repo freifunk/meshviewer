@@ -1,1 +1,7 @@
-../../assets/icons/_icon-mixin.scss
+@mixin icon($name, $code, $prefix: "ion-") {
+	.#{$prefix}#{$name} {
+		&::before {
+			content: "#{$code}";
+		}
+	}
+}

@@ -63,6 +63,38 @@ export const About = function (picturesSource: string, picturesLicense: string):
       "<p>The source code is available at " +
       '<a href="https://github.com/freifunk/meshviewer">' +
       "https://github.com/freifunk/meshviewer</a>.</p>";
+    // Apply runtime colors from config if available so the legend matches the map
+    try {
+      const cfg: any = (window as any).config || {};
+      const icon = cfg.icon || {};
+
+      const setSymbolColor = (selector: string, color: string | undefined) => {
+        if (!color) return;
+        const el = d.querySelector(selector) as HTMLElement | null;
+        if (el) {
+          el.style.backgroundColor = color;
+        }
+      };
+
+      // node colors
+      setSymbolColor(".legend-new .symbol", icon?.new?.fillColor || icon?.new?.color);
+      setSymbolColor(".legend-online .symbol", icon?.online?.fillColor || icon?.online?.color);
+      setSymbolColor(".legend-offline .symbol", icon?.offline?.fillColor || icon?.offline?.color);
+      // uplink uses the online uplink color if provided
+      setSymbolColor(
+        ".legend-uplink .symbol",
+        icon?.["online.uplink"]?.fillColor || icon?.["online.uplink"]?.color || icon?.online?.fillColor || icon?.online?.color,
+      );
+
+      // client colors
+      const client = cfg.client || {};
+      setSymbolColor(".legend-24ghz .symbol", client?.wifi24);
+      setSymbolColor(".legend-5ghz .symbol", client?.wifi5);
+      setSymbolColor(".legend-others .symbol", client?.other);
+    } catch (e) {
+      // ignore if config not present
+    }
+
   }
 
   return {
