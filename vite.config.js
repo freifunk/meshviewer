@@ -14,6 +14,14 @@ export default defineConfig({
   define: {
     __APP_VERSION__: JSON.stringify(pkg.version),
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // Ensure Sass can resolve bare @use imports like "mixins/icon" in CI/docker
+        includePaths: [resolve(__dirname, "scss")],
+      },
+    },
+  },
   build: {
     outDir: "build",
     sourcemap: true,
