@@ -64,7 +64,6 @@ export const About = function (picturesSource: string, picturesLicense: string):
       '<a href="https://github.com/freifunk/meshviewer">' +
       "https://github.com/freifunk/meshviewer</a>.</p>";
     // Apply runtime colors from config if available so the legend matches the map
-    try {
       const cfg: any = (window as any).config || {};
       const icon = cfg.icon || {};
 
@@ -94,9 +93,6 @@ export const About = function (picturesSource: string, picturesLicense: string):
       setSymbolColor(".legend-24ghz .symbol", client?.wifi24);
       setSymbolColor(".legend-5ghz .symbol", client?.wifi5);
       setSymbolColor(".legend-others .symbol", client?.other);
-    } catch (e) {
-      // ignore if config not present
-    }
   }
 
   return {

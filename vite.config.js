@@ -6,18 +6,6 @@ import pkg from "./package.json";
 
 export default defineConfig({
   base: "./",
-  server: {
-    // Proxy API requests during development to avoid CORS issues.
-    // Requests to '/api/yanic/*' will be forwarded to 'https://yanic.batman15.ffffm.net/*'
-    proxy: {
-      "/api/yanic": {
-        target: "https://yanic.batman15.ffffm.net",
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api\/yanic/, ""),
-      },
-    },
-  },
   resolve: {
     alias: {
       "@fonts": resolve(__dirname, "assets/fonts"),
@@ -67,7 +55,7 @@ export default defineConfig({
         ],
       },
       devOptions: {
-        enabled: false,
+        enabled: true,
       },
     }),
     checker({
