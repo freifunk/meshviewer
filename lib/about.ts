@@ -67,26 +67,47 @@ export const About = function (picturesSource: string, picturesLicense: string):
     const cfg: any = (window as any).config || {};
     const icon = cfg.icon || {};
 
-    const setSymbolColor = (selector: string, color: string | undefined) => {
-      if (!color) return;
+    const applyIconToSymbol = (selector: string, keys: string[]) => {
       const el = d.querySelector(selector) as HTMLElement | null;
-      if (el) {
-        el.style.borderColor = color;
+      if (!el) return;
+
+      // find the first matching icon config object for the provided keys
+      let cfgIcon: any = null;
+      for (const k of keys) {
+        if (icon?.[k]) {
+          cfgIcon = icon[k];
+          break;
+        }
+      }
+      if (!cfgIcon) return;
+
+      // Use fillColor only for background and color only for border.
+      // Do not fall back from one to the other — they represent different semantic values.
+      const fill = cfgIcon.fillColor;
+      const stroke = cfgIcon.color;
+
+      if (fill) {
+        el.style.backgroundColor = fill;
+      }
+      if (stroke) {
+        el.style.borderColor = stroke;
+        el.style.borderStyle = "solid";
+      }
+
+      // special handling for uplink-style small symbols (match _legend.scss)
+      if (keys.includes("online.uplink") || keys.includes("new.uplink")) {
+        el.style.height = "0.47em";
+        el.style.width = "0.47em";
+        el.style.borderWidth = "0.27em";
       }
     };
 
-    // node colors
-    setSymbolColor(".legend-new .symbol", icon?.new?.fillColor || icon?.new?.color);
-    setSymbolColor(".legend-online .symbol", icon?.online?.fillColor || icon?.online?.color);
-    setSymbolColor(".legend-offline .symbol", icon?.offline?.fillColor || icon?.offline?.color);
-    // uplink uses the online uplink color if provided
-    setSymbolColor(
-      ".legend-uplink .symbol",
-      icon?.["online.uplink"]?.fillColor ||
-        icon?.["online.uplink"]?.color ||
-        icon?.online?.fillColor ||
-        icon?.online?.color,
-    );
+    // node colors: prefer specific dot-keys (e.g. "new", "online", "offline")
+    applyIconToSymbol(".legend-new .symbol", ["new"]);
+    applyIconToSymbol(".legend-online .symbol", ["online"]);
+    applyIconToSymbol(".legend-offline .symbol", ["offline"]);
+    // uplink uses the more specific online.uplink if present, otherwise fallback to online
+    applyIconToSymbol(".legend-uplink .symbol", ["online.uplink", "online"]);
   }
 
   return {
