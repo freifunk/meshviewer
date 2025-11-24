@@ -71,7 +71,7 @@ export const About = function (picturesSource: string, picturesLicense: string):
       if (!color) return;
       const el = d.querySelector(selector) as HTMLElement | null;
       if (el) {
-        el.style.backgroundColor = color;
+        el.style.borderColor = color;
       }
     };
 
@@ -87,12 +87,6 @@ export const About = function (picturesSource: string, picturesLicense: string):
         icon?.online?.fillColor ||
         icon?.online?.color,
     );
-
-    // client colors
-    const client = cfg.client || {};
-    setSymbolColor(".legend-24ghz .symbol", client?.wifi24);
-    setSymbolColor(".legend-5ghz .symbol", client?.wifi5);
-    setSymbolColor(".legend-others .symbol", client?.other);
   }
 
   return {
