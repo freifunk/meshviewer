@@ -84,7 +84,7 @@ export const About = function (picturesSource: string, picturesLicense: string):
 
     // According to maintainer’s valid config JSON:
     applyColor(".legend-online .symbol", "online");
-    applyColor(".legend-online-uplink .symbol", "online.uplink");
+    applyColor(".legend-uplink .symbol", "online.uplink");
     applyColor(".legend-offline .symbol", "offline");
     applyColor(".legend-lost .symbol", "lost");
     applyColor(".legend-alert .symbol", "alert");
