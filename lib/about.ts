@@ -67,47 +67,29 @@ export const About = function (picturesSource: string, picturesLicense: string):
     const cfg: any = (window as any).config || {};
     const icon = cfg.icon || {};
 
-    const applyIconToSymbol = (selector: string, keys: string[]) => {
+    const applyColor = (selector: string, key: string) => {
       const el = d.querySelector(selector) as HTMLElement | null;
       if (!el) return;
 
-      // find the first matching icon config object for the provided keys
-      let cfgIcon: any = null;
-      for (const k of keys) {
-        if (icon?.[k]) {
-          cfgIcon = icon[k];
-          break;
-        }
-      }
+      const cfgIcon = icon[key];
       if (!cfgIcon) return;
 
-      // Use fillColor only for background and color only for border.
-      // Do not fall back from one to the other — they represent different semantic values.
-      const fill = cfgIcon.fillColor;
-      const stroke = cfgIcon.color;
-
-      if (fill) {
-        el.style.backgroundColor = fill;
+      if (cfgIcon.fillColor) {
+        el.style.backgroundColor = cfgIcon.fillColor;
       }
-      if (stroke) {
-        el.style.borderColor = stroke;
-        el.style.borderStyle = "solid";
-      }
-
-      // special handling for uplink-style small symbols (match _legend.scss)
-      if (keys.includes("online.uplink") || keys.includes("new.uplink")) {
-        el.style.height = "0.47em";
-        el.style.width = "0.47em";
-        el.style.borderWidth = "0.27em";
+      if (cfgIcon.color) {
+        el.style.borderColor = cfgIcon.color;
       }
     };
 
-    // node colors: prefer specific dot-keys (e.g. "new", "online", "offline")
-    applyIconToSymbol(".legend-new .symbol", ["new"]);
-    applyIconToSymbol(".legend-online .symbol", ["online"]);
-    applyIconToSymbol(".legend-offline .symbol", ["offline"]);
-    // uplink uses the more specific online.uplink if present, otherwise fallback to online
-    applyIconToSymbol(".legend-uplink .symbol", ["online.uplink", "online"]);
+    // According to maintainer’s valid config JSON:
+    applyColor(".legend-online .symbol", "online");
+    applyColor(".legend-online-uplink .symbol", "online.uplink");
+    applyColor(".legend-offline .symbol", "offline");
+    applyColor(".legend-lost .symbol", "lost");
+    applyColor(".legend-alert .symbol", "alert");
+    applyColor(".legend-new .symbol", "new");
+    applyColor(".legend-new-uplink .symbol", "new.uplink");
   }
 
   return {
