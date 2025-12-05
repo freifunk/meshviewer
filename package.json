@@ -12,7 +12,7 @@
   "type": "module",
   "devDependencies": {
     "@types/node": "^24.10.0",
-    "@typescript-eslint/parser": "^8.46.3",
+    "@typescript-eslint/parser": "^8.48.1",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.7.4",
