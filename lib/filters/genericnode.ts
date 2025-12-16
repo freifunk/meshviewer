@@ -60,10 +60,15 @@ export const GenericNodeFilter = function (
     return value.concat(name);
   }
 
+  function getNegate() {
+    return negate;
+  }
+
   return {
     run,
     setRefresh,
     render,
     getKey,
+    getNegate,
   };
 };
