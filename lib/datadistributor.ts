@@ -30,6 +30,7 @@ export interface Filter {
   getKey?: () => string;
   setRefresh(refresh: () => any): any;
   run(data: any): Boolean;
+  getNegate(): Boolean;
 }
 
 export type FilterMethod = (node: Node) => boolean;
