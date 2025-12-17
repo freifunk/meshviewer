@@ -128,8 +128,10 @@ export class Router extends Navigo {
 
     if (node) {
       this.gotoNode({ nodeId: node });
+      console.log("currentStateParamsNode", this.currentStateParams);
     } else if (link) {
       this.gotoLink({ linkId: link });
+      console.log("currentStateParamsLink", this.currentStateParams);
     } else if (lat) {
       this.targets.forEach((target) => {
         target.gotoLocation({
@@ -139,6 +141,7 @@ export class Router extends Navigo {
         });
       });
     } else {
+      console.log("currentStateParamsRESET", this.currentStateParams);
       this.resetView();
     }
   }
