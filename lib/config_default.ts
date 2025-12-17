@@ -134,6 +134,7 @@ export interface Config {
     tqFrom: string;
     tqTo: string;
     zoomModifier: number;
+    otherLinkColor: string;
   };
   locate: {
     outerCircle: {
@@ -332,6 +333,7 @@ export const config: Config = {
     tqFrom: "#770038",
     tqTo: "#dc0067",
     zoomModifier: 1,
+    otherLinkColor: "#5194ecff",
   },
   locate: {
     outerCircle: {
