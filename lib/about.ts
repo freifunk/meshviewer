@@ -2,6 +2,25 @@ import { _ } from "./utils/language.js";
 import { CanRender } from "./container.js";
 
 export const About = function (picturesSource: string, picturesLicense: string): CanRender {
+  function applyCustomLegendStyle(d: HTMLElement) {
+    const iconConfig = window.config.icon;
+
+    // apply custom styling from config.json to reflect changes in config.json
+    const applyColor = (selector: string, key: string) => {
+      // this applies the color config like Leaflet circleMarker config does
+      const el = d.querySelector(selector) as HTMLElement;
+      const cfgIcon = iconConfig[key];
+
+      el.style.backgroundColor = cfgIcon.fillColor;
+      el.style.borderColor = cfgIcon.color;
+    };
+    applyColor(".legend-new .symbol", "new");
+    applyColor(".legend-online .symbol", "online");
+    applyColor(".legend-offline .symbol", "offline");
+    // first apply online color, then add uplink specialized
+    applyColor(".legend-uplink .symbol", "online");
+    applyColor(".legend-uplink .symbol", "online.uplink");
+  }
   function render(d: HTMLElement) {
     d.innerHTML =
       _.t("sidebar.aboutInfo") +
@@ -63,6 +82,9 @@ export const About = function (picturesSource: string, picturesLicense: string):
       "<p>The source code is available at " +
       '<a href="https://github.com/freifunk/meshviewer">' +
       "https://github.com/freifunk/meshviewer</a>.</p>";
+
+    // Apply runtime colors from config if available so the legend matches the map
+    applyCustomLegendStyle(d);
   }
 
   return {
