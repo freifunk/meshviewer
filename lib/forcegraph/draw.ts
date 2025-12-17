@@ -120,18 +120,26 @@ self.drawLink = function drawLink(link: MapLink) {
   to = drawHighlightLink(link, to);
 
   let grd = ctx.createLinearGradient(link.source.x, link.source.y, link.target.x, link.target.y);
-  grd.addColorStop(0.45, link.color);
-  grd.addColorStop(0.55, link.color_to);
+
 
   ctx.lineTo(to[0], to[1]);
-  ctx.strokeStyle = grd;
+  
   if (link.o.type.indexOf("vpn") === 0) {
     ctx.globalAlpha = 0.2;
     ctx.lineWidth = 1.5;
+  } else if (link.o.type.indexOf("other") === 0) {
+    ctx.globalAlpha = 1;
+    ctx.lineWidth = 3.5;
+    link.color = "#5194ecff";
+    link.color_to = "#5194ecff";
   } else {
     ctx.globalAlpha = 0.8;
     ctx.lineWidth = 2.5;
   }
+
+  grd.addColorStop(0.45, link.color);
+  grd.addColorStop(0.55, link.color_to);
+  ctx.strokeStyle = grd;
   ctx.stroke();
   ctx.globalAlpha = 1;
 };
