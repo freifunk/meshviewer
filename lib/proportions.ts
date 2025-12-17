@@ -26,6 +26,21 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
   let time: Moment;
 
   let tables: Record<string, TableNode> = {};
+  // paramName -> (valueNorm -> Filter)
+  let createdFilters: { [param: string]: { [value: string]: Filter } } = {};
+  // weak map from filter object to meta { param, value, norm }
+  let filterMeta: WeakMap<Filter, { param: string; value: string; norm: string }> = new WeakMap();
+
+  function normalizeKey(s: string | null | undefined) {
+    if (!s) return "";
+    return String(s).replace(/\s+/g, "").toLowerCase();
+  }
+
+  function deriveParamName(keys: string[]) {
+    if (!keys || keys.length === 0) return "filter";
+    const joined = keys.join("_");
+    return joined.replace(" ", "_").toLowerCase();
+  }
 
   function count(nodes: Node[], key: string[], f?: (k: any) => any) {
     let dict = {};
@@ -56,6 +71,35 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     };
   }
 
+  // Watch filter changes and sync the URL accordingly (but ignore when we are
+  // programmatically applying filters from the hash).
+  filterManager.watchFilters({
+    filtersChanged: function (filters: Filter[] & { getKey?: () => string }[]) {
+      // Build param -> values map from active filters
+      const params: { [param: string]: string[] } = {};
+      filters.forEach(function (f) {
+        const meta = filterMeta.get(f);
+        if (!f.getKey) return;
+
+        console.log("test", f.getKey(), params);
+        
+        if (meta) {
+          params[meta.param] = params[meta.param] || [];
+          params[meta.param].push(meta.value);
+        }
+      });
+      // update active keys mapping (normalized)
+      const active: { [param: string]: string[] } = {};
+
+      for (const [p, value] of Object.entries(params)) {
+        active[p] = value.map(function (v) {
+          return normalizeKey(v);
+        });
+      }
+      window.router.setParams(params);
+    },
+  });
+
   function fillTable(name: string, table: TableNode | undefined, data: any[][]): TableNode {
     let tableNode: TableNode = table ?? {
       element: document.createElement("table"),
@@ -73,6 +117,15 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
       let v = data[1] / max;
 
       let filter = GenericNodeFilter(_.t(name), data[2], data[0], data[3]);
+      if (filter.getKey) {
+        const orig = filter.getKey();
+        const norm = normalizeKey(orig as string);
+        const param = deriveParamName(data[2]);
+        
+        createdFilters[param] = createdFilters[param] || {};
+        createdFilters[param][norm] = filter;
+        filterMeta.set(filter, { param: param, value: String(data[0]), norm: norm });
+      }
 
       let a = h("a", { on: { click: addFilter(filter) } }, data[0]);
 
@@ -101,6 +154,9 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
   self.setData = function setData(data: ObjectsLinksAndNodes) {
     let nodes = data.nodes.all;
     time = data.timestamp;
+
+    // clear created filters map for new data
+    createdFilters = {};
 
     function hostnameOfNodeID(nodeid: string | null) {
       // nodeid is a mac address here
@@ -220,7 +276,31 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
         return b[1] - a[1];
       }),
     );
+
+    applyFiltersFromHash();
   };
+
+  function applyFiltersFromHash() {
+    const params = window.router.getParams();
+    const keys = Object.keys(params);
+    if (keys.length === 0) return;
+    // When applying filters from the hash, only add those that are not
+    // currently active. Also set a flag so the watch handler doesn't try
+    // to re-sync the URL while we are programmatically applying filters.
+
+    for (const [param, values] of Object.entries(params)) {
+      console.log("apply_entries", param, values);
+      values.forEach(function (val) {
+        const norm = normalizeKey(val);
+        const bucket = createdFilters[param];
+        if (true || !bucket) {
+          console.log("apply_entries2", norm, param, bucket)
+          let filter = GenericNodeFilter(_.t(param), values, "testString", undefined);
+          filterManager.addFilter(filter);
+        }
+      });
+    }
+  }
 
   self.render = function render(el: HTMLElement) {
     self.renderSingle(el, "node.status", tables.status.element);
