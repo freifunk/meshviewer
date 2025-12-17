@@ -110,6 +110,7 @@ export class Router extends Navigo {
 
     // parse and store query-like params (after '?') so other components can access them
     this.currentStateParams = match.params;
+    console.log("currentStateParams", this.currentStateParams);
 
     if (lang && lang !== this.state.lang && lang === this.language.getLocale(lang)) {
       console.debug("Language change reload");
@@ -189,25 +190,7 @@ export class Router extends Navigo {
 
     // if params were provided in data or come from state/currentState, append them as query string
     // params should be an object mapping param -> string[]
-    let paramsObj: { [param: string]: string[] } | undefined = undefined;
-    if (data && (data as any).params) {
-      paramsObj = (data as any).params;
-    } else if (full) {
-      // prefer params parsed from the current route first, then fall back to this.state
-      paramsObj = this.currentStateParams || (this.state as any).params;
-      // if still not present, try parsing from the current location.hash to avoid losing params
-      if (!paramsObj) {
-        paramsObj = this.getParams();
-      }
-    }
-
-    if (paramsObj && Object.keys(paramsObj).length > 0) {
-      const qs = new URLSearchParams();
-      Object.keys(paramsObj).forEach((k) => {
-        qs.set(k, paramsObj[k].join(","));
-      });
-      result += "?" + qs.toString();
-    }
+    // console.log("parsing params",this.getParams());
 
     return result;
   }

@@ -26,14 +26,14 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
   let time: Moment;
 
   let tables: Record<string, TableNode> = {};
-  // paramName -> (valueNorm -> Filter)
-  let createdFilters: { [param: string]: { [value: string]: Filter } } = {};
   // weak map from filter object to meta { param, value, norm }
   let filterMeta: WeakMap<Filter, { param: string; value: string; norm: string }> = new WeakMap();
+  // flag set while we apply filters programmatically from the URL hash
+  let applyingHashFilters = false;
 
   function normalizeKey(s: string | null | undefined) {
     if (!s) return "";
-    return String(s).replace(/\s+/g, "").toLowerCase();
+    return String(s).replace(/\s+/g, "_").toLowerCase();
   }
 
   function deriveParamName(keys: string[]) {
@@ -81,7 +81,7 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
         const meta = filterMeta.get(f);
         if (!f.getKey) return;
 
-        console.log("test", f.getKey(), params);
+        console.log("test_filter", f.getKey(), meta, f.getNegate());
         
         if (meta) {
           params[meta.param] = params[meta.param] || [];
@@ -122,8 +122,6 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
         const norm = normalizeKey(orig as string);
         const param = deriveParamName(data[2]);
         
-        createdFilters[param] = createdFilters[param] || {};
-        createdFilters[param][norm] = filter;
         filterMeta.set(filter, { param: param, value: String(data[0]), norm: norm });
       }
 
@@ -154,9 +152,6 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
   self.setData = function setData(data: ObjectsLinksAndNodes) {
     let nodes = data.nodes.all;
     time = data.timestamp;
-
-    // clear created filters map for new data
-    createdFilters = {};
 
     function hostnameOfNodeID(nodeid: string | null) {
       // nodeid is a mac address here
@@ -277,28 +272,34 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
       }),
     );
 
-    applyFiltersFromHash();
+    if (!applyingHashFilters) {
+      console.log("applyingHashFilters");
+      applyFiltersFromHash();
+    }
+
   };
 
   function applyFiltersFromHash() {
     const params = window.router.getParams();
+    console.log("applied_params", window.router.currentStateParams)
     const keys = Object.keys(params);
     if (keys.length === 0) return;
     // When applying filters from the hash, only add those that are not
     // currently active. Also set a flag so the watch handler doesn't try
     // to re-sync the URL while we are programmatically applying filters.
-
-    for (const [param, values] of Object.entries(params)) {
-      console.log("apply_entries", param, values);
-      values.forEach(function (val) {
-        const norm = normalizeKey(val);
-        const bucket = createdFilters[param];
-        if (true || !bucket) {
-          console.log("apply_entries2", norm, param, bucket)
-          let filter = GenericNodeFilter(_.t(param), values, "testString", undefined);
-          filterManager.addFilter(filter);
-        }
-      });
+    applyingHashFilters = true;
+    try {
+      for (const [param, values] of Object.entries(params)) {
+        console.log("apply_entries", param, values);
+        let filter = GenericNodeFilter(_.t(param), values, "testString", undefined);
+        //filterManager.addFilter(filter);
+        values.forEach(function (val) {
+          const norm = normalizeKey(val);
+          console.log("apply_entries2", norm, param);
+        });
+      }
+    } finally {
+      applyingHashFilters = false;
     }
   }
 
