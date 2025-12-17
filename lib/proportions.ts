@@ -26,8 +26,8 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
   let time: Moment;
 
   let tables: Record<string, TableNode> = {};
-  // weak map from filter object to meta { param, value, norm }
-  let filterMeta: WeakMap<Filter, { param: string; value: string; norm: string }> = new WeakMap();
+  // weak map from filter object to meta { name, prop, value, norm }
+  let filterMeta: WeakMap<Filter, { name: string; prop: [string]; value: string; norm: string }> = new WeakMap();
   // flag set while we apply filters programmatically from the URL hash
   let applyingHashFilters = false;
 
@@ -38,8 +38,7 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
 
   function deriveParamName(keys: string[]) {
     if (!keys || keys.length === 0) return "filter";
-    const joined = keys.join("_");
-    return joined.replace(" ", "_").toLowerCase();
+    return keys.join("_").toLowerCase();
   }
 
   function count(nodes: Node[], key: string[], f?: (k: any) => any) {
@@ -84,18 +83,10 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
         console.log("test_filter", f.getKey(), meta, f.getNegate());
         
         if (meta) {
-          params[meta.param] = params[meta.param] || [];
-          params[meta.param].push(meta.value);
+          params[meta.name] = params[meta.name] || [];
+          params[meta.name].push(meta.value);
         }
       });
-      // update active keys mapping (normalized)
-      const active: { [param: string]: string[] } = {};
-
-      for (const [p, value] of Object.entries(params)) {
-        active[p] = value.map(function (v) {
-          return normalizeKey(v);
-        });
-      }
       window.router.setParams(params);
     },
   });
@@ -117,13 +108,10 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
       let v = data[1] / max;
 
       let filter = GenericNodeFilter(_.t(name), data[2], data[0], data[3]);
-      if (filter.getKey) {
-        const orig = filter.getKey();
-        const norm = normalizeKey(orig as string);
-        const param = deriveParamName(data[2]);
+      console.log("test_set_data", name, data[2], data[0], data[3]);
+      const param = deriveParamName(data[2]);
         
-        filterMeta.set(filter, { param: param, value: String(data[0]), norm: norm });
-      }
+      filterMeta.set(filter, { name: name, prop: data[2], value: String(data[0]), norm: data[3] });
 
       let a = h("a", { on: { click: addFilter(filter) } }, data[0]);
 
