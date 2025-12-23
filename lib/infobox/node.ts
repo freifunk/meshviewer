@@ -232,7 +232,7 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
         h("div", { props: { className: "eol" } }, [
           h("div", {
             props: {
-              innerHTML: config.eol_text || _.t("eol"),
+              innerHTML: config.eol_text || _.t("eol-text"),
             },
           }),
         ]),
@@ -243,7 +243,7 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
         h("div", { props: { className: "deprecated" } }, [
           h("div", {
             props: {
-              innerHTML: config.deprecation_text || _.t("deprecation"),
+              innerHTML: config.deprecation_text || _.t("deprecation-text"),
             },
           }),
         ]),
