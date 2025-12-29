@@ -163,12 +163,12 @@ export class Router extends Navigo {
       });
   }
 
-  generateLink(data?: {}, full?: boolean, deep?: boolean) {
+  generateLink(data?: {}, full?: boolean) {
     let result = "";
 
     if (full) {
       data = Object.assign({}, this.state, data);
-    } else if (deep) {
+    } else {
       result = "#";
       data = Object.assign({}, this.currentState, data);
     }
@@ -183,11 +183,18 @@ export class Router extends Navigo {
     return result;
   }
 
-  fullUrl(data?: {}, e?: Event | false, deep?: boolean) {
+  fullUrl(data?: {}, e?: Event | false) {
     if (e) {
       e.preventDefault();
     }
-    this.navigate(this.generateLink(data, !deep, deep));
+    this.navigate(this.generateLink(data, true));
+  }
+
+  deepUrl(data?: {}, e?: Event | false) {
+    if (e) {
+      e.preventDefault();
+    }
+    this.navigate(this.generateLink(data));
   }
 
   getLang() {
