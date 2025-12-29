@@ -27,7 +27,7 @@ export const Language = function () {
   }
 
   function setSelectLocale(event: any) {
-    router.fullUrl({ lang: event.target.value }, false, true);
+    router.deepUrl({ lang: event.target.value });
   }
 
   function getLocale(input?: LanguageCode): LanguageCode {
