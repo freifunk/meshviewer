@@ -129,8 +129,10 @@ self.drawLink = function drawLink(link: MapLink) {
   } else if (link.o.type.indexOf("other") === 0) {
     ctx.globalAlpha = 1;
     ctx.lineWidth = 3.5;
-    link.color = config.forceGraph.otherLinkColor;
-    link.color_to = config.forceGraph.otherLinkColor;
+    if (link.o.source_tq >= 0.99 && link.o.target_tq >= 0.99) {
+      link.color = config.forceGraph.otherLinkColor;
+      link.color_to = config.forceGraph.otherLinkColor;
+    }
   } else {
     ctx.globalAlpha = 0.8;
     ctx.lineWidth = 2.5;
