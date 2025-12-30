@@ -130,6 +130,7 @@ export interface Config {
   forceGraph: {
     nodeColor: string;
     nodeOfflineColor: string;
+    nodeUplinkColor?: string;
     highlightColor: string;
     labelColor: string;
     tqFrom: string;
@@ -330,6 +331,7 @@ export const config: Config = {
   forceGraph: {
     nodeColor: "#fff",
     nodeOfflineColor: "#D43E2A",
+    nodeUplinkColor: "#4285F4",
     highlightColor: "rgba(255, 255, 255, 0.2)",
     labelColor: "#fff",
     tqFrom: "#770038",
