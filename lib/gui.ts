@@ -88,7 +88,7 @@ export const Gui = function (language: ReturnType<typeof Language>) {
     } else {
       data = { view: "map" };
     }
-    router.deepUrl(data);
+    router.fullUrl(data);
   };
 
   buttons.appendChild(buttonToggle);
