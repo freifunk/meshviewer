@@ -125,6 +125,7 @@ export interface Config {
       opacity: number;
       dashArray: string;
     };
+    otherLinkColor: string;
   };
   forceGraph: {
     nodeColor: string;
@@ -324,6 +325,7 @@ export const config: Config = {
       opacity: 1,
       dashArray: "5, 10",
     },
+    otherLinkColor: "#5194ecff",
   },
   forceGraph: {
     nodeColor: "#fff",
