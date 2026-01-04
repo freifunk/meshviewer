@@ -13,7 +13,7 @@ interface NodeAttr {
   //   'value': function (d) {
   //     var moment = require('moment');
   //     var V = require('snabbdom').default;
-  //     return V.h('td', { props: { colSpan: 2 }, style: { background: '#49a' } },
+  //     return V.h('td', { props: { colSpan: 2 }, style: { background: '#49A' } },
   //       _.t('sidebar.nodeOnline') + ' translate, ' + moment(d.firstseen).get('month') +
   //       ' Month require libs like moment, access config ' + config.siteName);
   //   }
@@ -126,10 +126,12 @@ export interface Config {
       opacity: number;
       dashArray: string;
     };
+    otherLinkColor: string;
   };
   forceGraph: {
     nodeColor: string;
     nodeOfflineColor: string;
+    nodeUplinkColor?: string;
     highlightColor: string;
     labelColor: string;
     tqFrom: string;
@@ -274,7 +276,7 @@ export const config: Config = {
       stroke: false,
     },
     "online.uplink": {
-      fillColor: "#cde",
+      fillColor: "#CDE",
       stroke: true,
       radius: 4,
       weight: 10,
@@ -310,11 +312,11 @@ export const config: Config = {
     other: "rgba(227, 166, 25, 0.7)",
   },
   map: {
-    labelNewColor: "#459c18",
+    labelNewColor: "#459C18",
     tqFrom: "#F02311",
     tqTo: "#04C714",
     highlightNode: {
-      color: "#ad2358",
+      color: "#AD2358",
       weight: 8,
       fillOpacity: 1,
       opacity: 0.4,
@@ -325,16 +327,18 @@ export const config: Config = {
       opacity: 1,
       dashArray: "5, 10",
     },
+    otherLinkColor: "#5194ECFF",
   },
   forceGraph: {
-    nodeColor: "#fff",
+    nodeColor: "#FFF",
     nodeOfflineColor: "#D43E2A",
+    nodeUplinkColor: "#4285F4",
     highlightColor: "rgba(255, 255, 255, 0.2)",
-    labelColor: "#fff",
+    labelColor: "#FFF",
     tqFrom: "#770038",
-    tqTo: "#dc0067",
+    tqTo: "#DC0067",
     zoomModifier: 1,
-    otherLinkColor: "#5194ecff",
+    otherLinkColor: "#5194ECFF",
   },
   locate: {
     outerCircle: {
@@ -347,7 +351,7 @@ export const config: Config = {
     },
     innerCircle: {
       stroke: true,
-      color: "#ffffff",
+      color: "#FFFFFF",
       fillColor: "#4285F4",
       weight: 1.5,
       clickable: false,
