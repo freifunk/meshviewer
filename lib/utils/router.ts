@@ -106,7 +106,7 @@ export class Router extends Navigo {
 
     if (lang && lang !== this.state.lang && lang === this.language.getLocale(lang)) {
       console.debug("Language change reload");
-      location.hash = "/" + match.url;
+      location.hash = "/" + match.hashString;
       location.reload();
     }
 
@@ -146,7 +146,7 @@ export class Router extends Navigo {
     )
       .on(
         // lang, viewValue, node, link, zoom, lat, lon
-        /^\/?(\w{2})?\/?(map|graph)?\/?([a-f\d]{12})?([a-f\d\-]{25})?\/?(?:(\d+)\/(-?[\d.]+)\/(-?[\d.]+))?$/,
+        /^\/?(\w{2})?\/?(map|graph)?\/?([a-f\d]{12})?([a-f\d\-]{25})?\/?(?:(\d+)\/(-?[\d.]+)\/(-?[\d.]+))?(?:\?.*)?$/,
         (match?: Match) => {
           this.customRoute(match);
         },
@@ -204,6 +204,51 @@ export class Router extends Navigo {
       return lang[1];
     }
     return null;
+  }
+
+  // Parse query-like params from the location.hash (everything after '?')
+  getParams(): { [param: string]: string[] } {
+    const hash = location.hash || "";
+    const [, queryString] = hash.split("?");
+    const out: { [param: string]: string[] } = {};
+
+    if (!queryString) {
+      return out;
+    }
+
+    const params = new URLSearchParams(queryString);
+
+    params.forEach(function (value, key) {
+      // value can be something like "v1,!v2"
+      const parts = value.split(",").filter(Boolean);
+
+      if (!out[key]) {
+        out[key] = parts;
+      } else {
+        out[key] = out[key].concat(parts);
+      }
+    });
+
+    return out;
+  }
+
+  // Replace params portion in the current hash with provided params object.
+  // If params is empty, the query portion will be removed.
+  setParams(params: { [param: string]: string[] }) {
+    const hash = location.hash || "";
+    const base = hash.split("?")[0] || "";
+    const keys = Object.keys(params || {});
+    if (!keys.length) {
+      location.hash = base;
+      return;
+    }
+    const qs = new URLSearchParams();
+    keys.forEach(function (k) {
+      // Join multiple values for same key with ","
+      // e.g. map?node.firmware=v1,!v2
+      qs.set(k, params[k].join(","));
+    });
+    location.hash = base + "?" + qs.toString();
   }
 
   addTarget(target: Target) {

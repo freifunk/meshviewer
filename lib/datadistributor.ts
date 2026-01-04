@@ -32,6 +32,13 @@ export interface Filter {
   run(data: any): Boolean;
 }
 
+export interface GenericFilter extends Filter {
+  getNegate(): boolean;
+  getName(): string;
+  getValue(): string;
+  setNegate(negate: boolean): void;
+}
+
 export type FilterMethod = (node: Node) => boolean;
 
 export const DataDistributor = function () {
