@@ -1,20 +1,21 @@
 import * as helper from "../utils/helper.js";
-import { Filter } from "../datadistributor.js";
+import { GenericFilter } from "../datadistributor.js";
 import { CanRender } from "../container.js";
 import { Node } from "../utils/node.js";
+import { _ } from "../utils/language.js";
 
 export const GenericNodeFilter = function (
   name: string,
   keys: string[],
   value: string,
   nodeValueModifier: (a: any) => string,
-): Filter & CanRender {
+): GenericFilter & CanRender {
   let negate = false;
   let refresh: () => any;
 
   let label = document.createElement("label");
   let strong = document.createElement("strong");
-  label.textContent = name + ": ";
+  label.textContent = _.t(name) + ": ";
   label.appendChild(strong);
 
   function run(node: Node) {
@@ -60,6 +61,14 @@ export const GenericNodeFilter = function (
     return value.concat(name);
   }
 
+  function getName() {
+    return name;
+  }
+
+  function getValue() {
+    return value;
+  }
+
   function getNegate() {
     return negate;
   }
@@ -70,5 +79,7 @@ export const GenericNodeFilter = function (
     render,
     getKey,
     getNegate,
+    getName,
+    getValue,
   };
 };

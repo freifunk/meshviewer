@@ -35,14 +35,9 @@ export const HostnameFilter = function (): CanRender & Filter {
     el.appendChild(input);
   }
 
-  function getNegate() {
-    return false;
-  }
-
   return {
     run,
     setRefresh,
     render,
-    getNegate,
   };
 };

@@ -1,7 +1,7 @@
 import * as d3Interpolate from "d3-interpolate";
 import { Moment } from "moment";
 import { classModule, eventListenersModule, h, init, propsModule, styleModule, VNode } from "snabbdom";
-import { DataDistributor, Filter, ObjectsLinksAndNodes } from "./datadistributor.js";
+import { DataDistributor, Filter, GenericFilter, ObjectsLinksAndNodes } from "./datadistributor.js";
 import { GenericNodeFilter } from "./filters/genericnode.js";
 import * as helper from "./utils/helper.js";
 import { _ } from "./utils/language.js";
@@ -12,6 +12,82 @@ type TableNode = {
   element: HTMLTableElement;
   vnode?: VNode;
 };
+
+const statusFieldMapping = {
+  "node.status": {
+    "keys": ["is_online"],
+    "modifier": function (d: any) {
+      return d ? "online" : "offline";
+    }
+  },
+  "node.firmware": {
+    "keys": ["firmware", "release"],
+  },
+  "node.baseversion": {
+    "keys": ["firmware", "base"],
+  },
+  "node.deprecationStatus": {
+    "keys": ["model"],
+    "modifier": function (d: any) {
+      if (window.config.deprecated && d && window.config.deprecated.includes(d)) return _.t("deprecation");
+      if (window.config.eol && d && window.config.eol.includes(d)) return _.t("eol");
+      return _.t("no");
+    }
+  },
+  "node.hardware": {
+    "keys": ["model"],
+  },
+  "node.visible": {
+    "keys": ["location"],
+    "modifier": function (d: any) {
+      return d && d.longitude && d.latitude ? _.t("yes") : _.t("no");
+    }
+  },
+  "node.update": {
+    "keys": ["autoupdater"],
+    "modifier": function (d: any) {
+      if (d.enabled) {
+        return d.branch;
+      }
+      return _.t("node.deactivated");
+    }
+  },
+  "node.selectedGatewayIPv4": {
+    "keys": ["gateway"],
+    "modifier": function (nodeid: string | null, data: ObjectsLinksAndNodes) {
+      let gateway = data.nodeDict[nodeid];
+      if (gateway) {
+        return gateway.hostname;
+      }
+      return null;
+    }
+  },
+  "node.selectedGatewayIPv6": {
+    "keys": ["gateway6"],
+    "modifier": function (nodeid: string | null, data: ObjectsLinksAndNodes) {
+      let gateway = data.nodeDict[nodeid];
+      if (gateway) {
+        return gateway.hostname;
+      }
+      return null;
+    }
+  },
+  "node.domain": {
+    "keys": ["domain"],
+    "modifier": function (d: any) {
+      if (window.config.domainNames) {
+        window.config.domainNames.some(function (t) {
+          if (d === t.domain) {
+            d = t.name;
+            return true;
+          }
+        });
+      }
+      return d;
+    }
+  },
+};
+
 
 const patch = init([classModule, propsModule, styleModule, eventListenersModule]);
 
@@ -26,10 +102,10 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
   let time: Moment;
 
   let tables: Record<string, TableNode> = {};
-  // weak map from filter object to meta { name, prop, value, norm }
   let filterMeta: WeakMap<Filter, { name: string; prop: [string]; value: string; norm: string }> = new WeakMap();
   // flag set while we apply filters programmatically from the URL hash
-  let applyingHashFilters = false;
+  let appliedUrlFilters = false;
+  let applyingFilter = false;
 
   function normalizeKey(s: string | null | undefined) {
     if (!s) return "";
@@ -65,6 +141,7 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
 
   function addFilter(filter: Filter) {
     return function () {
+      console.log("adding_filter", filter.getKey());
       filterManager.addFilter(filter);
       return false;
     };
@@ -73,21 +150,20 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
   // Watch filter changes and sync the URL accordingly (but ignore when we are
   // programmatically applying filters from the hash).
   filterManager.watchFilters({
-    filtersChanged: function (filters: Filter[] & { getKey?: () => string }[]) {
+    filtersChanged: function (filters: GenericFilter[]) {
       // Build param -> values map from active filters
       const params: { [param: string]: string[] } = {};
       filters.forEach(function (f) {
-        const meta = filterMeta.get(f);
         if (!f.getKey) return;
 
-        console.log("test_filter", f.getKey(), meta, f.getNegate());
+        console.log("watchedFilter", f.getKey(), f.getNegate());
         
-        if (meta) {
-          params[meta.name] = params[meta.name] || [];
-          params[meta.name].push(meta.value);
-        }
+          params[f.getName()] = [f.getValue()];
       });
-      window.router.setParams(params);
+      if (appliedUrlFilters) {
+        console.log("setParams");
+        window.router.setParams(params);
+      }
     },
   });
 
@@ -107,12 +183,13 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     let items = data.map(function (data) {
       let v = data[1] / max;
 
-      let filter = GenericNodeFilter(_.t(name), data[2], data[0], data[3]);
-      console.log("test_set_data", name, data[2], data[0], data[3]);
+      let keys = data[2];
+      let value = data[0];
+      let modifierFunction = data[3];
+      let filter = GenericNodeFilter(name, keys, value, modifierFunction);
+      //console.log("test_set_data", name, data[2], data[0], data[3]);
       const param = deriveParamName(data[2]);
         
-      filterMeta.set(filter, { name: name, prop: data[2], value: String(data[0]), norm: data[3] });
-
       let a = h("a", { on: { click: addFilter(filter) } }, data[0]);
 
       let th = h("th", a);
@@ -260,34 +337,45 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
       }),
     );
 
-    if (!applyingHashFilters) {
-      console.log("applyingHashFilters");
+    if (!appliedUrlFilters) {
       applyFiltersFromHash();
     }
 
   };
 
   function applyFiltersFromHash() {
+    console.log("applyFiltersFromHash");
     const params = window.router.getParams();
-    console.log("applied_params", window.router.currentStateParams)
+    console.log("applied_params", params)
     const keys = Object.keys(params);
+    appliedUrlFilters = true;
     if (keys.length === 0) return;
     // When applying filters from the hash, only add those that are not
     // currently active. Also set a flag so the watch handler doesn't try
     // to re-sync the URL while we are programmatically applying filters.
-    applyingHashFilters = true;
+    applyingFilter = true;
     try {
       for (const [param, values] of Object.entries(params)) {
-        console.log("apply_entries", param, values);
-        let filter = GenericNodeFilter(_.t(param), values, "testString", undefined);
-        //filterManager.addFilter(filter);
+        
+        let norm;
+        
         values.forEach(function (val) {
-          const norm = normalizeKey(val);
-          console.log("apply_entries2", norm, param);
+          norm = normalizeKey(val);
         });
+        console.log("apply_entries", norm, param, values);
+        statusFieldMapping[param];
+        if (!statusFieldMapping[param]) {
+          console.log("unknown_filter_param", param);
+          return;
+        }
+        const mapping = statusFieldMapping[param];
+
+        let filter = GenericNodeFilter(param, mapping.keys, norm, mapping.modifier);
+        console.log("adding_filter_from_hash", filter.getKey());
+        filterManager.addFilter(filter);
       }
     } finally {
-      applyingHashFilters = false;
+      applyingFilter = false;
     }
   }
 

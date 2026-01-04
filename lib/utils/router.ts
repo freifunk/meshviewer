@@ -45,7 +45,7 @@ export class Router extends Navigo {
   // optional URL query-like params parsed from the hash (after '?')
   // param -> string[]
   // Example: #/de/map?foo=a,b&bar=c -> { foo: ['a','b'], bar: ['c'] }
-  currentStateParams: { [param: string]: string } | undefined = undefined;
+  currentStateParams: { [param: string]: string[] } | undefined = undefined;
   state = { lang: null, view: "map" };
   language = undefined;
 
@@ -109,8 +109,7 @@ export class Router extends Navigo {
     };
 
     // parse and store query-like params (after '?') so other components can access them
-    this.currentStateParams = match.params;
-    console.log("currentStateParams", this.currentStateParams);
+    this.currentStateParams = this.getParams();
 
     if (lang && lang !== this.state.lang && lang === this.language.getLocale(lang)) {
       console.debug("Language change reload");
@@ -223,11 +222,9 @@ export class Router extends Navigo {
 
   // Parse query-like params from the location.hash (everything after '?')
   getParams(): { [param: string]: string[] } {
-    const hash = location.hash || "";
-    const idx = hash.indexOf("?");
-    if (idx === -1) return {};
-    const qs = hash.slice(idx + 1);
-    const params = new URLSearchParams(qs);
+    const hash = location.hash;
+    const [, queryString] = hash.split('?');
+    const params = new URLSearchParams(queryString);
     const out: { [param: string]: string[] } = {};
     params.forEach(function (value, key) {
       out[key] = value.split(",").filter(Boolean);
@@ -239,6 +236,7 @@ export class Router extends Navigo {
   // If params is empty, the query portion will be removed.
   setParams(params: { [param: string]: string[] }) {
     const hash = location.hash || "";
+    console.log("setParams", params, location.hash);
     const base = hash.split("?")[0] || "";
     const keys = Object.keys(params || {});
     if (!keys.length) {
