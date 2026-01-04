@@ -91,7 +91,11 @@ self.drawNode = function drawNode(node: MapNode) {
     if (node.o.is_gateway) {
       ctx.rect(node.x - 9, node.y - 9, 18, 18);
     }
-    ctx.fillStyle = config.forceGraph.nodeColor;
+    if (helper.hasUplink(node.o)) {
+      ctx.fillStyle = config.forceGraph.nodeUplinkColor;
+    } else {
+      ctx.fillStyle = config.forceGraph.nodeColor;
+    }
   } else {
     ctx.arc(node.x, node.y, 6, 0, 2 * Math.PI);
     ctx.fillStyle = config.forceGraph.nodeOfflineColor;
