@@ -62,6 +62,12 @@ variables.$color-online: color.adjust(variables.$color-online, $lightness: 25%);
     }
   }
 
+  .leaflet-popup-content-wrapper {
+    background: color.adjust(variables.$color-white, $lightness: 10%);
+    border-radius: 5px;
+    text-align: center;
+  }
+
   .leaflet-control-layers {
     &.leaflet-control {
       opacity: 0.9;

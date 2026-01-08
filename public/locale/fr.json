@@ -62,8 +62,10 @@
   },
   "button": {
     "switchView": "Basculer l’affichage",
+    "fullscreen": "Vollbildmodus wechseln",
+    "tracking": "Localisation",
     "location": "Choisir les coordonnées",
-    "tracking": "Localisation"
+    "ruler": "Règle"
   },
   "momentjs": {
     "calendar": {

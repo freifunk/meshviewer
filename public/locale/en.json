@@ -63,9 +63,10 @@
   },
   "button": {
     "switchView": "Switch view",
-    "location": "Pick coordinates",
+    "fullscreen": "Toggle fullscreen",
     "tracking": "Localisation",
-    "fullscreen": "Toggle fullscreen"
+    "location": "Pick coordinates",
+    "ruler": "Ruler"
   },
   "momentjs": {
     "calendar": {
