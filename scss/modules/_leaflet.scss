@@ -535,3 +535,9 @@
     }
   }
 }
+
+.leaflet-popup-content-wrapper {
+  background: variables.$color-white;
+  border-radius: 5px;
+  text-align: center;
+}
