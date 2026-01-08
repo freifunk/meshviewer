@@ -78,3 +78,11 @@ but also names based on elements like `p`, `a`, `div`..
 
 `V`
 : [Snabbdom](https://github.com/snabbdom/snabbdom) virtual dom
+
+## Addition of new icons
+
+To add new icons to the `meshviewer.woff2` icon-set, one must edit the icon-set manually.
+
+- This can be done by uploading the existing `meshviewer.tff` to https://icomoon.io/new-app
+- Then, one can add a new icon by searching in the UI or uploading an SVG.
+- Finally, export the iconset and replace the existing one
