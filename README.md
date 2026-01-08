@@ -31,13 +31,7 @@ Hint: Instead of the latest release `ghcr.io/freifunk/meshviewer:latest` one can
 
 ## Configuration
 
-The configuration documentation is nowhere near finished.
-
-### Deprecation and EOL Warning
-
-Both the deprecation and the EOL warning can be turned off with `"deprecation_enabled": false` - but we wouldn't suggest it.
-
-You can insert custom HTML into the deprecation and eol warning via `"deprecation_text":""` and `"eol_text":""` respectively.
+The [configuration documentation](CONFIGURATION.md) is nowhere near finished. Please open a PR to add the missing pieces.
 
 ## Development & Building
 
