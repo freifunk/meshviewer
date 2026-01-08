@@ -183,7 +183,7 @@ Nodes can display a picture of the device type. These need to be provided as svg
 ```
 
 ```json
-  "node_custom": "/[^a-z0-9\\-\\.]/ig", # regex that get applied to node_name, e.g. used for noamlisation of domain names
+  "node_custom": "/[^a-z0-9\\-\\.]/ig", # regex that gets applied to node_name, e.g. used for normalisation of domain names
 ```
 
 ### Deprecation and EOL Warning
