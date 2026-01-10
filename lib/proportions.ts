@@ -116,27 +116,28 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     return String(s).replace(/\s+/g, " ").trim();
   }
 
-  function count(nodes: Node[], key: string[], f?: (k: any, ctx?: any) => any, ctx?: any) {
-    let dict = {};
+  function count(nodes: Node[], keys: string[], f?: (k: any, ctx?: any) => any, ctx?: any) {
+    const counts = new Map<any, number>();
 
     nodes.forEach(function (node) {
-      let dictKey = helper.dictGet(node, key.slice(0));
+      // pass shallow copy of keys to dictGet
+      let dictKey = helper.dictGet(node, keys.slice(0));
 
       if (f !== undefined) {
-        // pass optional context to modifier; modifier can accept (value) or (value, ctx)
         dictKey = f(dictKey, ctx);
       }
 
-      if (dictKey === null) {
-        return;
-      }
+      if (dictKey === null) return;
 
-      dict[dictKey] = 1 + (dictKey in dict ? dict[dictKey] : 0);
+      counts.set(dictKey, (counts.get(dictKey) || 0) + 1);
     });
 
-    return Object.keys(dict).map(function (dictKey) {
-      return [dictKey, dict[dictKey], key, f];
+    const result: any[] = [];
+    counts.forEach(function (countValue, k) {
+      result.push([k, countValue, keys, f]);
     });
+
+    return result;
   }
 
   function addFilter(filter: Filter) {
@@ -180,6 +181,11 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
       element: document.createElement("table"),
       vnode: undefined,
     };
+
+    if (!data || data.length === 0) {
+      // keep existing table if any, but nothing to render
+      return tableNode;
+    }
 
     let max = Math.max.apply(
       Math,
@@ -325,10 +331,10 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
 
   self.renderSingle = function renderSingle(el: HTMLElement, mappingName: string) {
     const tableNode = tables[mappingName];
-    if (!tableNode || !tableNode.element ) {
+    if (!tableNode || !tableNode.element) {
       console.warn("wrong mapping name", mappingName);
       return;
-    } 
+    }
 
     let h2 = document.createElement("h2");
     h2.classList.add("proportion-header");
