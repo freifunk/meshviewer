@@ -71,6 +71,7 @@ export const DataDistributor = function () {
     if (data === undefined) {
       return;
     }
+    notifyObservers();
 
     let filter: FilterMethod = filters.reduce(
       function (a: FilterMethod, filter) {
@@ -108,7 +109,6 @@ export const DataDistributor = function () {
 
     if (newItem) {
       filters.push(filter);
-      notifyObservers();
       filter.setRefresh(refresh);
       refresh();
     }
@@ -118,7 +118,6 @@ export const DataDistributor = function () {
     filters = filters.filter(function (currentElement) {
       return filter !== currentElement;
     });
-    notifyObservers();
     refresh();
   }
 
