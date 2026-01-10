@@ -163,6 +163,18 @@ export class Router extends Navigo {
       });
   }
 
+  paramsToUrl(params: { [param: string]: string[] }) {
+    const keys = Object.keys(params);
+    if (!keys.length) {
+      return "";
+    }
+    const qs = new URLSearchParams();
+    keys.forEach(function (k) {
+      qs.set(k, params[k].join(","));
+    });
+    return "?" + qs.toString();
+  }
+
   generateLink(data?: {}, full?: boolean) {
     let result = "";
 
@@ -179,6 +191,10 @@ export class Router extends Navigo {
       }
       result += "/" + data[key];
     }
+
+    // add data query params
+    const params = this.getParams();
+    result += this.paramsToUrl(params);
 
     return result;
   }
@@ -237,18 +253,7 @@ export class Router extends Navigo {
   setParams(params: { [param: string]: string[] }) {
     const hash = location.hash || "";
     const base = hash.split("?")[0] || "";
-    const keys = Object.keys(params || {});
-    if (!keys.length) {
-      location.hash = base;
-      return;
-    }
-    const qs = new URLSearchParams();
-    keys.forEach(function (k) {
-      // Join multiple values for same key with ","
-      // e.g. map?node.firmware=v1,!v2
-      qs.set(k, params[k].join(","));
-    });
-    location.hash = base + "?" + qs.toString();
+    location.hash = base + this.paramsToUrl(params);
   }
 
   addTarget(target: Target) {
