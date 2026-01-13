@@ -32,6 +32,13 @@ export interface Filter {
   run(data: any): Boolean;
 }
 
+export interface GenericFilter extends Filter {
+  getNegate(): boolean;
+  getName(): string;
+  getValue(): string;
+  setNegate(negate: boolean): void;
+}
+
 export type FilterMethod = (node: Node) => boolean;
 
 export const DataDistributor = function () {
@@ -64,6 +71,7 @@ export const DataDistributor = function () {
     if (data === undefined) {
       return;
     }
+    notifyObservers();
 
     let filter: FilterMethod = filters.reduce(
       function (a: FilterMethod, filter) {
@@ -101,7 +109,6 @@ export const DataDistributor = function () {
 
     if (newItem) {
       filters.push(filter);
-      notifyObservers();
       filter.setRefresh(refresh);
       refresh();
     }
@@ -111,7 +118,6 @@ export const DataDistributor = function () {
     filters = filters.filter(function (currentElement) {
       return filter !== currentElement;
     });
-    notifyObservers();
     refresh();
   }
 

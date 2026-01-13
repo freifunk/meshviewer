@@ -1,7 +1,7 @@
 import * as d3Interpolate from "d3-interpolate";
 import { Moment } from "moment";
 import { classModule, eventListenersModule, h, init, propsModule, styleModule, VNode } from "snabbdom";
-import { DataDistributor, Filter, ObjectsLinksAndNodes } from "./datadistributor.js";
+import { DataDistributor, Filter, GenericFilter, ObjectsLinksAndNodes } from "./datadistributor.js";
 import { GenericNodeFilter } from "./filters/genericnode.js";
 import * as helper from "./utils/helper.js";
 import { _ } from "./utils/language.js";
@@ -11,6 +11,88 @@ import { compare } from "./utils/version.js";
 type TableNode = {
   element: HTMLTableElement;
   vnode?: VNode;
+};
+
+type Modifier = (value: any, ctx?: ObjectsLinksAndNodes) => string;
+
+type MappingEntry = {
+  keys: string[];
+  modifier?: Modifier;
+};
+
+const statusFieldMapping: Record<string, MappingEntry> = {
+  "node.status": {
+    keys: ["is_online"],
+    modifier: function (d: any) {
+      return d ? "online" : "offline";
+    },
+  },
+  "node.firmware": {
+    keys: ["firmware", "release"],
+  },
+  "node.baseversion": {
+    keys: ["firmware", "base"],
+  },
+  "node.deprecationStatus": {
+    keys: ["model"],
+    modifier: function (d: any) {
+      if (window.config.deprecated && d && window.config.deprecated.includes(d)) return _.t("deprecation");
+      if (window.config.eol && d && window.config.eol.includes(d)) return _.t("eol");
+      return _.t("no");
+    },
+  },
+  "node.hardware": {
+    keys: ["model"],
+  },
+  "node.visible": {
+    keys: ["location"],
+    modifier: function (d: any) {
+      return d && d.longitude && d.latitude ? _.t("yes") : _.t("no");
+    },
+  },
+  "node.update": {
+    keys: ["autoupdater"],
+    modifier: function (d: any) {
+      if (d.enabled) {
+        return d.branch;
+      }
+      return _.t("node.deactivated");
+    },
+  },
+  "node.selectedGatewayIPv4": {
+    keys: ["gateway"],
+    modifier: function (nodeid: string | null, data: ObjectsLinksAndNodes) {
+      let gateway = data.nodeDict[nodeid];
+      if (gateway) {
+        return gateway.hostname;
+      }
+      return null;
+    },
+  },
+  "node.selectedGatewayIPv6": {
+    keys: ["gateway6"],
+    modifier: function (nodeid: string | null, data: ObjectsLinksAndNodes) {
+      let gateway = data.nodeDict[nodeid];
+      if (gateway) {
+        return gateway.hostname;
+      }
+      return null;
+    },
+  },
+  "node.domain": {
+    keys: ["domain"],
+    modifier: function (d: any) {
+      if (window.config.domainNames) {
+        window.config.domainNames.some(function (t) {
+          if (d === t.domain) {
+            d = t.name;
+            return true;
+          }
+        });
+      }
+      return d;
+    },
+  },
 };
 
 const patch = init([classModule, propsModule, styleModule, eventListenersModule]);
@@ -26,27 +108,36 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
   let time: Moment;
 
   let tables: Record<string, TableNode> = {};
+  // flag set while we apply filters programmatically from the URL hash
+  let appliedUrlFilters = false;
 
-  function count(nodes: Node[], key: string[], f?: (k: any) => any) {
-    let dict = {};
+  function normalizeKey(s: string | null | undefined) {
+    if (!s) return "";
+    return String(s).replace(/\s+/g, " ").trim();
+  }
+
+  function count(nodes: Node[], keys: string[], f?: (k: any, ctx?: any) => any, ctx?: any) {
+    const counts = new Map<any, number>();
 
     nodes.forEach(function (node) {
-      let dictKey = helper.dictGet(node, key.slice(0));
+      // pass shallow copy of keys to dictGet
+      let dictKey = helper.dictGet(node, keys.slice(0));
 
       if (f !== undefined) {
-        dictKey = f(dictKey);
+        dictKey = f(dictKey, ctx);
       }
 
-      if (dictKey === null) {
-        return;
-      }
+      if (dictKey === null) return;
 
-      dict[dictKey] = 1 + (dictKey in dict ? dict[dictKey] : 0);
+      counts.set(dictKey, (counts.get(dictKey) || 0) + 1);
     });
 
-    return Object.keys(dict).map(function (dictKey) {
-      return [dictKey, dict[dictKey], key, f];
+    const result: any[] = [];
+    counts.forEach(function (countValue, k) {
+      result.push([k, countValue, keys, f]);
     });
+
+    return result;
   }
 
   function addFilter(filter: Filter) {
@@ -56,11 +147,45 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     };
   }
 
+  // Watch filter changes and sync the URL accordingly (but ignore when we are
+  // programmatically applying filters from the hash).
+  filterManager.watchFilters({
+    filtersChanged: function (filters: GenericFilter[]) {
+      const params: { [param: string]: string[] } = {};
+
+      filters.forEach(function (f) {
+        if (!f.getKey) return;
+
+        const name = f.getName();
+        const value = f.getValue();
+        const negate = f.getNegate();
+
+        // Prefix with "!" when negated
+        const encoded = negate ? `!${value}` : value;
+
+        if (!params[name]) {
+          params[name] = [encoded];
+        } else {
+          params[name].push(encoded);
+        }
+      });
+
+      if (appliedUrlFilters) {
+        window.router.setParams(params);
+      }
+    },
+  });
+
   function fillTable(name: string, table: TableNode | undefined, data: any[][]): TableNode {
     let tableNode: TableNode = table ?? {
       element: document.createElement("table"),
       vnode: undefined,
     };
+
+    if (!data || data.length === 0) {
+      // keep existing table if any, but nothing to render
+      return tableNode;
+    }
 
     let max = Math.max.apply(
       Math,
@@ -72,7 +197,10 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     let items = data.map(function (data) {
       let v = data[1] / max;
 
-      let filter = GenericNodeFilter(_.t(name), data[2], data[0], data[3]);
+      let keys = data[2];
+      let value = data[0];
+      let modifierFunction = data[3];
+      let filter = GenericNodeFilter(name, keys, value, modifierFunction);
 
       let a = h("a", { on: { click: addFilter(filter) } }, data[0]);
 
@@ -102,13 +230,9 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     let nodes = data.nodes.all;
     time = data.timestamp;
 
-    function hostnameOfNodeID(nodeid: string | null) {
-      // nodeid is a mac address here
-      let gateway = data.nodeDict[nodeid];
-      if (gateway) {
-        return gateway.hostname;
-      }
-      return null;
+    // helper to fetch mapping entries from statusFieldMapping
+    function mapping(name: string) {
+      return (statusFieldMapping as any)[name] || { keys: [], modifier: undefined };
     }
 
     function sortVersionCountAndName(a, b) {
@@ -118,121 +242,76 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
       }
       return compare(a[0], b[0]);
     }
+    function processMapping(name: string, sorter?: (a: any, b: any) => number, ctx?: any) {
+      const m = mapping(name);
+      const arr = count(nodes, m.keys, m.modifier, ctx);
+      const sorted = sorter
+        ? arr.sort(sorter)
+        : arr.sort(function (a, b) {
+            return b[1] - a[1];
+          });
+      tables[name] = fillTable(name, tables[name], sorted);
+    }
 
-    let gatewayDict = count(nodes, ["gateway"], hostnameOfNodeID);
-    let gateway6Dict = count(nodes, ["gateway6"], hostnameOfNodeID);
+    // process mappings in a concise way
+    processMapping("node.status");
+    processMapping("node.firmware", sortVersionCountAndName);
+    processMapping("node.baseversion", sortVersionCountAndName);
+    processMapping("node.deprecationStatus");
+    processMapping("node.hardware");
+    processMapping("node.visible");
+    processMapping("node.update");
+    processMapping("node.selectedGatewayIPv4", undefined, data);
+    processMapping("node.selectedGatewayIPv6", undefined, data);
+    processMapping("node.domain");
 
-    let statusDict = count(nodes, ["is_online"], function (d) {
-      return d ? "online" : "offline";
-    });
-    let fwDict = count(nodes, ["firmware", "release"]);
-    let baseDict = count(nodes, ["firmware", "base"]);
-    let deprecationDict = count(nodes, ["model"], function (d) {
-      if (config.deprecated && d && config.deprecated.includes(d)) return _.t("deprecation");
-      if (config.eol && d && config.eol.includes(d)) return _.t("eol");
-      return _.t("no");
-    });
-    let hwDict = count(nodes, ["model"]);
-    let geoDict = count(nodes, ["location"], function (d) {
-      return d && d.longitude && d.latitude ? _.t("yes") : _.t("no");
-    });
+    // tables filled above via processMapping
 
-    let autoDict = count(nodes, ["autoupdater"], function (d) {
-      if (d.enabled) {
-        return d.branch;
-      }
-      return _.t("node.deactivated");
-    });
-
-    let domainDict = count(nodes, ["domain"], function (d) {
-      if (config.domainNames) {
-        config.domainNames.some(function (t) {
-          if (d === t.domain) {
-            d = t.name;
-            return true;
-          }
-        });
-      }
-      return d;
-    });
-
-    tables.status = fillTable(
-      "node.status",
-      tables.status,
-      statusDict.sort(function (a, b) {
-        return b[1] - a[1];
-      }),
-    );
-
-    tables.firmware = fillTable("node.firmware", tables.firmware, fwDict.sort(sortVersionCountAndName));
-
-    tables.baseversion = fillTable("node.baseversion", tables.baseversion, baseDict.sort(sortVersionCountAndName));
-
-    tables.deprecationStatus = fillTable(
-      "node.deprecationStatus",
-      tables.deprecationStatus,
-      deprecationDict.sort(function (a, b) {
-        return b[1] - a[1];
-      }),
-    );
-
-    tables.hardware = fillTable(
-      "node.hardware",
-      tables.hardware,
-      hwDict.sort(function (a, b) {
-        return b[1] - a[1];
-      }),
-    );
-
-    tables.visible = fillTable(
-      "node.visible",
-      tables.visible,
-      geoDict.sort(function (a, b) {
-        return b[1] - a[1];
-      }),
-    );
-
-    tables.update = fillTable(
-      "node.update",
-      tables.update,
-      autoDict.sort(function (a, b) {
-        return b[1] - a[1];
-      }),
-    );
-    tables.gateway = fillTable(
-      "node.selectedGatewayIPv4",
-      tables.gateway,
-      gatewayDict.sort(function (a, b) {
-        return b[1] - a[1];
-      }),
-    );
-    tables.gateway6 = fillTable(
-      "node.selectedGatewayIPv6",
-      tables.gateway6,
-      gateway6Dict.sort(function (a, b) {
-        return b[1] - a[1];
-      }),
-    );
-    tables.domain = fillTable(
-      "node.domain",
-      tables.domain,
-      domainDict.sort(function (a, b) {
-        return b[1] - a[1];
-      }),
-    );
+    if (!appliedUrlFilters) {
+      applyFiltersFromHash();
+    }
   };
 
+  function applyFiltersFromHash() {
+    const params = window.router.getParams();
+    const keys = Object.keys(params);
+    appliedUrlFilters = true;
+    if (keys.length === 0) return;
+
+    for (const [param, values] of Object.entries(params)) {
+      if (!statusFieldMapping[param]) {
+        console.warn("unknown_filter_param", param);
+        continue; // continue instead of return to process other params
+      }
+
+      const mapping = statusFieldMapping[param];
+
+      values.forEach(function (encodedValue) {
+        const negate = encodedValue.startsWith("!");
+        if (negate) {
+          encodedValue = encodedValue.slice(1);
+        }
+
+        let filter = GenericNodeFilter(param, mapping.keys, normalizeKey(encodedValue), mapping.modifier);
+        if (negate) {
+          filter.setNegate(true);
+        }
+        filterManager.addFilter(filter);
+      });
+    }
+  }
+
   self.render = function render(el: HTMLElement) {
-    self.renderSingle(el, "node.status", tables.status.element);
-    self.renderSingle(el, "node.firmware", tables.firmware.element);
-    self.renderSingle(el, "node.baseversion", tables.baseversion.element);
-    self.renderSingle(el, "node.deprecationStatus", tables.deprecationStatus.element);
-    self.renderSingle(el, "node.hardware", tables.hardware.element);
-    self.renderSingle(el, "node.visible", tables.visible.element);
-    self.renderSingle(el, "node.update", tables.update.element);
-    self.renderSingle(el, "node.selectedGatewayIPv4", tables.gateway.element);
-    self.renderSingle(el, "node.selectedGatewayIPv6", tables.gateway6.element);
-    self.renderSingle(el, "node.domain", tables.domain.element);
+    self.renderSingle(el, "node.status");
+    self.renderSingle(el, "node.firmware");
+    self.renderSingle(el, "node.baseversion");
+    self.renderSingle(el, "node.deprecationStatus");
+    self.renderSingle(el, "node.hardware");
+    self.renderSingle(el, "node.visible");
+    self.renderSingle(el, "node.update");
+    self.renderSingle(el, "node.selectedGatewayIPv4");
+    self.renderSingle(el, "node.selectedGatewayIPv6");
+    self.renderSingle(el, "node.domain");
 
     if (config.globalInfos) {
       let images = document.createElement("div");
@@ -250,17 +329,21 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     }
   };
 
-  self.renderSingle = function renderSingle(el: HTMLElement, heading: string, table: HTMLTableElement) {
-    if (table.children.length > 0) {
-      let h2 = document.createElement("h2");
-      h2.classList.add("proportion-header");
-      h2.textContent = _.t(heading);
-      h2.onclick = function onclick() {
-        table.classList.toggle("hide");
-      };
-      el.appendChild(h2);
-      el.appendChild(table);
+  self.renderSingle = function renderSingle(el: HTMLElement, mappingName: string) {
+    const tableNode = tables[mappingName];
+    if (!tableNode || !tableNode.element) {
+      console.warn("wrong mapping name", mappingName);
+      return;
     }
+
+    let h2 = document.createElement("h2");
+    h2.classList.add("proportion-header");
+    h2.textContent = _.t(mappingName);
+    h2.onclick = function onclick() {
+      tableNode.element.classList.toggle("hide");
+    };
+    el.appendChild(h2);
+    el.appendChild(tableNode.element);
   };
   return self;
 };
