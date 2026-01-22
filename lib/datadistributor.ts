@@ -67,11 +67,13 @@ export const DataDistributor = function () {
     refresh();
   }
 
-  function refresh() {
+  function refresh(withoutObservers?: boolean) {
     if (data === undefined) {
       return;
     }
-    notifyObservers();
+    if (!withoutObservers) {
+      notifyObservers();
+    }
 
     let filter: FilterMethod = filters.reduce(
       function (a: FilterMethod, filter) {
