@@ -20,6 +20,8 @@ table {
     td {
       text-align: left;
       width: 100%;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
   }
 }
