@@ -17,13 +17,13 @@ type Modifier = (value: any, ctx?: ObjectsLinksAndNodes) => string;
 
 type MappingEntry = {
   keys: string[];
-  modifier?: Modifier;
+  nodeValueModifier?: Modifier;
 };
 
 const statusFieldMapping: Record<string, MappingEntry> = {
   "node.status": {
     keys: ["is_online"],
-    modifier: function (d: any) {
+    nodeValueModifier: function (d: any) {
       return d ? "online" : "offline";
     },
   },
@@ -35,7 +35,7 @@ const statusFieldMapping: Record<string, MappingEntry> = {
   },
   "node.deprecationStatus": {
     keys: ["model"],
-    modifier: function (d: any) {
+    nodeValueModifier: function (d: any) {
       if (window.config.deprecated && d && window.config.deprecated.includes(d)) return _.t("deprecation");
       if (window.config.eol && d && window.config.eol.includes(d)) return _.t("eol");
       return _.t("no");
@@ -46,13 +46,13 @@ const statusFieldMapping: Record<string, MappingEntry> = {
   },
   "node.visible": {
     keys: ["location"],
-    modifier: function (d: any) {
+    nodeValueModifier: function (d: any) {
       return d && d.longitude && d.latitude ? _.t("yes") : _.t("no");
     },
   },
   "node.update": {
     keys: ["autoupdater"],
-    modifier: function (d: any) {
+    nodeValueModifier: function (d: any) {
       if (d.enabled) {
         return d.branch;
       }
@@ -61,27 +61,13 @@ const statusFieldMapping: Record<string, MappingEntry> = {
   },
   "node.selectedGatewayIPv4": {
     keys: ["gateway"],
-    modifier: function (nodeid: string | null, data: ObjectsLinksAndNodes) {
-      let gateway = data.nodeDict[nodeid];
-      if (gateway) {
-        return gateway.hostname;
-      }
-      return null;
-    },
   },
   "node.selectedGatewayIPv6": {
     keys: ["gateway6"],
-    modifier: function (nodeid: string | null, data: ObjectsLinksAndNodes) {
-      let gateway = data.nodeDict[nodeid];
-      if (gateway) {
-        return gateway.hostname;
-      }
-      return null;
-    },
   },
   "node.domain": {
     keys: ["domain"],
-    modifier: function (d: any) {
+    nodeValueModifier: function (d: any) {
       if (window.config.domainNames) {
         window.config.domainNames.some(function (t) {
           if (d === t.domain) {
@@ -116,15 +102,15 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     return String(s).replace(/\s+/g, " ").trim();
   }
 
-  function count(nodes: Node[], keys: string[], f?: (k: any, ctx?: any) => any, ctx?: any) {
+  function count(nodes: Node[], keys: string[], nodeValueModifier?: (k: any, ctx?: any) => any, ctx?: any) {
     const counts = new Map<any, number>();
 
     nodes.forEach(function (node) {
       // pass shallow copy of keys to dictGet
       let dictKey = helper.dictGet(node, keys.slice(0));
 
-      if (f !== undefined) {
-        dictKey = f(dictKey, ctx);
+      if (nodeValueModifier !== undefined) {
+        dictKey = nodeValueModifier(dictKey, ctx);
       }
 
       if (dictKey === null) return;
@@ -134,7 +120,7 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
 
     const result: any[] = [];
     counts.forEach(function (countValue, k) {
-      result.push([k, countValue, keys, f]);
+      result.push([k, countValue, keys, nodeValueModifier]);
     });
 
     return result;
@@ -230,10 +216,18 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     let nodes = data.nodes.all;
     time = data.timestamp;
 
-    // helper to fetch mapping entries from statusFieldMapping
-    function mapping(name: string) {
-      return (statusFieldMapping as any)[name] || { keys: [], modifier: undefined };
+    function gatewayNameFromNodeId(nodeid: string | null) {
+      let gateway = data.nodeDict[nodeid];
+      if (gateway) {
+        return gateway.hostname;
+      }
+      return null;
     }
+
+    // set nodeValueModifier for selectedGatewayIP filter later
+    // so that access to data.nodeDict can be encapsulated
+    statusFieldMapping["node.selectedGatewayIPv4"].nodeValueModifier = gatewayNameFromNodeId;
+    statusFieldMapping["node.selectedGatewayIPv6"].nodeValueModifier = gatewayNameFromNodeId;
 
     function sortVersionCountAndName(a, b) {
       // descending by count
@@ -242,9 +236,9 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
       }
       return compare(a[0], b[0]);
     }
-    function processMapping(name: string, sorter?: (a: any, b: any) => number, ctx?: any) {
-      const m = mapping(name);
-      const arr = count(nodes, m.keys, m.modifier, ctx);
+    function processMapping(name: string, sorter?: (a: any, b: any) => number) {
+      const m = statusFieldMapping[name];
+      const arr = count(nodes, m.keys, m.nodeValueModifier, data);
       const sorted = sorter
         ? arr.sort(sorter)
         : arr.sort(function (a, b) {
@@ -261,11 +255,9 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     processMapping("node.hardware");
     processMapping("node.visible");
     processMapping("node.update");
-    processMapping("node.selectedGatewayIPv4", undefined, data);
-    processMapping("node.selectedGatewayIPv6", undefined, data);
+    processMapping("node.selectedGatewayIPv4");
+    processMapping("node.selectedGatewayIPv6");
     processMapping("node.domain");
-
-    // tables filled above via processMapping
 
     if (!appliedUrlFilters) {
       applyFiltersFromHash();
@@ -292,7 +284,7 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
           encodedValue = encodedValue.slice(1);
         }
 
-        let filter = GenericNodeFilter(param, mapping.keys, normalizeKey(encodedValue), mapping.modifier);
+        let filter = GenericNodeFilter(param, mapping.keys, normalizeKey(encodedValue), mapping.nodeValueModifier);
         if (negate) {
           filter.setNegate(true);
         }
