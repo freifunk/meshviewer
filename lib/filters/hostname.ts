@@ -4,7 +4,7 @@ import { CanRender } from "../container.js";
 import { Filter } from "../datadistributor.js";
 
 export const HostnameFilter = function (): CanRender & Filter {
-  let refreshFunctions: (() => any)[] = [];
+  let refreshFunctions: ((bool?) => any)[] = [];
   let timer: ReturnType<typeof setTimeout>;
   let input = document.createElement("input");
 
@@ -12,7 +12,9 @@ export const HostnameFilter = function (): CanRender & Filter {
     clearTimeout(timer);
     timer = setTimeout(function () {
       refreshFunctions.forEach(function (f) {
-        f();
+        // observer gui function recreates the filter this removes the input focus
+        // the hostname filter should therefore not notifyObservers on refresh
+        f(true);
       });
     }, 250);
   }
