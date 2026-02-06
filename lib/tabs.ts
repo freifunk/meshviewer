@@ -51,6 +51,15 @@ export const Tabs = function () {
       }
     },
 
+    select(title: string) {
+      for (const li of tabs.children) {
+        if ((li as TabLi).getAttribute("data-tab") === title) {
+          gotoTab(li as TabLi);
+          return;
+        }
+      }
+    },
+
     render(el: HTMLElement) {
       el.appendChild(tabs);
       el.appendChild(container);
