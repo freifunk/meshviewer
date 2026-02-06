@@ -45,6 +45,7 @@ export interface Node {
   node_id: NodeId;
   hostname: string;
   domain?: string;
+  owner?: string;
   firstseen: Moment;
   lastseen: Moment;
   is_online: boolean;

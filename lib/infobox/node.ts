@@ -6,7 +6,8 @@ import * as helper from "../utils/helper.js";
 import nodef, { LinkScale, Neighbour, Node as NodeData, NodeId } from "../utils/node.js";
 import { NodeInfo } from "../config_default.js";
 import { createChartVNode } from "./chart.js";
-import { ObjectsLinksAndNodes } from "../datadistributor.js";
+import { DataDistributor, ObjectsLinksAndNodes } from "../datadistributor.js";
+import { GenericNodeFilter } from "../filters/genericnode.js";
 
 // `config.nodeAttr.value` may be either a function or a string. When it is a
 // string the renderer first looks for a `show<value>` helper in nodef and falls
@@ -53,7 +54,13 @@ function showDevicePictures(pictures: string, device: NodeData) {
   return helper.showDevicePicture(pictures, subst);
 }
 
-export function Node(el: HTMLElement, node: NodeData, linkScale: LinkScale, nodeDict: { [k: NodeId]: NodeData }) {
+export function Node(
+  el: HTMLElement,
+  node: NodeData,
+  linkScale: LinkScale,
+  nodeDict: { [k: NodeId]: NodeData },
+  filterManager?: ReturnType<typeof DataDistributor>,
+) {
   const config = window.config;
   const router = window.router;
 
@@ -226,7 +233,28 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: LinkScale, node
         }
 
         if (field) {
-          const cell: VNode = typeof field === "object" ? field : h("td", String(field));
+          let cell: VNode = typeof field === "object" ? field : h("td", String(field));
+          if (typeof field !== "object" && row.value === "owner" && filterManager) {
+            const ownerValue = String(field);
+            const filter = GenericNodeFilter("node.owner", ["owner"], ownerValue, undefined);
+            cell = h("td", [
+              h(
+                "a",
+                {
+                  style: { cursor: "pointer" },
+                  on: {
+                    click: function () {
+                      filterManager.addFilter(filter);
+                      router.fullUrl();
+                      const nodesTab = document.querySelector('.tabs li[data-tab="node.nodes"]') as HTMLLIElement;
+                      if (nodesTab) nodesTab.click();
+                    },
+                  },
+                },
+                ownerValue,
+              ),
+            ]);
+          }
           const rowCells: VNode[] = [];
           if (row.name !== undefined) {
             rowCells.push(h("th", _.t(row.name)));

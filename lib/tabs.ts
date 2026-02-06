@@ -30,6 +30,7 @@ export const Tabs = function () {
     add(title: string, child: CanRender) {
       const li = document.createElement("li") as TabLi;
       li.textContent = _.t(title);
+      li.setAttribute("data-tab", title);
       li.addEventListener("click", function (this: HTMLElement) {
         gotoTab(this as TabLi);
       });

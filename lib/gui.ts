@@ -129,7 +129,7 @@ export const Gui = function (language: ReturnType<typeof Language>) {
   const title = Title();
 
   const header = Container("header");
-  const infobox = Infobox(sidebar, linkScale);
+  const infobox = Infobox(sidebar, linkScale, fanout);
   const tabs = Tabs();
   const overview = Container();
   const legend = Legend(language);

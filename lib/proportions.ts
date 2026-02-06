@@ -31,7 +31,8 @@ type StatusFieldKey =
   | "node.update"
   | "node.selectedGatewayIPv4"
   | "node.selectedGatewayIPv6"
-  | "node.domain";
+  | "node.domain"
+  | "node.owner";
 
 const statusFieldMapping: Record<StatusFieldKey, MappingEntry> = {
   "node.status": {
@@ -85,6 +86,9 @@ const statusFieldMapping: Record<StatusFieldKey, MappingEntry> = {
   "node.domain": {
     keys: ["domain"],
     nodeValueModifier: (d: unknown) => (typeof d === "string" ? getDomainName(d) : null),
+  },
+  "node.owner": {
+    keys: ["owner"],
   },
 };
 
@@ -265,6 +269,7 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     processMapping("node.selectedGatewayIPv4");
     processMapping("node.selectedGatewayIPv6");
     processMapping("node.domain");
+    processMapping("node.owner");
 
     if (!appliedUrlFilters) {
       applyFiltersFromHash();
@@ -315,6 +320,7 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     self.renderSingle(el, "node.selectedGatewayIPv4");
     self.renderSingle(el, "node.selectedGatewayIPv6");
     self.renderSingle(el, "node.domain");
+    self.renderSingle(el, "node.owner");
 
     if (config.globalInfos) {
       const images = document.createElement("div");
