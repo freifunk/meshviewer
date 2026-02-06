@@ -146,6 +146,12 @@ export const Gui = function (language: ReturnType<typeof Language>) {
   tabs.add("sidebar.stats", statistics);
   tabs.add("sidebar.about", about);
 
+  // If filters are present in the URL, switch to the "nodes" tab on load
+  let urlParams = router.getParams();
+  if (Object.keys(urlParams).length > 0) {
+    tabs.select("node.nodes");
+  }
+
   router.addTarget(title);
   router.addTarget(infobox);
 
