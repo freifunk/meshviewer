@@ -7,7 +7,11 @@ import { Sidebar } from "../sidebar.js";
 import { TargetLocation } from "../utils/router.js";
 import { DataDistributor, ObjectsLinksAndNodes } from "../datadistributor.js";
 
-export const Main = function (sidebar: ReturnType<typeof Sidebar>, linkScale: (t: any) => any, filterManager?: ReturnType<typeof DataDistributor>) {
+export const Main = function (
+  sidebar: ReturnType<typeof Sidebar>,
+  linkScale: (t: any) => any,
+  filterManager?: ReturnType<typeof DataDistributor>,
+) {
   const self = {
     resetView: undefined,
     gotoNode: undefined,

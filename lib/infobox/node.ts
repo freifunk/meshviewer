@@ -45,7 +45,13 @@ function showDevicePictures(pictures: string, device: NodeData) {
   return helper.showDevicePicture(pictures, subst);
 }
 
-export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any, nodeDict: { [k: NodeId]: NodeData }, filterManager?: ReturnType<typeof DataDistributor>) {
+export function Node(
+  el: HTMLElement,
+  node: NodeData,
+  linkScale: (t: any) => any,
+  nodeDict: { [k: NodeId]: NodeData },
+  filterManager?: ReturnType<typeof DataDistributor>,
+) {
   let config = window.config;
   let router = window.router;
 
