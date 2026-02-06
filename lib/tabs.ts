@@ -39,6 +39,7 @@ export const Tabs = function () {
   self.add = function add(title: string, child: CanRender) {
     let li = document.createElement("li");
     li.textContent = _.t(title);
+    li.setAttribute("data-tab", title);
     li.onclick = switchTab;
     // @ts-ignore
     li.child = child;

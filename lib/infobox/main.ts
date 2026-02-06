@@ -5,9 +5,9 @@ import { location } from "./location.js";
 import { Link as LinkData, Node as NodeData, NodeId } from "../utils/node.js";
 import { Sidebar } from "../sidebar.js";
 import { TargetLocation } from "../utils/router.js";
-import { ObjectsLinksAndNodes } from "../datadistributor.js";
+import { DataDistributor, ObjectsLinksAndNodes } from "../datadistributor.js";
 
-export const Main = function (sidebar: ReturnType<typeof Sidebar>, linkScale: (t: any) => any) {
+export const Main = function (sidebar: ReturnType<typeof Sidebar>, linkScale: (t: any) => any, filterManager?: ReturnType<typeof DataDistributor>) {
   const self = {
     resetView: undefined,
     gotoNode: undefined,
@@ -55,7 +55,7 @@ export const Main = function (sidebar: ReturnType<typeof Sidebar>, linkScale: (t
 
   self.gotoNode = function gotoNode(nodeData: NodeData, nodeDict: { [k: NodeId]: NodeData }) {
     create();
-    node = Node(el, nodeData, linkScale, nodeDict);
+    node = Node(el, nodeData, linkScale, nodeDict, filterManager);
     node.render();
   };
 

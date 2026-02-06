@@ -107,7 +107,7 @@ export const Gui = function (language: ReturnType<typeof Language>) {
   let title = Title();
 
   let header = Container("header");
-  let infobox = Infobox(sidebar, linkScale);
+  let infobox = Infobox(sidebar, linkScale, fanout);
   let tabs = Tabs();
   let overview = Container();
   let legend = Legend(language);
