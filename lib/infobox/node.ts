@@ -5,6 +5,8 @@ import { SortTable } from "../sorttable.js";
 import * as helper from "../utils/helper.js";
 import nodef, { Neighbour, Node as NodeData, NodeId } from "../utils/node.js";
 import { NodeInfo } from "../config_default.js";
+import { DataDistributor } from "../datadistributor.js";
+import { GenericNodeFilter } from "../filters/genericnode.js";
 
 const patch = init([classModule, propsModule, styleModule, eventListenersModule]);
 
@@ -43,7 +45,13 @@ function showDevicePictures(pictures: string, device: NodeData) {
   return helper.showDevicePicture(pictures, subst);
 }
 
-export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any, nodeDict: { [k: NodeId]: NodeData }) {
+export function Node(
+  el: HTMLElement,
+  node: NodeData,
+  linkScale: (t: any) => any,
+  nodeDict: { [k: NodeId]: NodeData },
+  filterManager?: ReturnType<typeof DataDistributor>,
+) {
   let config = window.config;
   let router = window.router;
 
@@ -218,7 +226,29 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
 
       if (field) {
         if (typeof field !== "object") {
-          field = h("td", field);
+          if (row.value === "owner" && filterManager) {
+            let ownerValue = String(field);
+            let filter = GenericNodeFilter("node.owner", ["owner"], ownerValue, undefined);
+            field = h("td", [
+              h(
+                "a",
+                {
+                  style: { cursor: "pointer" },
+                  on: {
+                    click: function () {
+                      filterManager.addFilter(filter);
+                      router.fullUrl();
+                      let nodesTab = document.querySelector('.tabs li[data-tab="node.nodes"]') as HTMLLIElement;
+                      if (nodesTab) nodesTab.click();
+                    },
+                  },
+                },
+                ownerValue,
+              ),
+            ]);
+          } else {
+            field = h("td", field);
+          }
         }
         attributeTable.children.push(h("tr", [row.name !== undefined ? h("th", _.t(row.name)) : null, field]));
       }

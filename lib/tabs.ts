@@ -5,6 +5,7 @@ export const Tabs = function () {
   const self = {
     add: undefined,
     render: undefined,
+    select: undefined,
   };
 
   let tabs = document.createElement("ul");
@@ -39,6 +40,7 @@ export const Tabs = function () {
   self.add = function add(title: string, child: CanRender) {
     let li = document.createElement("li");
     li.textContent = _.t(title);
+    li.setAttribute("data-tab", title);
     li.onclick = switchTab;
     // @ts-ignore
     li.child = child;
@@ -55,6 +57,16 @@ export const Tabs = function () {
 
     if (!anyVisible) {
       gotoTab(li);
+    }
+  };
+
+  self.select = function select(title: string) {
+    for (let i = 0; i < tabs.children.length; i++) {
+      let li = tabs.children[i] as HTMLLIElement;
+      if (li.getAttribute("data-tab") === title) {
+        gotoTab(li);
+        return;
+      }
     }
   };
 
