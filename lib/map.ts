@@ -86,7 +86,11 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
       name: layer.name,
       layer:
         layer.type == "vector"
-          ? L.maplibreGL({ style: layer.url, attributionControl: { customAttribution: layer.config.attribution } })
+          ? L.maplibreGL({ 
+            style: layer.url, 
+            attributionControl: { customAttribution: layer.config.attribution },
+            maxZoom: layer.config.maxZoom,
+          })
           : L.tileLayer(
               layer.url.replace(
                 "{format}",
