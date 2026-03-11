@@ -51,6 +51,9 @@
     "rbush": "^4.0.1",
     "snabbdom": "^3.6.3"
   },
+  "overrides": {
+    "serialize-javascript": ">=7.0.3"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
