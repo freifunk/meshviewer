@@ -2,7 +2,7 @@ import { classModule, eventListenersModule, h, init, propsModule, styleModule, V
 
 const patch = init([classModule, propsModule, styleModule, eventListenersModule]);
 import { select } from "d3-selection";
-import { scaleTime, scaleLinear } from "d3-scale";
+import { scaleTime, scaleLinear, NumberValue } from "d3-scale";
 import { axisBottom, axisLeft } from "d3-axis";
 import { line, curveMonotoneX } from "d3-shape";
 import { timeFormat } from "d3-time-format";
@@ -151,7 +151,7 @@ function renderD3Chart(
 
   const yScale = scaleLinear().domain(yDomain).nice().range([innerHeight, 0]);
 
-  const fmt = suffix ? (v) => d3Format(spec)(v) + suffix : d3Format(spec);
+  const fmt = suffix ? (v: NumberValue) => d3Format(spec)(v) + suffix : d3Format(spec);
 
   const yAxis = axisLeft(yScale)
     .ticks(4)
@@ -197,7 +197,7 @@ function renderD3Chart(
     .defined((d) => d.v !== null)
     .curve(curveMonotoneX)
     .x((d) => xScale(d.t))
-    .y((d) => yScale(d.v));
+    .y((d) => yScale(d.v!));
 
   seriesList.forEach((s, i) => {
     svg

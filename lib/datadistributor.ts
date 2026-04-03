@@ -42,7 +42,7 @@ export interface GenericFilter extends Filter {
 export type FilterMethod = (node: Node) => boolean;
 
 export const DataDistributor = function () {
-  let targets = [];
+  let targets: CanSetData[] = [];
   let filterObservers: CanFiltersChanged[] = [];
   let filters: Filter[] = [];
   let filteredData: ObjectsLinksAndNodes;
@@ -103,7 +103,7 @@ export const DataDistributor = function () {
     let newItem = true;
 
     filters.forEach(function (oldFilter: Filter) {
-      if (oldFilter.getKey && oldFilter.getKey() === filter.getKey()) {
+      if (oldFilter.getKey && filter.getKey && oldFilter.getKey() === filter.getKey()) {
         removeFilter(oldFilter);
         newItem = false;
       }

@@ -5,10 +5,15 @@ export const NodeFilter = function (filter: FilterMethod) {
     let node: ObjectsLinksAndNodes = Object.create(data);
     node.nodes = { all: [], lost: [], new: [], offline: [], online: [] };
 
-    for (let key in data.nodes) {
-      if (data.nodes.hasOwnProperty(key)) {
-        node.nodes[key] = data.nodes[key].filter(filter);
-      }
+    const nodeKeys: (keyof import("../datadistributor.js").NodesByState)[] = [
+      "all",
+      "lost",
+      "new",
+      "offline",
+      "online",
+    ];
+    for (const key of nodeKeys) {
+      node.nodes[key] = data.nodes[key].filter(filter);
     }
 
     node.links = data.links.filter(function (d) {
