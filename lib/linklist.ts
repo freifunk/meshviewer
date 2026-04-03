@@ -10,7 +10,7 @@ function linkName(link: Link) {
   return (link.source ? link.source.hostname : link.id) + " – " + link.target.hostname;
 }
 
-let headings: Heading[] = [
+const headings: Heading[] = [
   {
     name: "",
     sort: function (a, b) {
@@ -43,15 +43,11 @@ let headings: Heading[] = [
 ];
 
 export const Linklist = function (linkScale: (t: any) => any): CanRender & CanSetData {
-  let router = window.router;
-  let table = SortTable(headings, 3, renderRow);
-  const self = {
-    render: undefined,
-    setData: undefined,
-  };
+  const router = window.router;
+  const table = SortTable(headings, 3, renderRow);
 
   function renderRow(link: Link) {
-    let td1Content = [
+    const td1Content = [
       h(
         "a",
         {
@@ -88,20 +84,17 @@ export const Linklist = function (linkScale: (t: any) => any): CanRender & CanSe
     ]);
   }
 
-  self.render = function render(d: HTMLElement) {
-    let h2 = document.createElement("h2");
-    h2.textContent = _.t("node.links");
-    d.appendChild(h2);
-    table.el.classList.add("link-list");
-    d.appendChild(table.el);
-  };
-
-  self.setData = function setData(d: ObjectsLinksAndNodes) {
-    table.setData(d.links);
-  };
-
   return {
-    setData: self.setData,
-    render: self.render,
+    render(d: HTMLElement) {
+      const h2 = document.createElement("h2");
+      h2.textContent = _.t("node.links");
+      d.appendChild(h2);
+      table.el.classList.add("link-list");
+      d.appendChild(table.el);
+    },
+
+    setData(d: ObjectsLinksAndNodes) {
+      table.setData(d.links);
+    },
   };
 };

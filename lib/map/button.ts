@@ -1,34 +1,53 @@
 import * as L from "leaflet";
-import { _ } from "../utils/language";
+import { _ } from "../utils/language.js";
 
-import { LocationMarker } from "./locationmarker";
+import { LocationMarker } from "./locationmarker.js";
 
-let ButtonBase = L.Control.extend({
+type ButtonBaseThis = L.Control & {
+  f: (v: boolean) => void;
+  active: boolean;
+  button: HTMLElement;
+  update: () => void;
+};
+
+type ButtonOnAddThis = ButtonBaseThis & { onClick: L.DomEvent.EventHandlerFn };
+
+// L.Control.extend() returns a runtime constructor that @types/leaflet types as
+// the bare Class constructor `(...args: any[])`. The buttons defined below all
+// share the same constructor shape and the same instance methods we use, so we
+// name those once and cast each `.extend` result to it.
+type ButtonControl = L.Control & {
+  onAdd: () => HTMLElement;
+  set: (v: boolean) => void;
+};
+type ButtonCtor = new (f: (v: boolean) => void) => ButtonControl;
+
+const ButtonBase = L.Control.extend({
   options: {
     position: "bottomright",
   },
 
   active: false,
-  button: undefined,
+  button: undefined as HTMLElement | undefined,
 
-  initialize: function (f, options) {
+  initialize: function (this: ButtonBaseThis, f: (v: boolean) => void, options?: L.ControlOptions) {
     L.Util.setOptions(this, options);
     this.f = f;
   },
 
-  update: function () {
+  update: function (this: ButtonBaseThis) {
     this.button.classList.toggle("active", this.active);
   },
 
-  set: function (activeValue) {
+  set: function (this: ButtonBaseThis, activeValue: boolean) {
     this.active = activeValue;
     this.update();
   },
 });
 
-let LocateButton = ButtonBase.extend({
-  onAdd: function () {
-    let button = L.DomUtil.create("button", "ion-locate");
+const LocateButton = ButtonBase.extend({
+  onAdd: function (this: ButtonOnAddThis) {
+    const button = L.DomUtil.create("button", "ion-locate");
     button.setAttribute("aria-label", _.t("button.tracking"));
     L.DomEvent.disableClickPropagation(button);
     L.DomEvent.addListener(button, "click", this.onClick, this);
@@ -38,18 +57,16 @@ let LocateButton = ButtonBase.extend({
     return button;
   },
 
-  onClick: function () {
+  onClick: function (this: ButtonBaseThis) {
     this.f(!this.active);
   },
 });
 
-let CoordsPickerButton = ButtonBase.extend({
-  onAdd: function () {
-    let button = L.DomUtil.create("button", "ion-pin");
+const CoordsPickerButton = ButtonBase.extend({
+  onAdd: function (this: ButtonOnAddThis) {
+    const button = L.DomUtil.create("button", "ion-pin");
     button.setAttribute("aria-label", _.t("button.location"));
 
-    // Click propagation isn't disabled as this causes problems with the
-    // location picking mode; instead propagation is stopped in onClick().
     L.DomEvent.addListener(button, "click", this.onClick, this);
 
     this.button = button;
@@ -57,15 +74,15 @@ let CoordsPickerButton = ButtonBase.extend({
     return button;
   },
 
-  onClick: function (e) {
+  onClick: function (this: ButtonBaseThis, e: Event) {
     L.DomEvent.stopPropagation(e);
     this.f(!this.active);
   },
 });
 
-let RulerButton = ButtonBase.extend({
-  onAdd: function () {
-    let button = L.DomUtil.create("button", "ion-ruler");
+const RulerButton = ButtonBase.extend({
+  onAdd: function (this: ButtonOnAddThis) {
+    const button = L.DomUtil.create("button", "ion-ruler");
     button.setAttribute("aria-label", _.t("button.ruler"));
     L.DomEvent.disableClickPropagation(button);
     L.DomEvent.addListener(button, "click", this.onClick, this);
@@ -75,23 +92,31 @@ let RulerButton = ButtonBase.extend({
     return button;
   },
 
-  onClick: function (e) {
+  onClick: function (this: ButtonBaseThis, e: Event) {
     L.DomEvent.stopPropagation(e);
     this.f(!this.active);
   },
 });
 
-export const Button = function (map, buttons) {
-  let userLocation;
-  const self = {
-    clearButtons: undefined,
-    disableTracking: undefined,
-    locationFound: undefined,
-    locationError: undefined,
-    init: undefined,
+export type MapButtonApi = {
+  clearButtons: () => void;
+  disableTracking: () => void;
+  locationFound: (location: L.LocationEvent) => void;
+  locationError: () => void;
+  init: () => void;
+};
+
+export const Button = function (map: L.Map, buttons: HTMLElement): MapButtonApi {
+  let userLocation: LocationMarker | null = null;
+  const self: MapButtonApi = {
+    clearButtons: () => {},
+    disableTracking: () => {},
+    locationFound: () => {},
+    locationError: () => {},
+    init: () => {},
   };
 
-  let locateUserButton = new LocateButton(function (activate) {
+  const locateUserButton = new (LocateButton as unknown as ButtonCtor)(function (activate: boolean) {
     if (activate) {
       enableTracking();
     } else {
@@ -99,10 +124,10 @@ export const Button = function (map, buttons) {
     }
   });
 
-  let mybuttons = [];
+  const mybuttons: HTMLElement[] = [];
 
-  function addButton(button) {
-    let el = button.onAdd();
+  function addButton(button: ButtonControl) {
+    const el = button.onAdd();
     mybuttons.push(el);
     buttons.appendChild(el);
   }
@@ -113,7 +138,7 @@ export const Button = function (map, buttons) {
     });
   };
 
-  let showCoordsPickerButton = new CoordsPickerButton(function (activate) {
+  const showCoordsPickerButton = new (CoordsPickerButton as unknown as ButtonCtor)(function (activate: boolean) {
     if (activate) {
       enableCoords();
     } else {
@@ -121,8 +146,7 @@ export const Button = function (map, buttons) {
     }
   });
 
-  // Ruler / measure distances button
-  let rulerButton = new RulerButton(function (activate) {
+  const rulerButton = new (RulerButton as unknown as ButtonCtor)(function (activate: boolean) {
     if (activate) {
       enableRuler();
     } else {
@@ -130,13 +154,13 @@ export const Button = function (map, buttons) {
     }
   });
 
-  let rulerLayerGroup = null;
-  let rulerMarkers = [];
-  let rulerLines = null;
-  let rulerLinesBg = null;
-  let rulerDistancePopups = [];
+  let rulerLayerGroup: L.LayerGroup | null = null;
+  const rulerMarkers: L.CircleMarker[] = [];
+  let rulerLines: L.Polyline | null = null;
+  let rulerLinesBg: L.Polyline | null = null;
+  const rulerDistancePopups: L.Popup[] = [];
 
-  function formatDistance(m) {
+  function formatDistance(m: number) {
     if (m >= 1000) {
       return (m / 1000).toFixed(2) + " km";
     }
@@ -144,15 +168,12 @@ export const Button = function (map, buttons) {
   }
 
   function enableRuler() {
-    // create layer group for ruler markers/lines
     rulerLayerGroup = L.layerGroup().addTo(map);
     rulerLinesBg = L.polyline([], {
       color: "#fff",
       weight: 3,
     }).addTo(rulerLayerGroup);
     rulerLines = L.polyline([], { color: "#000", weight: 2, dashArray: "4" }).addTo(rulerLayerGroup);
-    rulerMarkers = [];
-    rulerDistancePopups = [];
 
     map.getContainer().classList.add("measure-active");
     map.on("click", onRulerClick);
@@ -167,44 +188,44 @@ export const Button = function (map, buttons) {
       map.removeLayer(rulerLayerGroup);
       rulerLayerGroup = null;
     }
-    rulerMarkers = [];
+    rulerMarkers.length = 0;
     rulerLines = null;
     rulerLinesBg = null;
-    rulerDistancePopups = [];
+    rulerDistancePopups.length = 0;
 
     rulerButton.set(false);
   }
 
-  function onRulerClick(e) {
-    let latlng = e.latlng;
-    let config = window.config;
-    let marker = L.circleMarker(latlng, {
+  function onRulerClick(e: L.LeafletMouseEvent) {
+    const latlng = e.latlng;
+    const config = window.config;
+    if (!rulerLayerGroup || !rulerLines || !rulerLinesBg) {
+      return;
+    }
+    const marker = L.circleMarker(latlng, {
       radius: 5,
       color: config.map && config.map.labelNewColor ? config.map.labelNewColor : "#333",
     }).addTo(rulerLayerGroup);
     rulerMarkers.push(marker);
 
-    // add to polyline
-    let latlngs = rulerLines.getLatLngs();
+    const latlngs = rulerLines.getLatLngs() as L.LatLng[];
     latlngs.push(latlng);
     rulerLines.setLatLngs(latlngs);
     rulerLinesBg.setLatLngs(latlngs);
 
-    // compute segment distance and total distance
     if (latlngs.length >= 2) {
-      let last = latlngs[latlngs.length - 2];
-      let segDist = latlng.distanceTo(latlngs[latlngs.length - 2]);
-      // show popup at midpoint for segment
-      let midLat = (latlng.lat + last.lat) / 2;
-      let midLng = (latlng.lng + last.lng) / 2;
+      const last = latlngs[latlngs.length - 2];
+      const segDist = latlng.distanceTo(latlngs[latlngs.length - 2]);
 
-      // compute total
+      const midLat = (latlng.lat + last.lat) / 2;
+      const midLng = (latlng.lng + last.lng) / 2;
+
       let total = 0;
       for (let i = 1; i < latlngs.length; i++) {
         total += latlngs[i].distanceTo(latlngs[i - 1]);
       }
 
-      let popup = L.popup({ closeButton: false, autoClose: false, className: "ruler-popup" })
+      const popup = L.popup({ closeButton: false, autoClose: false, className: "ruler-popup" })
         .setLatLng([midLat, midLng])
         .setContent("<strong>" + formatDistance(segDist) + "</strong><br/>" + formatDistance(total))
         .addTo(rulerLayerGroup);
@@ -217,6 +238,7 @@ export const Button = function (map, buttons) {
     map.locate({
       watch: true,
       enableHighAccuracy: true,
+      // @ts-expect-error Leaflet runtime accepts "untilPan"/"untilPanOrZoom" for setView, but @types/leaflet only types boolean.
       setView: "untilPan",
     });
     locateUserButton.set(true);
@@ -240,12 +262,13 @@ export const Button = function (map, buttons) {
     showCoordsPickerButton.set(false);
   }
 
-  function showCoordinates(clicked) {
+  function showCoordinates(clicked: L.LeafletMouseEvent) {
+    const router = window.router;
     router.fullUrl({ zoom: map.getZoom(), lat: clicked.latlng.lat, lng: clicked.latlng.lng });
     disableCoords();
   }
 
-  self.locationFound = function locationFound(location) {
+  self.locationFound = function locationFound(location: L.LocationEvent) {
     if (!userLocation) {
       userLocation = new LocationMarker(location.latlng).addTo(map);
     }
