@@ -18,12 +18,13 @@ import { FilterGui } from "./filters/filtergui.js";
 import { HostnameFilter } from "./filters/hostname.js";
 import * as helper from "./utils/helper.js";
 import { Language } from "./utils/language.js";
+import { ObjectsLinksAndNodes } from "./datadistributor.js";
 
 export const Gui = function (language: ReturnType<typeof Language>) {
-  const self = {
-    setData: undefined,
+  const self: { setData: (data: ObjectsLinksAndNodes) => void } = {
+    setData: () => {},
   };
-  let content: ReturnType<typeof Map>;
+  let content: ReturnType<typeof Map> | ReturnType<typeof ForceGraph> | null = null;
   let contentDiv: HTMLDivElement;
   let router = window.router;
   let config = window.config;

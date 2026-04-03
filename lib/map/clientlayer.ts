@@ -27,21 +27,17 @@ export const ClientLayer = L.GridLayer.extend({
     this.redraw();
   },
   createTile: function (tilePoint: Coords) {
-    let tile: HTMLElement & {
-      width?: number;
-      height?: number;
-      getContext?: (type: string) => CanvasRenderingContext2D;
-    } = L.DomUtil.create("canvas", "leaflet-tile");
+    const tile = L.DomUtil.create("canvas", "leaflet-tile") as HTMLCanvasElement;
 
-    let tileSize = this.options.tileSize;
-    tile.width = tileSize;
-    tile.height = tileSize;
+    const tileSize = this.options.tileSize;
+    tile.width = tileSize as number;
+    tile.height = tileSize as number;
 
     if (!this.data) {
       return tile;
     }
 
-    let ctx = tile.getContext("2d");
+    const ctx = tile.getContext("2d")!;
     let size = tilePoint.multiplyBy(tileSize);
     let map = this._map;
 

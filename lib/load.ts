@@ -4,7 +4,7 @@ import { main } from "./main.js";
 export const load = async () => {
   const configResponse = await fetch("config.json");
   if (!configResponse.ok) {
-    document.querySelector(".loader").innerHTML =
+    document.querySelector(".loader")!.innerHTML =
       "config.json can not be loaded:" +
       "<br>" +
       configResponse.statusText +
@@ -16,6 +16,6 @@ export const load = async () => {
     return;
   }
   const config = await configResponse.json();
-  globalThis.config = Object.assign(defaultConfig, config);
+  window.config = Object.assign(defaultConfig, config);
   main();
 };

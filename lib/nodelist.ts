@@ -1,3 +1,4 @@
+import moment from "moment";
 import { h, VNode } from "snabbdom";
 import { _ } from "./utils/language.js";
 import { Heading, SortTable } from "./sorttable.js";
@@ -7,7 +8,6 @@ import { CanSetData, ObjectsLinksAndNodes } from "./datadistributor.js";
 import { CanRender } from "./container.js";
 
 function showUptime(uptime: number) {
-  // 1000ms are 1 second and 60 second are 1min: 60 * 1000 =  60000
   let seconds = uptime / 60000;
   if (Math.abs(seconds) < 60) {
     return Math.round(seconds) + " m";
@@ -20,7 +20,7 @@ function showUptime(uptime: number) {
   return Math.round(seconds) + " d";
 }
 
-let headings: Heading[] = [
+const headings: Heading[] = [
   {
     name: "",
   },
@@ -58,11 +58,8 @@ let headings: Heading[] = [
 ];
 
 export const Nodelist = function (): CanSetData & CanRender {
-  let router = window.router;
-  const self = {
-    render: undefined,
-    setData: undefined,
-  };
+  const router = window.router;
+  const table = SortTable(headings, 1, renderRow);
 
   function renderRow(node: Node) {
     let td0Content: string | VNode = "";
@@ -70,7 +67,7 @@ export const Nodelist = function (): CanSetData & CanRender {
       td0Content = h("span", { props: { className: "icon ion-location", title: _.t("location.location") } });
     }
 
-    let td1Content = h(
+    const td1Content = h(
       "a",
       {
         props: {
@@ -95,32 +92,28 @@ export const Nodelist = function (): CanSetData & CanRender {
     ]);
   }
 
-  let table = SortTable(headings, 1, renderRow);
-
-  self.render = function render(d: HTMLElement) {
-    let h2 = document.createElement("h2");
-    h2.textContent = _.t("node.all");
-    d.appendChild(h2);
-    table.el.classList.add("node-list");
-    d.appendChild(table.el);
-  };
-
-  self.setData = function setData(nodesData: ObjectsLinksAndNodes) {
-    let nodesList = nodesData.nodes.all.map(function (node) {
-      let nodeData = Object.create(node);
-      if (node.is_online) {
-        nodeData.uptime = nodesData.now.valueOf() - new Date(node.uptime).getTime();
-      } else {
-        nodeData.uptime = node.lastseen.valueOf() - nodesData.now.valueOf();
-      }
-      return nodeData;
-    });
-
-    table.setData(nodesList);
-  };
-
   return {
-    setData: self.setData,
-    render: self.render,
+    render(d: HTMLElement) {
+      const h2 = document.createElement("h2");
+      h2.textContent = _.t("node.all");
+      d.appendChild(h2);
+      table.el.classList.add("node-list");
+      d.appendChild(table.el);
+    },
+
+    setData(nodesData: ObjectsLinksAndNodes) {
+      const now = nodesData.now ?? moment();
+      const nodesList = nodesData.nodes.all.map(function (node) {
+        const nodeData = Object.create(node);
+        if (node.is_online) {
+          nodeData.uptime = now.valueOf() - new Date(node.uptime).getTime();
+        } else {
+          nodeData.uptime = node.lastseen.valueOf() - now.valueOf();
+        }
+        return nodeData;
+      });
+
+      table.setData(nodesList);
+    },
   };
 };

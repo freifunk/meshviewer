@@ -1,18 +1,15 @@
 import { _ } from "./utils/language.js";
 import { CanRender } from "./container.js";
 
-export const Tabs = function () {
-  const self = {
-    add: undefined,
-    render: undefined,
-  };
+type TabLi = HTMLLIElement & { child: CanRender };
 
-  let tabs = document.createElement("ul");
+export const Tabs = function () {
+  const tabs = document.createElement("ul");
   tabs.classList.add("tabs");
 
-  let container = document.createElement("div");
+  const container = document.createElement("div");
 
-  function gotoTab(li: HTMLLIElement) {
+  function gotoTab(li: TabLi) {
     for (let i = 0; i < tabs.children.length; i++) {
       tabs.children[i].classList.remove("visible");
     }
@@ -23,45 +20,39 @@ export const Tabs = function () {
 
     li.classList.add("visible");
 
-    let tab = document.createElement("div");
+    const tab = document.createElement("div");
     tab.classList.add("tab");
     container.appendChild(tab);
-    // @ts-ignore
     li.child.render(tab);
   }
 
-  function switchTab() {
-    gotoTab(this);
+  return {
+    add(title: string, child: CanRender) {
+      const li = document.createElement("li") as TabLi;
+      li.textContent = _.t(title);
+      li.addEventListener("click", function (this: HTMLElement) {
+        gotoTab(this as TabLi);
+      });
+      li.child = child;
+      tabs.appendChild(li);
 
-    return false;
-  }
+      let anyVisible = false;
 
-  self.add = function add(title: string, child: CanRender) {
-    let li = document.createElement("li");
-    li.textContent = _.t(title);
-    li.onclick = switchTab;
-    // @ts-ignore
-    li.child = child;
-    tabs.appendChild(li);
-
-    let anyVisible = false;
-
-    for (let i = 0; i < tabs.children.length; i++) {
-      if (tabs.children[i].classList.contains("visible")) {
-        anyVisible = true;
-        break;
+      for (let i = 0; i < tabs.children.length; i++) {
+        if (tabs.children[i].classList.contains("visible")) {
+          anyVisible = true;
+          break;
+        }
       }
-    }
 
-    if (!anyVisible) {
-      gotoTab(li);
-    }
+      if (!anyVisible) {
+        gotoTab(li);
+      }
+    },
+
+    render(el: HTMLElement) {
+      el.appendChild(tabs);
+      el.appendChild(container);
+    },
   };
-
-  self.render = function render(el: HTMLElement) {
-    el.appendChild(tabs);
-    el.appendChild(container);
-  };
-
-  return self;
 };
