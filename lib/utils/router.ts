@@ -1,15 +1,7 @@
 import Navigo, { Match } from "navigo";
 import { Language } from "./language.js";
-import { Link, NodeId } from "./node.js";
-import { Moment } from "moment";
-
-export interface Objects {
-  nodeDict: NodeId[];
-  links: Link[];
-  nodes?: Node[];
-  now?: Moment;
-  timestamp?: Moment;
-}
+import { Link, Node, NodeId } from "./node.js";
+import { ObjectsLinksAndNodes } from "../datadistributor.js";
 
 export interface TargetLocation {
   lng: number;
@@ -19,7 +11,7 @@ export interface TargetLocation {
 
 export interface Target {
   resetView(): void;
-  gotoNode(nodeId: NodeId, nodeIdList: NodeId[]): any;
+  gotoNode(node: Node, nodeDict: { [k: NodeId]: Node }): any;
   gotoLink(link: Link[]): any;
   gotoLocation(locationData: TargetLocation): any;
 }
@@ -28,22 +20,38 @@ interface Views {
   [k: string]: () => any;
 }
 
+type RouteData = Record<string, string> | string[] | null;
+
+function routeGroup(data: RouteData, index: number): string | undefined {
+  if (data == null) {
+    return undefined;
+  }
+  if (Array.isArray(data)) {
+    return data[index];
+  }
+  return data[String(index)];
+}
+
 export class Router extends Navigo {
   init = false;
-  objects: Objects = { nodeDict: [], links: [] };
+  objects: ObjectsLinksAndNodes = {
+    nodes: { all: [], lost: [], new: [], offline: [], online: [] },
+    links: [],
+    nodeDict: {},
+  };
   targets: Target[] = [];
   views: Views = {};
-  currentState = {
-    lang: undefined, // like de or en
-    view: undefined, // map or graph
-    node: undefined, // Node ID
-    link: undefined, // Two node IDs concatenated by -
-    zoom: undefined,
-    lat: undefined,
-    lng: undefined,
-  };
-  state = { lang: null, view: "map" };
-  language = undefined;
+  currentState: {
+    lang?: string;
+    view?: string;
+    node?: string;
+    link?: string;
+    zoom?: string;
+    lat?: string;
+    lng?: string;
+  } = {};
+  state: { lang: string | null; view: string } = { lang: null, view: "map" };
+  language!: ReturnType<typeof Language>;
 
   constructor(language: ReturnType<typeof Language>) {
     super("/", { hash: true });
@@ -59,18 +67,20 @@ export class Router extends Navigo {
   }
 
   gotoNode(node: { nodeId: NodeId }) {
-    if (this.objects.nodeDict[node.nodeId]) {
+    const dict = this.objects.nodeDict ?? {};
+    const n = dict[node.nodeId];
+    if (n) {
       this.targets.forEach((target) => {
-        target.gotoNode(this.objects.nodeDict[node.nodeId], this.objects.nodeDict);
+        target.gotoNode(n, dict);
       });
     }
   }
 
   gotoLink(linkData: { linkId: string }) {
-    let link = this.objects.links.filter(function (value) {
+    const link = this.objects.links.filter(function (value) {
       return value.id === linkData.linkId;
     });
-    if (link) {
+    if (link.length) {
       this.targets.forEach(function (target) {
         target.gotoLink(link);
       });
@@ -86,28 +96,29 @@ export class Router extends Navigo {
   }
 
   customRoute(match?: Match) {
-    let lang: string | undefined = match.data[0];
-    let viewValue: "map" | "graph" | string | undefined = match.data[1];
-    let node: string | undefined = match.data[2];
-    let link: string | undefined = match.data[3];
-    let zoom: number | string | undefined = match.data[4];
-    let lat: number | string | undefined = match.data[5];
-    let lng: number | string | undefined = match.data[6];
+    const d = match?.data as RouteData;
+    const lang = routeGroup(d, 0);
+    let viewValue: "map" | "graph" | string | undefined = routeGroup(d, 1);
+    const node = routeGroup(d, 2);
+    const link = routeGroup(d, 3);
+    const zoom = routeGroup(d, 4);
+    const lat = routeGroup(d, 5);
+    const lng = routeGroup(d, 6);
 
     this.currentState = {
-      lang: lang,
+      lang,
       view: viewValue,
-      node: node,
-      link: link,
-      zoom: zoom,
-      lat: lat,
-      lng: lng,
+      node,
+      link,
+      zoom,
+      lat,
+      lng,
     };
 
     if (lang && lang !== this.state.lang && lang === this.language.getLocale(lang)) {
       console.debug("Language change reload");
-      const prefix = match.hashString.startsWith("/") ? "" : "/";
-      location.hash = prefix + match.hashString;
+      const prefix = match!.hashString.startsWith("/") ? "" : "/";
+      location.hash = prefix + match!.hashString;
       location.reload();
     }
 
@@ -126,9 +137,9 @@ export class Router extends Navigo {
     } else if (lat) {
       this.targets.forEach((target) => {
         target.gotoLocation({
-          zoom: parseInt(this.currentState.zoom, 10),
-          lat: parseFloat(this.currentState.lat),
-          lng: parseFloat(this.currentState.lng),
+          zoom: parseInt(this.currentState.zoom ?? "0", 10),
+          lat: parseFloat(this.currentState.lat ?? "0"),
+          lng: parseFloat(this.currentState.lng ?? "0"),
         });
       });
     } else {
@@ -142,7 +153,11 @@ export class Router extends Navigo {
       /^\/?!(.*)?$/,
       (match?: Match) => {
         console.debug("fixing legacy url");
-        this.navigate(match.data[0]);
+        const d = match?.data as RouteData;
+        const first = Array.isArray(d) ? d[0] : d && typeof d === "object" ? Object.values(d)[0] : undefined;
+        if (first !== undefined) {
+          this.navigate(String(first));
+        }
       },
     )
       .on(
@@ -176,38 +191,42 @@ export class Router extends Navigo {
     return "?" + qs.toString();
   }
 
-  generateLink(data?: {}, full?: boolean) {
+  generateLink(data?: Record<string, unknown>, full?: boolean) {
     let result = "";
 
+    let merged: Record<string, unknown>;
     if (full) {
-      data = Object.assign({}, this.state, data);
+      merged = Object.assign({}, this.state, data);
     } else {
       result = "#";
-      data = Object.assign({}, this.currentState, data);
+      merged = Object.assign({}, this.currentState, data);
     }
 
-    for (let key in data) {
-      if (!data.hasOwnProperty(key) || data[key] === undefined || data[key] === "") {
+    for (const key in merged) {
+      if (!Object.prototype.hasOwnProperty.call(merged, key)) {
         continue;
       }
-      result += "/" + data[key];
+      const v = merged[key];
+      if (v === undefined || v === "") {
+        continue;
+      }
+      result += "/" + String(v);
     }
 
-    // add data query params
     const params = this.getParams();
     result += this.paramsToUrl(params);
 
     return result;
   }
 
-  fullUrl(data?: {}, e?: Event | false) {
+  fullUrl(data?: Record<string, unknown>, e?: Event | false) {
     if (e) {
       e.preventDefault();
     }
     this.navigate(this.generateLink(data, true));
   }
 
-  deepUrl(data?: {}, e?: Event | false) {
+  deepUrl(data?: Record<string, unknown>, e?: Event | false) {
     if (e) {
       e.preventDefault();
     }
@@ -215,7 +234,7 @@ export class Router extends Navigo {
   }
 
   getLang() {
-    let lang = location.hash.match(/^\/?#?\/(\w{2})\//);
+    const lang = location.hash.match(/^\/?#?\/(\w{2})\//);
     if (lang) {
       this.state.lang = this.language.getLocale(lang[1]);
       return lang[1];
@@ -236,7 +255,6 @@ export class Router extends Navigo {
     const params = new URLSearchParams(queryString);
 
     params.forEach(function (value, key) {
-      // value can be something like "v1,!v2"
       const parts = value.split(",").filter(Boolean);
 
       if (!out[key]) {
@@ -274,7 +292,7 @@ export class Router extends Navigo {
     return this.currentState.view;
   }
 
-  setData(data: Objects) {
+  setData(data: ObjectsLinksAndNodes) {
     this.objects = data;
   }
 }

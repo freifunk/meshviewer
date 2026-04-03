@@ -1,10 +1,15 @@
 {
   "compilerOptions": {
     "target": "es2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "allowJs": true,
-    "module": "node16",
-    "moduleResolution": "node16",
-    "esModuleInterop": true
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitThis": true,
+    "useUnknownInCatchVariables": true
   },
-  "include": ["lib"]
+  "include": ["lib", "vite-env.d.ts"]
 }

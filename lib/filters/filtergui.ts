@@ -11,12 +11,12 @@ export const FilterGui = function (distributor: ReturnType<typeof DataDistributo
     el.appendChild(div);
   }
 
-  function filtersChanged(filters: Filter[] & CanRender[]) {
+  function filtersChanged(filters: Filter[]) {
     while (container.firstChild) {
       container.removeChild(container.firstChild);
     }
 
-    filters.forEach(function (filter: Filter & CanRender) {
+    (filters as (Filter & CanRender)[]).forEach(function (filter) {
       let li = document.createElement("li");
       container.appendChild(li);
       filter.render(li);

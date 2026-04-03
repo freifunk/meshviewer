@@ -27,7 +27,7 @@ export const get = function get(url: string) {
 };
 
 export const getJSON = function getJSON(url: string) {
-  return get(url).then(JSON.parse);
+  return get(url).then((text: unknown) => JSON.parse(String(text)));
 };
 
 export const sortByKey = function sortByKey(key: string, data: { [k: string]: Moment }[]) {
@@ -57,9 +57,8 @@ export const one = function one() {
 };
 
 export const dictGet = function dictGet(dict: { [x: string]: any }, keys: string[]) {
-  let key = keys.shift();
-
-  if (!(key in dict)) {
+  const key = keys.shift();
+  if (key === undefined || !(key in dict)) {
     return null;
   }
 
@@ -98,7 +97,7 @@ export const hasUplink = function hasUplink(data: Node | {}) {
 };
 
 export const subtract = function subtract(a: Node[], b: Node[]) {
-  let ids = {};
+  const ids: Record<string, boolean> = {};
 
   b.forEach(function (d) {
     ids[d.node_id] = true;
@@ -239,19 +238,21 @@ export const positionClients = function positionClients(
 };
 
 export const fullscreen = function fullscreen(btn: HTMLButtonElement) {
-  if (!document.fullscreenElement && !document["webkitFullscreenElement"] && !document["mozFullScreenElement"]) {
-    let fel = document.firstElementChild;
-    let func = fel.requestFullscreen || fel["webkitRequestFullScreen"] || fel["mozRequestFullScreen"];
-    func.call(fel);
+  const fel = document.documentElement;
+  if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement) {
+    const enter =
+      fel.requestFullscreen?.bind(fel) ?? fel.webkitRequestFullScreen?.bind(fel) ?? fel.mozRequestFullScreen?.bind(fel);
+    enter?.();
     btn.classList.remove("ion-full-enter");
     btn.classList.add("ion-full-exit");
   } else {
-    let func = document.exitFullscreen || document["webkitExitFullscreen"] || document["mozCancelFullScreen"];
-    if (func) {
-      func.call(document);
-      btn.classList.remove("ion-full-exit");
-      btn.classList.add("ion-full-enter");
-    }
+    const exit =
+      document.exitFullscreen?.bind(document) ??
+      document.webkitExitFullscreen?.bind(document) ??
+      document.mozCancelFullScreen?.bind(document);
+    exit?.();
+    btn.classList.remove("ion-full-exit");
+    btn.classList.add("ion-full-enter");
   }
 };
 

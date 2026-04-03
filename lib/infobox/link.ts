@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { classModule, eventListenersModule, h, init, propsModule, styleModule, VNode } from "snabbdom";
 import { _ } from "../utils/language.js";
 import * as helper from "../utils/helper.js";

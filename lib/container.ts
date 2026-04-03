@@ -11,19 +11,15 @@ export const Container = function (tag?: string): CanRender & CanAdd {
     tag = "div";
   }
 
-  const self = {
-    add: undefined,
-    render: undefined,
-  };
+  const container = document.createElement(tag);
 
-  let container = document.createElement(tag);
-
-  self.add = function add(d: CanRender) {
-    d.render(container);
-  };
-
-  self.render = function render(el: HTMLElement) {
-    el.appendChild(container);
+  const self: CanRender & CanAdd = {
+    add(d: CanRender) {
+      d.render(container);
+    },
+    render(el: HTMLElement) {
+      el.appendChild(container);
+    },
   };
 
   return self;

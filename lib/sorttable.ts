@@ -13,21 +13,26 @@ const patch = init([classModule, propsModule, styleModule, eventListenersModule]
 export const SortTable = function (
   headings: Heading[],
   sortIndex: number,
-  renderRow: (element: any, i: number, all: []) => any,
+  renderRow: (element: any, i: number, all: any[]) => any,
   className: string[] = [],
 ) {
+  let data: any[] = [];
+  let sortReverse = false;
+  let currentSortIndex = sortIndex;
+
   const self: {
     el: HTMLElement;
-    vnode: VNode;
+    vnode: VNode | null;
     setData: (data: any[]) => void;
-  } = { el: undefined, setData: undefined, vnode: null };
-  let data: any[];
-  let sortReverse = false;
-  self.el = document.createElement("table");
+  } = {
+    el: document.createElement("table"),
+    vnode: null,
+    setData: () => {},
+  };
 
   function sortTable(i: number) {
-    sortReverse = i === sortIndex ? !sortReverse : false;
-    sortIndex = i;
+    sortReverse = i === currentSortIndex ? !sortReverse : false;
+    currentSortIndex = i;
 
     updateView();
   }
@@ -39,15 +44,14 @@ export const SortTable = function (
   }
 
   function updateView() {
-    let children = [];
+    const children: VNode[] = [];
 
     if (data.length !== 0) {
-      let th = headings.map(function (row, i) {
+      const th = headings.map(function (row, i) {
         let name = _.t(row.name);
-        let properties = {
+        const properties: { onclick: () => void; className: string; title?: string } = {
           onclick: sortTableHandler(i),
           className: "sort-header",
-          title: undefined,
         };
 
         if (row.class) {
@@ -56,24 +60,30 @@ export const SortTable = function (
           name = "";
         }
 
-        if (sortIndex === i) {
+        if (currentSortIndex === i) {
           properties.className += sortReverse ? " sort-up" : " sort-down";
         }
 
         return h("th", { props: properties }, name);
       });
 
-      let links = data.slice(0).sort(headings[sortIndex].sort);
+      const sortFn = headings[currentSortIndex].sort ?? (() => 0);
+      let links = data.slice(0).sort(sortFn);
 
-      if (headings[sortIndex].reverse ? !sortReverse : sortReverse) {
+      if (headings[currentSortIndex].reverse ? !sortReverse : sortReverse) {
         links = links.reverse();
       }
 
       children.push(h("thead", h("tr", th)));
-      children.push(h("tbody", links.map(renderRow)));
+      children.push(
+        h(
+          "tbody",
+          links.map((row, idx, arr) => renderRow(row, idx, arr)),
+        ),
+      );
     }
 
-    let elNew = h("table", { props: { className } }, children);
+    const elNew = h("table", { props: { className } }, children);
     self.vnode = patch(self.vnode ?? self.el, elNew);
   }
 
