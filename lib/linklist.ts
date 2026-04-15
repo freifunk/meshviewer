@@ -28,7 +28,13 @@ let headings: Heading[] = [
     name: "node.tq",
     class: "ion-connection-bars",
     sort: function (a, b) {
-      return (a.source_tq + a.target_tq) / 2 - (b.source_tq + b.target_tq) / 2;
+      let am = helper.linkMetric(a.source_tq, a.source_tp);
+      let bm = helper.linkMetric(b.source_tq, b.source_tp);
+      let an = helper.linkMetric(a.target_tq, a.target_tp);
+      let bn = helper.linkMetric(b.target_tq, b.target_tp);
+      let aAvg = am === undefined && an === undefined ? -Infinity : ((am ?? 0) + (an ?? 0)) / 2;
+      let bAvg = bm === undefined && bn === undefined ? -Infinity : ((bm ?? 0) + (bn ?? 0)) / 2;
+      return aAvg - bAvg;
     },
     reverse: true,
   },
@@ -81,8 +87,16 @@ export const Linklist = function (linkScale: (t: any) => any): CanRender & CanSe
       h("td", td1Content),
       h(
         "td",
-        { style: { color: linkScale((link.source_tq + link.target_tq) / 2) } },
-        helper.showTq(link.source_tq) + " - " + helper.showTq(link.target_tq),
+        {
+          style: {
+            color: linkScale(
+              ((helper.linkMetric(link.source_tq, link.source_tp) ?? 0) +
+                (helper.linkMetric(link.target_tq, link.target_tp) ?? 0)) /
+                2,
+            ),
+          },
+        },
+        helper.showBiDiLinkMetric(link.source_tq, link.source_tp, link.target_tq, link.target_tp),
       ),
       h("td", helper.showDistance(link)),
     ]);

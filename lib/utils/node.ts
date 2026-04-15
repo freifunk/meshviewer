@@ -15,8 +15,10 @@ export interface Link {
   target_addr: string;
   source_mac?: string; // Same as _addr
   target_mac?: string; // Same as _addr
-  source_tq: number;
-  target_tq: number;
+  source_tq?: number; // Batman IV link quality (0..1)
+  target_tq?: number;
+  source_tp?: number; // Batman V link quality (kbps)
+  target_tp?: number;
 }
 
 export interface Neighbour {
