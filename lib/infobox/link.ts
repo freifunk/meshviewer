@@ -79,7 +79,7 @@ export const Link = function (el: HTMLElement, linkData: LinkData[], linkScale: 
       );
       helper.attributeEntry(
         children,
-        "node.tq",
+        (link.source_tp ?? 0) > 0 || (link.target_tp ?? 0) > 0 ? "node.throughput" : "node.tq",
         h(
           "span",
           {

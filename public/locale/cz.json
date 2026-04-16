@@ -9,6 +9,7 @@
     "distance": "Vzdálenost",
     "connectionType": "typ připojení",
     "tq": "tq",
+    "throughput": "Propustnost",
     "lastOnline": "poslední on-line  %{time} (%{date})",
     "lastOffline": "lastOffline %{time} (%{date})",
     "activated": "aktivováno (%{branch})",
