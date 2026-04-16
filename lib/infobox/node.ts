@@ -168,8 +168,12 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
       class: "ion-connection-bars",
       sort: function (a: Neighbour, b: Neighbour) {
         let am = helper.linkMetric(a.link.source_tq, a.link.source_tp);
+        let an = helper.linkMetric(a.link.target_tq, a.link.target_tp);
         let bm = helper.linkMetric(b.link.source_tq, b.link.source_tp);
-        return (am === undefined ? -Infinity : am) - (bm === undefined ? -Infinity : bm);
+        let bn = helper.linkMetric(b.link.target_tq, b.link.target_tp);
+        let aAvg = am === undefined && an === undefined ? -Infinity : ((am ?? 0) + (an ?? 0)) / 2;
+        let bAvg = bm === undefined && bn === undefined ? -Infinity : ((bm ?? 0) + (bn ?? 0)) / 2;
+        return aAvg - bAvg;
       },
       reverse: true,
     },
