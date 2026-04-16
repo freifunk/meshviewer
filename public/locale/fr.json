@@ -9,6 +9,7 @@
     "distance": "Distance",
     "connectionType": "Type de connexion",
     "tq": "Qualité de transmission",
+    "throughput": "Débit",
     "lastOnline": "en ligne, dernier message %{time} (%{date})",
     "lastOffline": "hors ligne, dernier message %{time} (%{date})",
     "activated": "activé (%{branch})",
