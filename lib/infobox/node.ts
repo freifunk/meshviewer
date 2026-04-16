@@ -173,8 +173,12 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: LinkScale, node
       class: "ion-connection-bars",
       sort: function (a: Neighbour, b: Neighbour) {
         const am = helper.linkMetric(a.link.source_tq, a.link.source_tp);
+        const an = helper.linkMetric(a.link.target_tq, a.link.target_tp);
         const bm = helper.linkMetric(b.link.source_tq, b.link.source_tp);
-        return (am === undefined ? -Infinity : am) - (bm === undefined ? -Infinity : bm);
+        const bn = helper.linkMetric(b.link.target_tq, b.link.target_tp);
+        const aAvg = am === undefined && an === undefined ? -Infinity : ((am ?? 0) + (an ?? 0)) / 2;
+        const bAvg = bm === undefined && bn === undefined ? -Infinity : ((bm ?? 0) + (bn ?? 0)) / 2;
+        return aAvg - bAvg;
       },
       reverse: true,
     },
