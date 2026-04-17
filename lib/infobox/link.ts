@@ -79,11 +79,19 @@ export const Link = function (el: HTMLElement, linkData: LinkData[], linkScale: 
       );
       helper.attributeEntry(
         children,
-        "node.tq",
+        (link.source_tp ?? 0) > 0 || (link.target_tp ?? 0) > 0 ? "node.throughput" : "node.tq",
         h(
           "span",
-          { style: { color: linkScale((link.source_tq + link.target_tq) / 2) } },
-          helper.showTq(link.source_tq) + " - " + helper.showTq(link.target_tq),
+          {
+            style: {
+              color: linkScale(
+                ((helper.linkMetric(link.source_tq, link.source_tp) ?? 0) +
+                  (helper.linkMetric(link.target_tq, link.target_tp) ?? 0)) /
+                  2,
+              ),
+            },
+          },
+          helper.showBiDiLinkMetric(link.source_tq, link.source_tp, link.target_tq, link.target_tp),
         ),
       );
 

@@ -108,7 +108,11 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
           "a",
           {
             style: {
-              color: linkScale((connecting.link.source_tq + connecting.link.target_tq) / 2),
+              color: linkScale(
+                ((helper.linkMetric(connecting.link.source_tq, connecting.link.source_tp) ?? 0) +
+                  (helper.linkMetric(connecting.link.target_tq, connecting.link.target_tp) ?? 0)) /
+                  2,
+              ),
             },
             props: {
               title: connecting.link.source.hostname + " - " + connecting.link.target.hostname,
@@ -120,7 +124,12 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
               },
             },
           },
-          helper.showTq(connecting.link.source_tq) + " - " + helper.showTq(connecting.link.target_tq),
+          helper.showBiDiLinkMetric(
+            connecting.link.source_tq,
+            connecting.link.source_tp,
+            connecting.link.target_tq,
+            connecting.link.target_tp,
+          ),
         ),
       ]),
       h("td", helper.showDistance(connecting.link)),
@@ -158,7 +167,13 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
       name: "node.tq",
       class: "ion-connection-bars",
       sort: function (a: Neighbour, b: Neighbour) {
-        return a.link.source_tq - b.link.source_tq;
+        let am = helper.linkMetric(a.link.source_tq, a.link.source_tp);
+        let an = helper.linkMetric(a.link.target_tq, a.link.target_tp);
+        let bm = helper.linkMetric(b.link.source_tq, b.link.source_tp);
+        let bn = helper.linkMetric(b.link.target_tq, b.link.target_tp);
+        let aAvg = am === undefined && an === undefined ? -Infinity : ((am ?? 0) + (an ?? 0)) / 2;
+        let bAvg = bm === undefined && bn === undefined ? -Infinity : ((bm ?? 0) + (bn ?? 0)) / 2;
+        return aAvg - bAvg;
       },
       reverse: true,
     },
