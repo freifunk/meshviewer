@@ -160,19 +160,6 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
         map.setZoom(maxZoom);
       }
     }
-
-    let html_tag: Element = document.querySelector("html");
-    let class_list = html_tag.classList;
-    const mode = selectedLayer?.options?.mode;
-    class_list.forEach(function (item) {
-      if (item.startsWith("theme_")) {
-        class_list.remove(item);
-      }
-    });
-    if (html_tag && mode && mode !== "" && !html_tag.classList.contains(mode)) {
-      class_list.add("theme_" + mode);
-      labelLayer.updateLayer();
-    }
   });
 
   map.on("load", function () {
