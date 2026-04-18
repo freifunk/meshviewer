@@ -63,7 +63,12 @@
   "button": {
     "switchView": "Görünümü Değiştir",
     "location": "Koordinatları seç",
-    "tracking": "Yerelleştirme"
+    "tracking": "Yerelleştirme",
+    "theme": {
+      "light": "Açık (sonraki: koyu)",
+      "dark": "Koyu (sonraki: oto)",
+      "auto": "Oto (sonraki: açık)"
+    }
   },
   "momentjs": {
     "calendar": {
