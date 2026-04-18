@@ -30,6 +30,23 @@
     <link rel="mask-icon" href="./mask-icon.svg" color="#FFFFFF" />
     <meta name="theme-color" content="#ffffff" />
 
+    <!-- Keep storage key ("meshviewer.theme") and class name ("theme_night") in sync with lib/theme.ts -->
+    <script>
+      try {
+        var t = localStorage.getItem("meshviewer.theme");
+        if (t === "dark" || (t !== "light" && matchMedia("(prefers-color-scheme: dark)").matches)) {
+          document.documentElement.classList.add("theme_night");
+        }
+      } catch (e) {
+        try {
+          if (matchMedia("(prefers-color-scheme: dark)").matches) {
+            document.documentElement.classList.add("theme_night");
+          }
+        } catch (_) {
+          /* matchMedia unavailable; accept a light paint */
+        }
+      }
+    </script>
     <script src="lib/index.ts" type="module"></script>
   </head>
   <body>
