@@ -18,6 +18,7 @@ import { FilterGui } from "./filters/filtergui.js";
 import { HostnameFilter } from "./filters/hostname.js";
 import * as helper from "./utils/helper.js";
 import { Language } from "./utils/language.js";
+import { cycleTheme, getTheme, initTheme, themeIconSVG } from "./theme.js";
 
 export const Gui = function (language: ReturnType<typeof Language>) {
   const self = {
@@ -77,6 +78,21 @@ export const Gui = function (language: ReturnType<typeof Language>) {
   sidebar = Sidebar(document.body);
 
   contentDiv.appendChild(buttons);
+
+  initTheme();
+  let buttonTheme = document.createElement("button");
+  buttonTheme.classList.add("theme-toggle");
+  function refreshThemeButton() {
+    let current = getTheme();
+    buttonTheme.innerHTML = themeIconSVG(current);
+    buttonTheme.setAttribute("aria-label", _.t("button.theme." + current));
+  }
+  buttonTheme.onclick = function onclick() {
+    cycleTheme();
+    refreshThemeButton();
+  };
+  refreshThemeButton();
+  buttons.appendChild(buttonTheme);
 
   let buttonToggle = document.createElement("button");
   buttonToggle.classList.add("ion-eye");
