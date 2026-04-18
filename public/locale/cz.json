@@ -63,7 +63,12 @@
   "button": {
     "switchView": "Přepnout zobrazení",
     "location": "Vybrat souřadnice",
-    "tracking": "Lokalizace"
+    "tracking": "Lokalizace",
+    "theme": {
+      "light": "Světlý (další: tmavý)",
+      "dark": "Tmavý (další: auto)",
+      "auto": "Auto (další: světlý)"
+    }
   },
   "momentjs": {
     "calendar": {
