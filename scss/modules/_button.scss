@@ -79,6 +79,13 @@ button {
     margin: variables.$button-distance;
     width: auto;
   }
+
+  &.theme-toggle {
+    svg {
+      height: 1em;
+      width: 1em;
+    }
+  }
 }
 
 // Tooltip
