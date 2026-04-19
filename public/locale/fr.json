@@ -65,7 +65,12 @@
     "fullscreen": "Vollbildmodus wechseln",
     "tracking": "Localisation",
     "location": "Choisir les coordonnées",
-    "ruler": "Règle"
+    "ruler": "Règle",
+    "theme": {
+      "light": "Clair (suivant : sombre)",
+      "dark": "Sombre (suivant : auto)",
+      "auto": "Auto (suivant : clair)"
+    }
   },
   "momentjs": {
     "calendar": {
