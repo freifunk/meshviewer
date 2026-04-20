@@ -79,6 +79,9 @@ const statusFieldMapping: Record<string, MappingEntry> = {
       return d;
     },
   },
+  "node.owner": {
+    keys: ["owner"],
+  },
 };
 
 const patch = init([classModule, propsModule, styleModule, eventListenersModule]);
@@ -258,6 +261,7 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     processMapping("node.selectedGatewayIPv4");
     processMapping("node.selectedGatewayIPv6");
     processMapping("node.domain");
+    processMapping("node.owner");
 
     if (!appliedUrlFilters) {
       applyFiltersFromHash();
@@ -304,6 +308,7 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     self.renderSingle(el, "node.selectedGatewayIPv4");
     self.renderSingle(el, "node.selectedGatewayIPv6");
     self.renderSingle(el, "node.domain");
+    self.renderSingle(el, "node.owner");
 
     if (config.globalInfos) {
       let images = document.createElement("div");
