@@ -8,7 +8,7 @@
     "localClients": "Clients in the local cloud",
     "distance": "Vzdálenost",
     "connectionType": "typ připojení",
-    "tq": "tq",
+    "tq": "Kvalita přenosu",
     "lastOnline": "poslední on-line  %{time} (%{date})",
     "lastOffline": "lastOffline %{time} (%{date})",
     "activated": "aktivováno (%{branch})",
