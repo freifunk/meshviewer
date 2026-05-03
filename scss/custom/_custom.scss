@@ -8,3 +8,14 @@
 
 // SCSS supports css with a lot of additional features like variables or mixins.
 // Autoprefixer runs in postcss, no need to add browser-prefixes like -webkit, -moz or -ms
+
+// Test vertical-align tuning for centered SVGs
+// Adjust the variable below to test different pixel offsets
+:root {
+  --icon-va: -2px;
+}
+
+[class^="ion-"]::before,
+[class*=" ion-"]::before {
+  vertical-align: var(--icon-va);
+}

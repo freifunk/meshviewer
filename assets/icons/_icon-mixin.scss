@@ -1,7 +1,18 @@
-@mixin icon($name, $code, $prefix: "ion-") {
-  .#{$prefix}#{$name} {
-    &::before {
-      content: "#{$code}";
-    }
+@mixin icon-mask($name) {
+  background-color: currentColor;
+  content: "";
+  display: inline-block;
+  height: 1em;
+  mask-image: url("@icons/#{$name}.svg");
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  vertical-align: -2px;
+  width: 1em;
+}
+
+@mixin icon($name, $prefix: "ion-") {
+  .#{$prefix}#{$name}::before {
+    mask-image: url("@icons/#{$name}.svg");
   }
 }

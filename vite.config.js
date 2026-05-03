@@ -9,6 +9,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@fonts": resolve(__dirname, "assets/fonts"),
+      "@icons": resolve(__dirname, "assets/icons/svg"),
     },
   },
   define: {
