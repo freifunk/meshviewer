@@ -18,7 +18,7 @@ import { FilterGui } from "./filters/filtergui.js";
 import { HostnameFilter } from "./filters/hostname.js";
 import * as helper from "./utils/helper.js";
 import { Language } from "./utils/language.js";
-import { cycleTheme, getTheme, initTheme, themeIconSVG } from "./theme.js";
+import { cycleTheme, getTheme, initTheme } from "./theme.js";
 
 export const Gui = function (language: ReturnType<typeof Language>) {
   const self = {
@@ -81,10 +81,10 @@ export const Gui = function (language: ReturnType<typeof Language>) {
 
   initTheme();
   let buttonTheme = document.createElement("button");
-  buttonTheme.classList.add("theme-toggle");
   function refreshThemeButton() {
     let current = getTheme();
-    buttonTheme.innerHTML = themeIconSVG(current);
+    const themeIcon = { light: "sun", dark: "moon", auto: "auto" }[current];
+    buttonTheme.className = "theme-toggle ion-" + themeIcon;
     buttonTheme.setAttribute("aria-label", _.t("button.theme." + current));
   }
   buttonTheme.onclick = function onclick() {
