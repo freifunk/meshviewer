@@ -17,7 +17,7 @@
     "@typescript-eslint/parser": "^8.59.1",
     "eslint": "^10.3.0",
     "eslint-config-prettier": "^10.1.8",
-    "globals": "^17.4.0",
+    "globals": "^17.6.0",
     "prettier": "^3.8.1",
     "sass": "^1.99.0",
     "typescript": "^5.9.3",
