@@ -27,16 +27,16 @@
       "clients_other": 1,
       "is_gateway": false,
       "addresses": ["fd00::11", "10.0.0.11"],
-      "gateway_nexthop": "021122334402",
-      "gateway": "021122334402",
-      "gateway6": "021122334402",
+      "gateway_nexthop": "1004",
+      "gateway": "1004",
+      "gateway6": "1004",
       "autoupdater": {
         "enabled": true,
         "branch": "stable"
       }
     },
     {
-      "node_id": "021122334402",
+      "node_id": "1004",
       "hostname": "Vega",
       "domain": "lab",
       "firstseen": "@now-7d",
@@ -61,16 +61,16 @@
       "clients_other": 0,
       "is_gateway": true,
       "addresses": ["fd00::12", "10.0.0.12"],
-      "gateway_nexthop": "021122334402",
-      "gateway": "021122334402",
-      "gateway6": "021122334402",
+      "gateway_nexthop": "1004",
+      "gateway": "1004",
+      "gateway6": "1004",
       "autoupdater": {
         "enabled": true,
         "branch": "stable"
       }
     },
     {
-      "node_id": "021122334403",
+      "node_id": "node.a03",
       "hostname": "Arktur",
       "domain": "lab",
       "firstseen": "@now-38d",
@@ -95,9 +95,9 @@
       "clients_other": 1,
       "is_gateway": true,
       "addresses": ["fd00::13", "10.0.0.13"],
-      "gateway_nexthop": "021122334403",
-      "gateway": "021122334403",
-      "gateway6": "021122334403",
+      "gateway_nexthop": "node.a03",
+      "gateway": "node.a03",
+      "gateway6": "node.a03",
       "autoupdater": {
         "enabled": true,
         "branch": "stable"
@@ -129,16 +129,16 @@
       "clients_other": 0,
       "is_gateway": false,
       "addresses": ["fd00::14", "10.0.0.14"],
-      "gateway_nexthop": "021122334403",
-      "gateway": "021122334403",
-      "gateway6": "021122334403",
+      "gateway_nexthop": "node.a03",
+      "gateway": "node.a03",
+      "gateway6": "node.a03",
       "autoupdater": {
         "enabled": true,
         "branch": "stable"
       }
     },
     {
-      "node_id": "021122334405",
+      "node_id": "rgl5x",
       "hostname": "Rigel",
       "domain": "lab",
       "firstseen": "@now-10d",
@@ -163,9 +163,9 @@
       "clients_other": 1,
       "is_gateway": true,
       "addresses": ["fd00::15", "10.0.0.15"],
-      "gateway_nexthop": "021122334405",
-      "gateway": "021122334405",
-      "gateway6": "021122334405",
+      "gateway_nexthop": "rgl5x",
+      "gateway": "rgl5x",
+      "gateway6": "rgl5x",
       "autoupdater": {
         "enabled": true,
         "branch": "stable"
@@ -197,9 +197,9 @@
       "clients_other": 0,
       "is_gateway": false,
       "addresses": ["fd00::16", "10.0.0.16"],
-      "gateway_nexthop": "021122334405",
-      "gateway": "021122334405",
-      "gateway6": "021122334405",
+      "gateway_nexthop": "rgl5x",
+      "gateway": "rgl5x",
+      "gateway6": "rgl5x",
       "autoupdater": {
         "enabled": false,
         "branch": "stable"
@@ -231,9 +231,9 @@
       "clients_other": 0,
       "is_gateway": false,
       "addresses": ["fd00::17", "10.0.0.17"],
-      "gateway_nexthop": "021122334405",
-      "gateway": "021122334405",
-      "gateway6": "021122334405",
+      "gateway_nexthop": "rgl5x",
+      "gateway": "rgl5x",
+      "gateway6": "rgl5x",
       "autoupdater": {
         "enabled": false,
         "branch": "stable"
@@ -265,9 +265,9 @@
       "clients_other": 0,
       "is_gateway": false,
       "addresses": ["fd00::18", "10.0.0.18"],
-      "gateway_nexthop": "021122334405",
-      "gateway": "021122334405",
-      "gateway6": "021122334405",
+      "gateway_nexthop": "rgl5x",
+      "gateway": "rgl5x",
+      "gateway6": "rgl5x",
       "autoupdater": {
         "enabled": true,
         "branch": "stable"
@@ -312,7 +312,7 @@
     {
       "type": "wifi24",
       "source": "021122334401",
-      "target": "021122334402",
+      "target": "1004",
       "source_addr": "02:11:22:33:44:01",
       "target_addr": "02:11:22:33:44:02",
       "source_tq": 0.93,
@@ -320,7 +320,7 @@
     },
     {
       "type": "wifi24",
-      "source": "021122334403",
+      "source": "node.a03",
       "target": "021122334404",
       "source_addr": "02:11:22:33:44:03",
       "target_addr": "02:11:22:33:44:04",
@@ -329,7 +329,7 @@
     },
     {
       "type": "wifi5",
-      "source": "021122334405",
+      "source": "rgl5x",
       "target": "021122334408",
       "source_addr": "02:11:22:33:44:05",
       "target_addr": "02:11:22:33:44:08",

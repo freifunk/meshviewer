@@ -2,6 +2,7 @@ import Navigo, { Match } from "navigo";
 import { Language } from "./language.js";
 import { Link, NodeId } from "./node.js";
 import { Moment } from "moment";
+import { MESHVIEWER_ROUTE_PATTERN } from "./routerUtils.js";
 
 export interface Objects {
   nodeDict: NodeId[];
@@ -147,7 +148,7 @@ export class Router extends Navigo {
     )
       .on(
         // lang, viewValue, node, link, zoom, lat, lon
-        /^\/?(\w{2})?\/?(map|graph)?\/?([a-f\d]{12})?([a-f\d\-]{25})?\/?(?:(\d+)\/(-?[\d.]+)\/(-?[\d.]+))?(?:\?.*)?$/,
+        MESHVIEWER_ROUTE_PATTERN,
         (match?: Match) => {
           this.customRoute(match);
         },

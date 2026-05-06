@@ -23,6 +23,12 @@ This mode serves `dev-fixtures/config.json` as `/config.json` and `dev-fixtures/
 
 For timestamps in `dev-fixtures/meshviewer.json` you can use relative markers like `@now`, `@now-6d`, `@now-28h` or `@now-1w+2d`. They are expanded to ISO timestamps when the fixture endpoint is requested.
 
+### Unit tests
+
+For unit tests run:
+
+`npm run test:unit`
+
 ### Build and run using Docker
 
 You have to copy `config.example.json` to `public/config.json`.

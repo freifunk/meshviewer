@@ -137,12 +137,12 @@ Map human readable names to the domain from the individual node as stated in the
 
 Add Links to external Sites like wikis or monitoring. You might use one of the following variables as placeholders:
 
-| variable        | description                 |
-| --------------- | --------------------------- |
-| `{NODE_CUSTOM}` | node_name with custom regex |
-| `{NODE_ID}`     | mac address of the node     |
-| `{NODE_NAME}`   | hostname                    |
-| `{TIME}`        |                             |
+| variable        | description                                                                                                                      |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `{NODE_CUSTOM}` | node_name with custom regex                                                                                                      |
+| `{NODE_ID}`     | `node_id` from `meshviewer.json` (legacy 12-digit hex IDs, numeric IDs, or dotted IDs like `node.a03`; no `-` inside a node ID!) |
+| `{NODE_NAME}`   | hostname                                                                                                                         |
+| `{TIME}`        |                                                                                                                                  |
 
 Here are some examples:
 

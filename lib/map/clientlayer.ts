@@ -4,6 +4,7 @@ import * as helper from "../utils/helper.js";
 import { Node } from "../utils/node.js";
 import { ObjectsLinksAndNodes } from "../datadistributor.js";
 import { Coords } from "leaflet";
+import { nodeIdToStartAngle } from "./clientlayerUtils.js";
 
 export const ClientLayer = L.GridLayer.extend({
   mapRTree: function mapRTree(node: Node) {
@@ -22,7 +23,7 @@ export const ClientLayer = L.GridLayer.extend({
 
     // pre-calculate start angles
     this.data.all().forEach(function (positionedNode: { startAngle: number; node: Node }) {
-      positionedNode.startAngle = (parseInt(positionedNode.node.node_id.substr(10, 2), 16) / 255) * 2 * Math.PI;
+      positionedNode.startAngle = nodeIdToStartAngle(positionedNode.node.node_id);
     });
     this.redraw();
   },

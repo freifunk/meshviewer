@@ -20,4 +20,5 @@ jobs:
       - run: npm install
       - run: npm audit
       - run: npm run lint
+      - run: npm run test:unit
       - run: npm run build
