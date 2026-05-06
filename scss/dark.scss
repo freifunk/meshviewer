@@ -10,7 +10,7 @@ variables.$color-map-background: #0d151c;
 
 variables.$color-online: color.adjust(variables.$color-online, $lightness: 25%);
 
-.theme_night {
+.theme_dark {
   //@import 'modules/base';
   body,
   textarea,
