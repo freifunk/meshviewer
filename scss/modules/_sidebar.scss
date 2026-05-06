@@ -1,6 +1,7 @@
 @use "sass:color";
 @use "sass:map";
 @use "variables";
+@use "../mixins/icon";
 
 .sidebar {
   box-sizing: border-box;
@@ -134,7 +135,7 @@
   z-index: 1010;
 
   &::before {
-    content: "\f124";
+    @include icon.icon-mask("chevron-left");
     padding-right: 0.125em;
   }
 

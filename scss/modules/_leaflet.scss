@@ -1,6 +1,7 @@
 @use "sass:color";
 @use "sass:map";
 @use "variables";
+@use "../mixins/icon";
 
 .leaflet-pane,
 .leaflet-tile,
@@ -89,10 +90,7 @@
     }
 
     &::before {
-      content: "\f229";
-      font-family: variables.$font-family-icons;
-      speak: none;
-      text-rendering: auto;
+      @include icon.icon-mask("layer");
     }
   }
 
