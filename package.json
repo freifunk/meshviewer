@@ -59,6 +59,7 @@
   },
   "scripts": {
     "dev": "vite",
+    "dev:fixtures": "vite --mode fixtures",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "npm run lint:prettier && npm run lint:eslint",

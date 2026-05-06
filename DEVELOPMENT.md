@@ -13,6 +13,16 @@
 
 Hint: You can start a development server with `npm run dev`
 
+### Local fixture mode
+
+If you want to work against a committed local dummy dataset without touching `public/config.json`, use:
+
+`npm run dev:fixtures`
+
+This mode serves `dev-fixtures/config.json` as `/config.json` and `dev-fixtures/meshviewer.json` as `/fixtures/meshviewer.json` only in the Vite dev server. The files stay outside `public/` and are therefore not included in regular builds or release artifacts.
+
+For timestamps in `dev-fixtures/meshviewer.json` you can use relative markers like `@now`, `@now-6d`, `@now-28h` or `@now-1w+2d`. They are expanded to ISO timestamps when the fixture endpoint is requested.
+
 ### Build and run using Docker
 
 You have to copy `config.example.json` to `public/config.json`.
