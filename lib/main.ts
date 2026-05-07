@@ -7,6 +7,7 @@ import { Gui } from "./gui.js";
 import { Language } from "./utils/language.js";
 import * as helper from "./utils/helper.js";
 import { Link } from "./utils/node.js";
+import { resolveValidLinks } from "./mainDataUtils.js";
 
 export const main = () => {
   function handleData(data: { links: Link[]; nodes: Node[]; timestamp: string }[]) {
@@ -44,10 +45,9 @@ export const main = () => {
       nodeDict[node.node_id] = node;
     });
 
-    links.forEach(function (link) {
-      link.source = nodeDict[link.source];
-      link.target = nodeDict[link.target];
+    let validLinks = resolveValidLinks(links, nodeDict);
 
+    validLinks.forEach(function (link) {
       link.id = [link.source.node_id, link.target.node_id].join("-");
       link.source.neighbours.push({ node: link.target, link: link });
       link.target.neighbours.push({ node: link.source, link: link });
@@ -73,7 +73,7 @@ export const main = () => {
         new: newnodes,
         lost: lostnodes,
       },
-      links: links,
+      links: validLinks,
       nodeDict: nodeDict,
     };
   }

@@ -335,6 +335,15 @@
       "target_addr": "02:11:22:33:44:08",
       "source_tq": 0.95,
       "target_tq": 0.93
+    },
+    {
+      "type": "wifi24",
+      "source": "1004",
+      "target": "missing.a99",
+      "source_addr": "02:11:22:33:44:02",
+      "target_addr": "02:11:22:33:44:99",
+      "source_tq": 0.42,
+      "target_tq": 0.17
     }
   ]
 }
