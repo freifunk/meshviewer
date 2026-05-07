@@ -212,7 +212,8 @@ export class Router extends Navigo {
     if (e) {
       e.preventDefault();
     }
-    this.navigate(this.generateLink(data));
+    const target = this.generateLink(data);
+    this.navigate(target.startsWith("#") ? target.slice(1) : target);
   }
 
   getLang() {
