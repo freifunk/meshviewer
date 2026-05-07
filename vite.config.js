@@ -66,6 +66,7 @@ export default defineConfig(({ command, mode }) => ({
     sourcemap: true,
     rollupOptions: {
       input: {
+        embed: resolve(__dirname, "embed/index.html"),
         index: resolve(__dirname, "index.html"),
         offline: resolve(__dirname, "offline.html"),
       },
