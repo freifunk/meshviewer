@@ -306,6 +306,19 @@
         "enabled": false,
         "branch": "stable"
       }
+    },
+    {
+      "node_id": "sparse.a77",
+      "hostname": "Pollux",
+      "domain": "lab",
+      "firstseen": "@now-3d",
+      "lastseen": "@now-2h",
+      "is_online": false,
+      "location": {
+        "latitude": 52.5061,
+        "longitude": 13.3958
+      },
+      "is_gateway": false
     }
   ],
   "links": [

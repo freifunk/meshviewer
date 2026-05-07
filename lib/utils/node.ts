@@ -131,6 +131,9 @@ self.showFirmware = function showFirmware(node: Node) {
 };
 
 self.showUptime = function showUptime(node: Node) {
+  if (node.uptime == null) {
+    return undefined;
+  }
   return moment.utc(node.uptime).local().fromNow(true);
 };
 
@@ -139,10 +142,16 @@ self.showFirstSeen = function showFirstSeen(node: Node) {
 };
 
 self.showLoad = function showLoad(node: Node) {
+  if (node.loadavg == null) {
+    return undefined;
+  }
   return showBar(node.loadavg.toFixed(2), node.loadavg / (node.nproc || 1), node.loadavg >= node.nproc);
 };
 
 self.showRAM = function showRAM(node: Node) {
+  if (node.memory_usage == null) {
+    return undefined;
+  }
   return showBar(Math.round(node.memory_usage * 100) + " %", node.memory_usage, node.memory_usage >= 0.8);
 };
 
@@ -208,6 +217,9 @@ self.showClients = function showClients(node: Node) {
 };
 
 self.showIPs = function showIPs(node: Node) {
+  if (!node.addresses) {
+    return undefined;
+  }
   let string = [];
   let ips = node.addresses;
   ips.sort();
@@ -226,6 +238,9 @@ self.showIPs = function showIPs(node: Node) {
 };
 
 self.showAutoupdate = function showAutoupdate(node: Node) {
+  if (!node.autoupdater) {
+    return undefined;
+  }
   return node.autoupdater.enabled
     ? _.t("node.activated", { branch: node.autoupdater.branch })
     : _.t("node.deactivated");
