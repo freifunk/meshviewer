@@ -1,0 +1,18 @@
+{
+  "siteName": "Meshviewer Local Fixtures",
+  "dataPath": ["/fixtures/"],
+  "fixedCenter": [
+    [52.54, 13.0],
+    [52.48, 13.45]
+  ],
+  "mapLayers": [
+    {
+      "name": "CartoDB",
+      "url": "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+      "config": {
+        "maxZoom": 22,
+        "attribution": "&copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>, &copy; | <a href=\"https://carto.com/attribution\">CARTO</a>"
+      }
+    }
+  ]
+}
