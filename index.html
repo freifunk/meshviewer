@@ -4,18 +4,37 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
+    <meta name="color-scheme" content="light dark" />
     <title>Meshviewer PR Previews</title>
     <style>
+      :root {
+        --bg: #ffffff;
+        --fg: #222222;
+        --muted-bg: #f3f3f3;
+        --link: #0366d6;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #15191e;
+          --fg: #e6e6e6;
+          --muted-bg: #262b32;
+          --link: #6cb0ff;
+        }
+      }
       body {
         font-family: system-ui, sans-serif;
         max-width: 40rem;
         margin: 4rem auto;
         padding: 0 1rem;
         line-height: 1.5;
-        color: #222;
+        background: var(--bg);
+        color: var(--fg);
+      }
+      a {
+        color: var(--link);
       }
       code {
-        background: #f3f3f3;
+        background: var(--muted-bg);
         padding: 0.1em 0.3em;
         border-radius: 3px;
       }
