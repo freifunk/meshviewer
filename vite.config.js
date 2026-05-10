@@ -4,54 +4,7 @@ import { defineConfig } from "vite";
 import { checker } from "vite-plugin-checker";
 import { VitePWA } from "vite-plugin-pwa";
 import pkg from "./package.json";
-
-const relativeNowPattern = /^@now((?:[+-]\d+[smhdw])*)$/;
-
-function parseRelativeNow(value, now) {
-  const match = relativeNowPattern.exec(value);
-
-  if (!match) {
-    return value;
-  }
-
-  const date = new Date(now);
-  const offsets = match[1].match(/[+-]\d+[smhdw]/g) ?? [];
-  const unitToMilliseconds = {
-    s: 1000,
-    m: 60 * 1000,
-    h: 60 * 60 * 1000,
-    d: 24 * 60 * 60 * 1000,
-    w: 7 * 24 * 60 * 60 * 1000,
-  };
-
-  for (const offset of offsets) {
-    const sign = offset[0] === "+" ? 1 : -1;
-    const amount = Number.parseInt(offset.slice(1, -1), 10);
-    const unit = offset.at(-1);
-
-    date.setTime(date.getTime() + sign * amount * unitToMilliseconds[unit]);
-  }
-
-  return date.toISOString();
-}
-
-function resolveRelativeFixtureTimes(value, now = new Date()) {
-  if (typeof value === "string") {
-    return parseRelativeNow(value, now);
-  }
-
-  if (Array.isArray(value)) {
-    return value.map((entry) => resolveRelativeFixtureTimes(entry, now));
-  }
-
-  if (value && typeof value === "object") {
-    return Object.fromEntries(
-      Object.entries(value).map(([key, entry]) => [key, resolveRelativeFixtureTimes(entry, now)]),
-    );
-  }
-
-  return value;
-}
+import { resolveRelativeFixtureTimes } from "./scripts/fixture-times.mjs";
 
 function devFixturesPlugin() {
   const fixtureRoot = resolve(__dirname, "dev-fixtures");
@@ -120,39 +73,41 @@ export default defineConfig(({ command, mode }) => ({
   },
   plugins: [
     command === "serve" && mode === "fixtures" ? devFixturesPlugin() : null,
-    new VitePWA({
-      workbox: {
-        globPatterns: ["**/*.{js,css,html,ico,png,svg,ttf,woff,woff2}"],
-        navigateFallbackDenylist: [new RegExp(".*\.json")],
-      },
-      manifest: {
-        name: "Meshviewer",
-        short_name: "Meshviewer",
-        description:
-          "Meshviewer is an online visualization app to represent nodes and links on a map for Freifunk open mesh network.",
-        theme_color: "#ffffff",
-        icons: [
-          {
-            src: "pwa-64x64.png",
-            sizes: "64x64",
-            type: "image/png",
+    process.env.VITE_PREVIEW === "1"
+      ? null
+      : new VitePWA({
+          workbox: {
+            globPatterns: ["**/*.{js,css,html,ico,png,svg,ttf,woff,woff2}"],
+            navigateFallbackDenylist: [new RegExp(".*\.json")],
           },
-          {
-            src: "pwa-192x192.png",
-            sizes: "192x192",
-            type: "image/png",
+          manifest: {
+            name: "Meshviewer",
+            short_name: "Meshviewer",
+            description:
+              "Meshviewer is an online visualization app to represent nodes and links on a map for Freifunk open mesh network.",
+            theme_color: "#ffffff",
+            icons: [
+              {
+                src: "pwa-64x64.png",
+                sizes: "64x64",
+                type: "image/png",
+              },
+              {
+                src: "pwa-192x192.png",
+                sizes: "192x192",
+                type: "image/png",
+              },
+              {
+                src: "pwa-512x512.png",
+                sizes: "512x512",
+                type: "image/png",
+              },
+            ],
           },
-          {
-            src: "pwa-512x512.png",
-            sizes: "512x512",
-            type: "image/png",
+          devOptions: {
+            enabled: true,
           },
-        ],
-      },
-      devOptions: {
-        enabled: true,
-      },
-    }),
+        }),
     checker({
       // Run TypeScript checks
       typescript: true,
