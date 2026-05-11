@@ -23,7 +23,7 @@ jobs:
           git add -A
           git diff --cached --quiet || git commit -m "preview: cleanup PR #${{ github.event.pull_request.number }}"
           git push
-      - uses: marocchino/sticky-pull-request-comment@v2
+      - uses: marocchino/sticky-pull-request-comment@v3
         with:
           header: pr-preview
           message: "Preview for this PR has been removed."
