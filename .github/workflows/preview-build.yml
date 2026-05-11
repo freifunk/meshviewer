@@ -1,0 +1,29 @@
+name: PR Preview Build
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+concurrency:
+  group: preview-build-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      VITE_PREVIEW: "1"
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24.x
+      - run: npm ci
+      - run: npm run build
+      - run: node scripts/build-preview-fixtures.mjs
+      - run: echo "${{ github.event.pull_request.number }}" > build/.pr-number
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pr-preview-build
+          path: build/
+          retention-days: 7
+          include-hidden-files: true
