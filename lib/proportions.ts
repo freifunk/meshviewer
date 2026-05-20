@@ -53,7 +53,7 @@ const statusFieldMapping: Record<string, MappingEntry> = {
   "node.update": {
     keys: ["autoupdater"],
     nodeValueModifier: function (d: any) {
-      if (d.enabled) {
+      if (d && d.enabled) {
         return d.branch;
       }
       return _.t("node.deactivated");
