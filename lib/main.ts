@@ -10,6 +10,59 @@ import { Link } from "./utils/node.js";
 import { resolveValidLinks } from "./mainDataUtils.js";
 
 export const main = () => {
+  function normalizeHash(hash: string) {
+    if (!hash) {
+      return "";
+    }
+
+    return hash.startsWith("#") ? hash : `#${hash}`;
+  }
+
+  function replaceHash(hash: string) {
+    const nextHash = normalizeHash(hash);
+
+    if (!nextHash || nextHash === window.location.hash) {
+      return;
+    }
+
+    window.location.replace(nextHash);
+  }
+
+  function postHashToParent() {
+    console.log("post: ", window.location.hash);
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ hash: window.location.hash }, "*");
+    }
+  }
+
+  function initEmbedSync() {
+    if (window.parent === window) {
+      return;
+    }
+
+    // Attach to Navigo's internal methods to post the hash to the parent whenever it changes
+    type HistoryMethodName = "pushState" | "replaceState";
+    function wrapHistoryMethod(method: HistoryMethodName) {
+      const originalMethod = window.history[method].bind(window.history);
+
+      window.history[method] = function (...args) {
+        const result = originalMethod(...args);
+        postHashToParent();
+        return result;
+      } as History[HistoryMethodName];
+    }
+
+    wrapHistoryMethod("pushState");
+    wrapHistoryMethod("replaceState");
+
+    window.addEventListener("hashchange", postHashToParent);
+    window.addEventListener("message", function (event) {
+      if (event && event.data && typeof event.data.hash === "string") {
+        replaceHash(event.data.hash);
+      }
+    });
+  }
+
   function handleData(data: { links: Link[]; nodes: Node[]; timestamp: string }[]) {
     let config = window.config;
     let timestamp: string;
@@ -82,6 +135,8 @@ export const main = () => {
   let language = Language();
   let router = (window.router = new Router(language));
 
+  initEmbedSync();
+
   config.dataPath.forEach(function (_element, i) {
     config.dataPath[i] += "meshviewer.json";
   });
@@ -113,6 +168,7 @@ export const main = () => {
       gui.setData(nodesData);
       router.setData(nodesData);
       router.resolve();
+      postHashToParent();
 
       window.setInterval(function () {
         update().then(function (nodesData: any) {
