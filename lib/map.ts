@@ -3,7 +3,7 @@ import * as L from "leaflet";
 import { ClientLayer } from "./map/clientlayer.js";
 import { LabelLayer } from "./map/labellayer.js";
 import { Button } from "./map/button.js";
-import { maplibreGL } from "./map/maplibre-layer.js";
+import { loadMaplibreGL } from "./map/maplibre-layer.js";
 import "./map/activearea.js";
 import { Sidebar } from "./sidebar.js";
 import { LatLng } from "leaflet";
@@ -17,7 +17,11 @@ let options = {
   minZoom: 0,
 };
 
-export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typeof Sidebar>, buttons: HTMLElement) {
+export const Map = async function (
+  linkScale: (t: any) => any,
+  sidebar: ReturnType<typeof Sidebar>,
+  buttons: HTMLElement,
+) {
   const self: {
     setData: (data: ObjectsLinksAndNodes) => void;
     resetView: () => void;
@@ -89,12 +93,14 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
     return a.config.order - b.config.order;
   });
 
+  const maplibreGL = config.mapLayers.some((l) => l.type === "vector") ? await loadMaplibreGL() : undefined;
+
   let layers = config.mapLayers.map(function (layer) {
     return {
       name: layer.name,
       layer:
         layer.type == "vector"
-          ? maplibreGL({
+          ? maplibreGL!({
               style: layer.url,
               attributionControl: { customAttribution: layer.config.attribution },
               maxZoom: layer.config.maxZoom,
