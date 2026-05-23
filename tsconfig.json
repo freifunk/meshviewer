@@ -8,8 +8,11 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "strict": true,
+    "useUnknownInCatchVariables": true,
     "noImplicitThis": true,
-    "useUnknownInCatchVariables": true
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "noUncheckedIndexedAccess": true
   },
   "include": ["lib", "vite-env.d.ts"]
 }

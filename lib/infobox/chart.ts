@@ -26,9 +26,9 @@ function parseRelativeMs(t: string): number {
   if (t === "now") return Date.now();
   const m = t.match(/^now-(\d+)([smhdwMy])$/);
   if (!m) return Date.now();
-  const v = parseInt(m[1], 10);
+  const v = parseInt(m[1]!, 10);
   const mult: Record<string, number> = { s: 1e3, m: 6e4, h: 36e5, d: 864e5, w: 6048e5, M: 2592e6, y: 3154e7 };
-  return Date.now() - v * (mult[m[2]] ?? 1e3);
+  return Date.now() - v * (mult[m[2]!] ?? 1e3);
 }
 
 function applySubst(query: string, subst: Record<string, string>): string {
@@ -139,7 +139,7 @@ function renderD3Chart(
 ) {
   const { series: seriesList, xDomain, yDomain } = parsed;
   const seriesColor = (s: Series, i: number) =>
-    configMap.get(s.name)?.color ?? schemeTableau10[i % schemeTableau10.length];
+    configMap.get(s.name)?.color ?? schemeTableau10[i % schemeTableau10.length]!;
 
   const innerWidth = 440;
   const marginTop = 16,
