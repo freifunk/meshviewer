@@ -107,8 +107,7 @@ export class Router extends Navigo {
 
     if (lang && lang !== this.state.lang && lang === this.language.getLocale(lang)) {
       console.debug("Language change reload");
-      const prefix = match.hashString.startsWith("/") ? "" : "/";
-      location.hash = prefix + match.hashString;
+      location.hash = this.generateLink().substring(1);
       location.reload();
     }
 
