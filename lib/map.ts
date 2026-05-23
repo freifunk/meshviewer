@@ -1,9 +1,9 @@
 import * as L from "leaflet";
-import "@maplibre/maplibre-gl-leaflet";
 
 import { ClientLayer } from "./map/clientlayer.js";
 import { LabelLayer } from "./map/labellayer.js";
 import { Button } from "./map/button.js";
+import { maplibreGL } from "./map/maplibre-layer.js";
 import "./map/activearea.js";
 import { Sidebar } from "./sidebar.js";
 import { LatLng } from "leaflet";
@@ -94,7 +94,7 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
       name: layer.name,
       layer:
         layer.type == "vector"
-          ? L.maplibreGL({
+          ? maplibreGL({
               style: layer.url,
               attributionControl: { customAttribution: layer.config.attribution },
               maxZoom: layer.config.maxZoom,
