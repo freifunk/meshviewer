@@ -2,68 +2,68 @@ import { _ } from "./utils/language.js";
 import * as helper from "./utils/helper.js";
 import { Language } from "./utils/language.js";
 import { ObjectsLinksAndNodes } from "./datadistributor.js";
+import { CanSetData } from "./datadistributor.js";
+import { CanRender } from "./container.js";
 
-export const Legend = function (language: ReturnType<typeof Language>) {
-  const self = {
-    setData: undefined,
-    render: undefined,
-  };
-  let stats = document.createTextNode("");
-  let timestamp = document.createTextNode("");
+export const Legend = function (language: ReturnType<typeof Language>): CanSetData & CanRender {
+  const stats = document.createTextNode("");
+  const timestamp = document.createTextNode("");
 
-  self.setData = function setData(data: ObjectsLinksAndNodes) {
-    let totalNodes = Object.keys(data.nodeDict).length;
-    let totalOnlineNodes = data.nodes.online.length;
-    let totalClients = helper.sum(
-      data.nodes.online.map(function (node) {
-        return node.clients;
-      }),
-    );
-    let totalGateways = helper.sum(
-      data.nodes.online
-        .filter(function (node) {
-          return node.is_gateway;
-        })
-        .map(helper.one),
-    );
+  return {
+    setData(data: ObjectsLinksAndNodes) {
+      const nodeDict = data.nodeDict ?? {};
+      const totalNodes = Object.keys(nodeDict).length;
+      const totalOnlineNodes = data.nodes.online.length;
+      const totalClients = helper.sum(
+        data.nodes.online.map(function (node) {
+          return node.clients;
+        }),
+      );
+      const totalGateways = helper.sum(
+        data.nodes.online
+          .filter(function (node) {
+            return node.is_gateway;
+          })
+          .map(helper.one),
+      );
 
-    stats.textContent =
-      _.t("sidebar.nodes", { total: totalNodes, online: totalOnlineNodes }) +
-      " " +
-      _.t("sidebar.clients", { smart_count: totalClients }) +
-      " " +
-      _.t("sidebar.gateway", { smart_count: totalGateways });
+      stats.textContent =
+        _.t("sidebar.nodes", { total: totalNodes, online: totalOnlineNodes }) +
+        " " +
+        _.t("sidebar.clients", { smart_count: totalClients }) +
+        " " +
+        _.t("sidebar.gateway", { smart_count: totalGateways });
 
-    timestamp.textContent = _.t("sidebar.lastUpdate") + " " + data.timestamp.fromNow();
-  };
+      const ts = data.timestamp;
+      timestamp.textContent = _.t("sidebar.lastUpdate") + " " + (ts ? ts.fromNow() : "");
+    },
 
-  self.render = function render(el: HTMLElement) {
-    let config = window.config;
-    let h1 = document.createElement("h1");
-    h1.textContent = config.siteName;
-    el.appendChild(h1);
+    render(el: HTMLElement) {
+      const config = window.config;
+      const h1 = document.createElement("h1");
+      h1.textContent = config.siteName;
+      el.appendChild(h1);
 
-    language.languageSelect(el);
+      language.languageSelect(el);
 
-    let p = document.createElement("p");
-    p.classList.add("legend");
+      const p = document.createElement("p");
+      p.classList.add("legend");
 
-    p.appendChild(stats);
-    p.appendChild(document.createElement("br"));
-    p.appendChild(timestamp);
-
-    if (config.linkList) {
+      p.appendChild(stats);
       p.appendChild(document.createElement("br"));
-      config.linkList.forEach(function (link) {
-        let a = document.createElement("a");
-        a.innerText = link.title;
-        a.href = link.href;
-        p.appendChild(a);
-      });
-    }
+      p.appendChild(timestamp);
 
-    el.appendChild(p);
+      if (config.linkList) {
+        p.appendChild(document.createElement("br"));
+        config.linkList.forEach(function (link) {
+          const a = document.createElement("a");
+          a.innerText = link.title;
+          a.href = link.href;
+          p.appendChild(a);
+        });
+      }
+
+      el.appendChild(p);
+    },
   };
-
-  return self;
 };

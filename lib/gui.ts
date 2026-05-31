@@ -18,13 +18,14 @@ import { FilterGui } from "./filters/filtergui.js";
 import { HostnameFilter } from "./filters/hostname.js";
 import * as helper from "./utils/helper.js";
 import { Language } from "./utils/language.js";
+import { ObjectsLinksAndNodes } from "./datadistributor.js";
 import { cycleTheme, getTheme, initTheme } from "./theme.js";
 
 export const Gui = function (language: ReturnType<typeof Language>) {
-  const self = {
-    setData: undefined,
+  const self: { setData: (data: ObjectsLinksAndNodes) => void } = {
+    setData: () => {},
   };
-  let content: ReturnType<typeof Map>;
+  let content: ReturnType<typeof Map> | ReturnType<typeof ForceGraph> | null = null;
   let contentDiv: HTMLDivElement;
   let router = window.router;
   let config = window.config;
@@ -68,7 +69,10 @@ export const Gui = function (language: ReturnType<typeof Language>) {
     };
   }
 
-  let loader = document.getElementsByClassName("loader")[0];
+  const loader = document.querySelector(".loader");
+  if (!loader) {
+    throw new Error(".loader element missing from index.html");
+  }
   loader.classList.add("hide");
 
   contentDiv = document.createElement("div");

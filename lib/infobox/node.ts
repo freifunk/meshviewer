@@ -6,9 +6,17 @@ import * as helper from "../utils/helper.js";
 import nodef, { Neighbour, Node as NodeData, NodeId } from "../utils/node.js";
 import { NodeInfo } from "../config_default.js";
 
+// `config.nodeAttr.value` may be either a function or a string. When it is a
+// string the renderer first looks for a `show<value>` helper in nodef and falls
+// back to reading the attribute off the node itself. Both lookups are dynamic
+// against a config-provided key, which is captured by these local types.
+type NodeFieldValue = string | number | VNode | undefined;
+type NodefShowers = Record<string, ((n: NodeData) => NodeFieldValue) | undefined>;
+type NodeRecord = Record<string, NodeFieldValue>;
+
 const patch = init([classModule, propsModule, styleModule, eventListenersModule]);
 
-function showStatImg(nodeInfo: NodeInfo, node: NodeData): HTMLDivElement {
+function showStatImg(nodeInfo: NodeInfo, node: NodeData): VNode {
   let config = window.config;
   let subst = {
     "{NODE_ID}": node.node_id,
@@ -127,11 +135,6 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
     ]);
   }
 
-  const self = {
-    render: undefined,
-    setData: undefined,
-  };
-
   let headings = [
     {
       name: "",
@@ -181,103 +184,115 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
 
   let tableNeighbour = SortTable(headings, 1, renderNeighbourRow, ["node-links"]);
 
-  self.render = function render() {
-    let newContainer = h("div", [h("h2", node.hostname)]);
+  const self = {
+    render() {
+      const containerChildren: (VNode | string)[] = [h("h2", node.hostname)];
 
-    // Device picture
-    let devicePictures: VNode = showDevicePictures(config.devicePictures, node);
-    let devicePicturesContainerData = {
-      props: {
-        className: "hw-img-container",
-      },
-    };
-    newContainer.children.push(devicePictures ? h("div", devicePicturesContainerData, devicePictures) : h("div"));
+      // Device picture
+      const devicePictures = showDevicePictures(config.devicePictures, node);
+      const devicePicturesContainerData = {
+        props: {
+          className: "hw-img-container",
+        },
+      };
+      containerChildren.push(devicePictures ? h("div", devicePicturesContainerData, devicePictures) : h("div"));
 
-    let attributeTable = h("table", { props: { className: "attributes" } }, []);
+      const attributeRows: (VNode | string)[] = [];
 
-    let showDeprecation = false;
-    let showEol = false;
+      let showDeprecation = false;
+      let showEol = false;
 
-    config.nodeAttr.forEach(function (row) {
-      let field = node[String(row.value)];
-      if (typeof row.value === "function") {
-        field = row.value(node, nodeDict);
-      } else if (nodef["show" + row.value] !== undefined) {
-        field = nodef["show" + row.value](node);
-      }
-      // Check if device is in list of deprecated devices. If so, display the deprecation warning
-      if (config.deprecation_enabled) {
-        if (row.name === "node.hardware") {
-          if (config.eol && field && config.eol.includes(field)) {
+      const showers: NodefShowers = nodef;
+      const nodeRecord: NodeRecord = node as unknown as NodeRecord;
+
+      config.nodeAttr.forEach(function (row) {
+        let field: NodeFieldValue;
+        if (typeof row.value === "function") {
+          field = row.value(node, nodeDict);
+        } else {
+          const shower = showers[`show${row.value}`];
+          field = shower ? shower(node) : nodeRecord[row.value];
+        }
+
+        // Check if device is in list of deprecated devices. If so, display the deprecation warning
+        if (config.deprecation_enabled && row.name === "node.hardware" && typeof field === "string") {
+          if (config.eol && config.eol.includes(field)) {
             showEol = true;
-          } else if (config.deprecated && field && config.deprecated.includes(field)) {
+          } else if (config.deprecated && config.deprecated.includes(field)) {
             showDeprecation = true;
           }
         }
-      }
 
-      if (field) {
-        if (typeof field !== "object") {
-          field = h("td", field);
+        if (field) {
+          const cell: VNode = typeof field === "object" ? field : h("td", String(field));
+          const rowCells: VNode[] = [];
+          if (row.name !== undefined) {
+            rowCells.push(h("th", _.t(row.name)));
+          }
+          rowCells.push(cell);
+          attributeRows.push(h("tr", rowCells));
         }
-        attributeTable.children.push(h("tr", [row.name !== undefined ? h("th", _.t(row.name)) : null, field]));
-      }
-    });
-    attributeTable.children.push(h("tr", [h("th", _.t("node.gateway")), showGateway(node)]));
-
-    // Deprecation warning
-    if (showEol) {
-      // Add eol warning to the container
-      newContainer.children.push(
-        h("div", { props: { className: "eol" } }, [
-          h("div", {
-            props: {
-              innerHTML: config.eol_text || _.t("eol-text"),
-            },
-          }),
-        ]),
-      );
-    } else if (showDeprecation) {
-      // Add deprecation warning to the container
-      newContainer.children.push(
-        h("div", { props: { className: "deprecated" } }, [
-          h("div", {
-            props: {
-              innerHTML: config.deprecation_text || _.t("deprecation-text"),
-            },
-          }),
-        ]),
-      );
-    }
-
-    // Attributes
-    newContainer.children.push(attributeTable);
-
-    // // Neighbors
-    newContainer.children.push(h("h3", _.t("node.link", node.neighbours.length) + " (" + node.neighbours.length + ")"));
-    if (node.neighbours.length > 0) {
-      tableNeighbour.setData(node.neighbours);
-      newContainer.children.push(tableNeighbour.vnode);
-    }
-
-    // // Images
-    if (config.nodeInfos) {
-      let img = [];
-      config.nodeInfos.forEach(function (nodeInfo) {
-        img.push(h("h4", nodeInfo.name) as unknown as HTMLElement);
-        img.push(showStatImg(nodeInfo, node));
       });
-      newContainer.children.push(h("div", img));
-    }
+      attributeRows.push(h("tr", [h("th", _.t("node.gateway")), showGateway(node)]));
+      const attributeTable = h("table", { props: { className: "attributes" } }, attributeRows);
 
-    containerVnode = patch(containerVnode ?? container, newContainer);
+      // Deprecation warning
+      if (showEol) {
+        containerChildren.push(
+          h("div", { props: { className: "eol" } }, [
+            h("div", {
+              props: {
+                innerHTML: config.eol_text || _.t("eol-text"),
+              },
+            }),
+          ]),
+        );
+      } else if (showDeprecation) {
+        containerChildren.push(
+          h("div", { props: { className: "deprecated" } }, [
+            h("div", {
+              props: {
+                innerHTML: config.deprecation_text || _.t("deprecation-text"),
+              },
+            }),
+          ]),
+        );
+      }
+
+      // Attributes
+      containerChildren.push(attributeTable);
+
+      // Neighbours
+      containerChildren.push(h("h3", _.t("node.link", node.neighbours.length) + " (" + node.neighbours.length + ")"));
+      if (node.neighbours.length > 0) {
+        tableNeighbour.setData(node.neighbours);
+        if (tableNeighbour.vnode) {
+          containerChildren.push(tableNeighbour.vnode);
+        }
+      }
+
+      // Images
+      if (config.nodeInfos) {
+        const img: VNode[] = [];
+        config.nodeInfos.forEach(function (nodeInfo) {
+          img.push(h("h4", nodeInfo.name));
+          img.push(showStatImg(nodeInfo, node));
+        });
+        containerChildren.push(h("div", img));
+      }
+
+      const newContainer = h("div", containerChildren);
+      containerVnode = patch(containerVnode ?? container, newContainer);
+    },
+
+    setData(data: { nodeDict: { [x: NodeId]: NodeData } }) {
+      const fresh = data.nodeDict[node.node_id];
+      if (fresh) {
+        node = fresh;
+      }
+      self.render();
+    },
   };
 
-  self.setData = function setData(data: { nodeDict: { [x: NodeId]: NodeData } }) {
-    if (data.nodeDict[node.node_id]) {
-      node = data.nodeDict[node.node_id];
-    }
-    self.render();
-  };
   return self;
 }
