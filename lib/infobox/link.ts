@@ -26,7 +26,7 @@ function showStatImg(images: VNode[], linkInfo: LinkInfo, link: LinkData, time: 
   images.push(helper.showStat(linkInfo, subst));
 }
 
-export const Link = function (el: HTMLElement, linkData: LinkData[], linkScale: (t: any) => any) {
+export const Link = function (el: HTMLElement, linkData: [LinkData, ...LinkData[]], linkScale: (t: any) => any) {
   let container = document.createElement("div");
   el.appendChild(container);
   let containerVnode: VNode | undefined;
@@ -115,9 +115,14 @@ export const Link = function (el: HTMLElement, linkData: LinkData[], linkScale: 
     },
 
     setData(data: { links: LinkData[] }) {
-      linkData = data.links.filter(function (link) {
+      const filtered = data.links.filter(function (link) {
         return link.id === linkData[0].id;
       });
+      const [first, ...rest] = filtered;
+      if (!first) {
+        return;
+      }
+      linkData = [first, ...rest];
       self.render();
     },
   };

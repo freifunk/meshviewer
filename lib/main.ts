@@ -71,10 +71,10 @@ export const main = () => {
     let links: Link[] = [];
     const nodeDict: Record<string, Node> = {};
 
-    for (let i = 0; i < data.length; ++i) {
-      nodes = nodes.concat(data[i].nodes);
-      timestamp = data[i].timestamp;
-      links = links.concat(data[i].links);
+    for (const entry of data) {
+      nodes = nodes.concat(entry.nodes);
+      timestamp = entry.timestamp;
+      links = links.concat(entry.links);
     }
 
     nodes.forEach(function (node) {
@@ -107,12 +107,11 @@ export const main = () => {
       link.target.neighbours.push({ node: link.source, link: link });
 
       try {
-        const latlngs: L.LatLng[] = [];
-        latlngs.push(L.latLng(link.source.location.latitude, link.source.location.longitude));
-        latlngs.push(L.latLng(link.target.location.latitude, link.target.location.longitude));
-        (link as Link & { latlngs: L.LatLng[] }).latlngs = latlngs;
+        const source = L.latLng(link.source.location.latitude, link.source.location.longitude);
+        const target = L.latLng(link.target.location.latitude, link.target.location.longitude);
+        (link as Link & { latlngs: L.LatLng[] }).latlngs = [source, target];
 
-        link.distance = latlngs[0].distanceTo(latlngs[1]);
+        link.distance = source.distanceTo(target);
       } catch (e) {
         // ignore exception
       }

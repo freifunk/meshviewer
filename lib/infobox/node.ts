@@ -296,8 +296,9 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
     },
 
     setData(data: { nodeDict: { [x: NodeId]: NodeData } }) {
-      if (data.nodeDict[node.node_id]) {
-        node = data.nodeDict[node.node_id];
+      const fresh = data.nodeDict[node.node_id];
+      if (fresh) {
+        node = fresh;
       }
       self.render();
     },

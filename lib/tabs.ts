@@ -10,8 +10,8 @@ export const Tabs = function () {
   const container = document.createElement("div");
 
   function gotoTab(li: TabLi) {
-    for (let i = 0; i < tabs.children.length; i++) {
-      tabs.children[i].classList.remove("visible");
+    for (const child of tabs.children) {
+      child.classList.remove("visible");
     }
 
     while (container.firstChild) {
@@ -38,8 +38,8 @@ export const Tabs = function () {
 
       let anyVisible = false;
 
-      for (let i = 0; i < tabs.children.length; i++) {
-        if (tabs.children[i].classList.contains("visible")) {
+      for (const child of tabs.children) {
+        if (child.classList.contains("visible")) {
           anyVisible = true;
           break;
         }

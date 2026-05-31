@@ -22,7 +22,7 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
     setData: (data: ObjectsLinksAndNodes) => void;
     resetView: () => void;
     gotoNode: (node: Node, nodeDict: { [k: NodeId]: Node }) => void;
-    gotoLink: (link: Link[]) => void;
+    gotoLink: (link: [Link, ...Link[]]) => void;
     gotoLocation: (destination: L.LatLngLiteral & { zoom: number }) => void;
     destroy: () => void;
     render: (d: HTMLElement) => void;
@@ -111,7 +111,11 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
     };
   });
 
-  map.addLayer(layers[0].layer);
+  const firstLayer = layers[0];
+  if (!firstLayer) {
+    throw new Error("config.mapLayers must contain at least one layer");
+  }
+  map.addLayer(firstLayer.layer);
 
   layers.forEach(function (layer) {
     baseLayers[layer.name] = layer.layer;
@@ -203,12 +207,12 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
     nodes: { [k: NodeId]: { resetStyle: () => any } },
     links: { [k: LinkId]: { resetStyle: () => any } },
   ) {
-    Object.keys(nodes).forEach(function (id) {
-      nodes[id].resetStyle();
+    Object.values(nodes).forEach(function (entry) {
+      entry.resetStyle();
     });
 
-    Object.keys(links).forEach(function (id) {
-      links[id].resetStyle();
+    Object.values(links).forEach(function (entry) {
+      entry.resetStyle();
     });
   }
 
@@ -237,12 +241,18 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
       | undefined;
 
     if (highlight !== undefined) {
-      if (highlight.type === "node" && nodeDict[highlight.o.node_id]) {
-        target = nodeDict[highlight.o.node_id];
-        target.setStyle(config.map.highlightNode);
-      } else if (highlight.type === "link" && linkDict[highlight.o.id]) {
-        target = linkDict[highlight.o.id];
-        target.setStyle(config.map.highlightLink);
+      if (highlight.type === "node") {
+        const candidate = nodeDict[highlight.o.node_id];
+        if (candidate) {
+          target = candidate;
+          target.setStyle(config.map.highlightNode);
+        }
+      } else if (highlight.type === "link") {
+        const candidate = linkDict[highlight.o.id];
+        if (candidate) {
+          target = candidate;
+          target.setStyle(config.map.highlightLink);
+        }
       }
     }
 
@@ -279,7 +289,7 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
     updateView();
   };
 
-  self.gotoLink = function gotoLink(link: Link[]) {
+  self.gotoLink = function gotoLink(link: [Link, ...Link[]]) {
     button.disableTracking();
     highlight = { type: "link", o: link[0] };
     updateView();

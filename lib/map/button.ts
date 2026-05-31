@@ -213,16 +213,20 @@ export const Button = function (map: L.Map, buttons: HTMLElement): MapButtonApi 
     rulerLines.setLatLngs(latlngs);
     rulerLinesBg.setLatLngs(latlngs);
 
-    if (latlngs.length >= 2) {
-      const last = latlngs[latlngs.length - 2];
-      const segDist = latlng.distanceTo(latlngs[latlngs.length - 2]);
+    const last = latlngs[latlngs.length - 2];
+    if (last) {
+      const segDist = latlng.distanceTo(last);
 
       const midLat = (latlng.lat + last.lat) / 2;
       const midLng = (latlng.lng + last.lng) / 2;
 
       let total = 0;
       for (let i = 1; i < latlngs.length; i++) {
-        total += latlngs[i].distanceTo(latlngs[i - 1]);
+        const a = latlngs[i];
+        const b = latlngs[i - 1];
+        if (a && b) {
+          total += a.distanceTo(b);
+        }
       }
 
       const popup = L.popup({ closeButton: false, autoClose: false, className: "ruler-popup" })

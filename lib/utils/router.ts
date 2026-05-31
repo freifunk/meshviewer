@@ -13,7 +13,7 @@ export interface TargetLocation {
 export interface Target {
   resetView(): void;
   gotoNode(node: Node, nodeDict: { [k: NodeId]: Node }): any;
-  gotoLink(link: Link[]): any;
+  gotoLink(link: [Link, ...Link[]]): any;
   gotoLocation(locationData: TargetLocation): any;
 }
 
@@ -81,16 +81,19 @@ export class Router extends Navigo {
     const link = this.objects.links.filter(function (value) {
       return value.id === linkData.linkId;
     });
-    if (link.length) {
+    const [first, ...rest] = link;
+    if (first) {
+      const nonEmpty: [Link, ...Link[]] = [first, ...rest];
       this.targets.forEach(function (target) {
-        target.gotoLink(link);
+        target.gotoLink(nonEmpty);
       });
     }
   }
 
   view(data: { view: string }) {
-    if (data.view in this.views) {
-      this.views[data.view]();
+    const view = this.views[data.view];
+    if (view) {
+      view();
       this.state.view = data.view;
       this.resetView();
     }
@@ -180,13 +183,13 @@ export class Router extends Navigo {
   }
 
   paramsToUrl(params: { [param: string]: string[] }) {
-    const keys = Object.keys(params);
-    if (!keys.length) {
+    const entries = Object.entries(params);
+    if (!entries.length) {
       return "";
     }
     const qs = new URLSearchParams();
-    keys.forEach(function (k) {
-      qs.set(k, params[k].join(","));
+    entries.forEach(function ([k, v]) {
+      qs.set(k, v.join(","));
     });
     return "?" + qs.toString();
   }

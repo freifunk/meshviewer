@@ -3,7 +3,6 @@ type Theme = "light" | "dark" | "auto";
 // Keep STORAGE_KEY and DARK_CLASS in sync with the pre-paint inline script in index.html.
 const STORAGE_KEY = "meshviewer.theme";
 const DARK_CLASS = "theme_dark";
-const THEMES: Theme[] = ["light", "dark", "auto"];
 
 let inMemory: Theme = "auto";
 
@@ -56,8 +55,14 @@ export function getTheme(): Theme {
   return read();
 }
 
+const NEXT_THEME: Record<Theme, Theme> = {
+  light: "dark",
+  dark: "auto",
+  auto: "light",
+};
+
 export function cycleTheme(): Theme {
-  let next = THEMES[(THEMES.indexOf(read()) + 1) % THEMES.length];
+  const next = NEXT_THEME[read()];
   write(next);
   apply();
   return next;

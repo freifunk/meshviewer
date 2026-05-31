@@ -37,7 +37,11 @@ export const Main = function (
     sidebar.hide();
 
     el = document.createElement("div");
-    sidebar.container.children[1].appendChild(el);
+    const inner = sidebar.container.children[1];
+    if (!inner) {
+      throw new Error("sidebar layout missing inner container");
+    }
+    inner.appendChild(el);
 
     el.scrollIntoView(false);
     el.classList.add("infobox");
@@ -64,7 +68,7 @@ export const Main = function (
       node.render();
     },
 
-    gotoLink(linkData: LinkData[]) {
+    gotoLink(linkData: [LinkData, ...LinkData[]]) {
       create();
       link = LinkView(el!, linkData, linkScale) as unknown as InfoboxPanel;
       link.render();
