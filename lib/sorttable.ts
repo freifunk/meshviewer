@@ -67,10 +67,11 @@ export const SortTable = function (
         return h("th", { props: properties }, name);
       });
 
-      const sortFn = headings[currentSortIndex].sort ?? (() => 0);
+      const heading = headings[currentSortIndex];
+      const sortFn = heading?.sort ?? (() => 0);
       let links = data.slice(0).sort(sortFn);
 
-      if (headings[currentSortIndex].reverse ? !sortReverse : sortReverse) {
+      if (heading?.reverse ? !sortReverse : sortReverse) {
         links = links.reverse();
       }
 

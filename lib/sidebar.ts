@@ -3,8 +3,8 @@ import { CanRender } from "./container.js";
 
 export const Sidebar = function (el: HTMLElement) {
   const gridBreakpoints = {
-    lg: [992, 446],
-    xl: [1200, 560],
+    lg: [992, 446] as const,
+    xl: [1200, 560] as const,
   };
 
   const sidebar = document.createElement("div");
@@ -45,13 +45,13 @@ export const Sidebar = function (el: HTMLElement) {
     },
 
     hide() {
-      container.children[1].classList.add("hide");
-      container.children[2].classList.add("hide");
+      container.children[1]?.classList.add("hide");
+      container.children[2]?.classList.add("hide");
     },
 
     reveal() {
-      container.children[1].classList.remove("hide");
-      container.children[2].classList.remove("hide");
+      container.children[1]?.classList.remove("hide");
+      container.children[2]?.classList.remove("hide");
     },
 
     container: sidebar,

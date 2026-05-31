@@ -50,7 +50,7 @@ function drawHighlightNode(node: MapNode) {
   }
 }
 
-function drawHighlightLink(link: MapLink, to: number[]) {
+function drawHighlightLink(link: MapLink, to: [number, number]): [number, number] {
   if (highlight && highlight.type === "link" && link.o.id === highlight.id) {
     const config = window.config;
     ctx.lineTo(to[0], to[1]);
@@ -112,7 +112,7 @@ const self = {
     }
     ctx.beginPath();
     ctx.moveTo(link.source.x, link.source.y);
-    let to = [link.target.x, link.target.y];
+    let to: [number, number] = [link.target.x, link.target.y];
 
     to = drawHighlightLink(link, to);
 

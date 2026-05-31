@@ -18,7 +18,7 @@ export const ForceGraph = function (linkScale: (t: any) => any, sidebar: ReturnT
     setData: (data: ObjectsLinksAndNodes) => void;
     resetView: () => void;
     gotoNode: (nodeData: Node, nodeDict: { [k: NodeId]: Node }) => void;
-    gotoLink: (linkData: Link[]) => void;
+    gotoLink: (linkData: [Link, ...Link[]]) => void;
     gotoLocation: () => void;
     destroy: () => void;
     render: (d: HTMLElement) => void;
@@ -71,7 +71,7 @@ export const ForceGraph = function (linkScale: (t: any) => any, sidebar: ReturnT
     transform.k = p.k;
   }
 
-  function moveTo(callback: () => number[], forceMove?: boolean) {
+  function moveTo(callback: () => [number, number, number], forceMove?: boolean) {
     clearTimeout(movetoTimer);
     if (!forceMove && force && force.alpha() > 0.3) {
       movetoTimer = setTimeout(function timerOfMoveTo() {
@@ -79,10 +79,7 @@ export const ForceGraph = function (linkScale: (t: any) => any, sidebar: ReturnT
       }, 300);
       return;
     }
-    const result = callback();
-    const x = result[0];
-    const y = result[1];
-    const k = result[2];
+    const [x, y, k] = callback();
     const end = {
       k: k,
       x: (canvas.width + sidebar.getWidth()) / 2 - x * k,
@@ -248,21 +245,29 @@ export const ForceGraph = function (linkScale: (t: any) => any, sidebar: ReturnT
       return node;
     });
 
-    intLinks = data.links
-      .filter(function (link) {
-        return nd[link.source.node_id].is_online && nd[link.target.node_id].is_online;
-      })
-      .map(function (link) {
-        return {
+    intLinks = data.links.flatMap(function (link) {
+      const sourceRaw = nd[link.source.node_id];
+      const targetRaw = nd[link.target.node_id];
+      if (!sourceRaw?.is_online || !targetRaw?.is_online) {
+        return [];
+      }
+      const source = dictNodes[link.source.node_id];
+      const target = dictNodes[link.target.node_id];
+      if (!source || !target) {
+        return [];
+      }
+      return [
+        {
           o: link,
-          source: dictNodes[link.source.node_id],
-          target: dictNodes[link.target.node_id],
+          source,
+          target,
           color: linkScale(link.source_tq),
           color_to: linkScale(link.target_tq),
           x: 0,
           y: 0,
-        };
-      });
+        },
+      ];
+    });
 
     force!.nodes(intNodes);
     forceLink.links!(intLinks);
@@ -288,7 +293,7 @@ export const ForceGraph = function (linkScale: (t: any) => any, sidebar: ReturnT
       draw.setHighlight({ type: "node", id: nodeData.node_id });
       const node = dictNodes[nodeData.node_id];
       if (node) {
-        return [node.x!, node.y!, (ZOOM_MAX + 1) / 2];
+        return [node.x, node.y, (ZOOM_MAX + 1) / 2];
       }
       const config = window.config;
       draw.setHighlight(null);
@@ -296,14 +301,14 @@ export const ForceGraph = function (linkScale: (t: any) => any, sidebar: ReturnT
     });
   };
 
-  self.gotoLink = function gotoLink(linkData: Link[]) {
+  self.gotoLink = function gotoLink(linkData: [Link, ...Link[]]) {
     moveTo(function calcToLink() {
       draw.setHighlight({ type: "link", id: linkData[0].id });
       const link = intLinks.find(function (link) {
         return link.o.id === linkData[0].id;
       });
       if (link) {
-        return [(link.source.x! + link.target.x!) / 2, (link.source.y! + link.target.y!) / 2, ZOOM_MAX / 2 + ZOOM_MIN];
+        return [(link.source.x + link.target.x) / 2, (link.source.y + link.target.y) / 2, ZOOM_MAX / 2 + ZOOM_MIN];
       }
       const config = window.config;
       draw.setHighlight(null);

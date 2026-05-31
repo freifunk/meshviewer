@@ -20,7 +20,19 @@ type MappingEntry = {
   nodeValueModifier?: Modifier;
 };
 
-const statusFieldMapping: Record<string, MappingEntry> = {
+type StatusFieldKey =
+  | "node.status"
+  | "node.firmware"
+  | "node.baseversion"
+  | "node.deprecationStatus"
+  | "node.hardware"
+  | "node.visible"
+  | "node.update"
+  | "node.selectedGatewayIPv4"
+  | "node.selectedGatewayIPv6"
+  | "node.domain";
+
+const statusFieldMapping: Record<StatusFieldKey, MappingEntry> = {
   "node.status": {
     keys: ["is_online"],
     nodeValueModifier: function (d: any) {
@@ -244,7 +256,7 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
       }
       return compare(String(a[0]), String(b[0]));
     }
-    function processMapping(name: string, sorter?: (a: any, b: any) => number) {
+    function processMapping(name: StatusFieldKey, sorter?: (a: any, b: any) => number) {
       const m = statusFieldMapping[name];
       const arr = count(nodes, m.keys, m.nodeValueModifier, data);
       const sorted = sorter
@@ -279,12 +291,11 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     if (keys.length === 0) return;
 
     for (const [param, values] of Object.entries(params)) {
-      if (!statusFieldMapping[param]) {
+      if (!(param in statusFieldMapping)) {
         console.warn("unknown_filter_param", param);
         continue; // continue instead of return to process other params
       }
-
-      const mapping = statusFieldMapping[param];
+      const mapping = statusFieldMapping[param as StatusFieldKey];
 
       values.forEach(function (encodedValue) {
         const negate = encodedValue.startsWith("!");

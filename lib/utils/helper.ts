@@ -30,16 +30,16 @@ export const getJSON = function getJSON(url: string) {
   return get(url).then((text: unknown) => JSON.parse(String(text)));
 };
 
-export const sortByKey = function sortByKey(key: string, data: { [k: string]: Moment }[]) {
+export const sortByKey = function sortByKey<K extends string>(key: K, data: Array<Record<K, Moment>>) {
   return data.sort(function (a, b) {
     return b[key].unix() - a[key].unix();
   });
 };
 
-export const limit = function limit(
-  key: string,
+export const limit = function limit<K extends string>(
+  key: K,
   moment: Moment,
-  data: { [k: string]: { isAfter: (p: Moment) => boolean } }[],
+  data: Array<Record<K, { isAfter: (p: Moment) => boolean }>>,
 ) {
   return data.filter(function (entry) {
     return entry[key].isAfter(moment);
@@ -70,11 +70,9 @@ export const dictGet = function dictGet(dict: { [x: string]: any }, keys: string
 };
 
 export const listReplace = function listReplace(template: string, subst: ReplaceMapping) {
-  for (let key in subst) {
-    if (subst.hasOwnProperty(key)) {
-      let re = new RegExp(key, "g");
-      template = template.replace(re, subst[key]);
-    }
+  for (const [key, value] of Object.entries(subst)) {
+    let re = new RegExp(key, "g");
+    template = template.replace(re, value);
   }
   return template;
 };

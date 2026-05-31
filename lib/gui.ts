@@ -69,7 +69,10 @@ export const Gui = function (language: ReturnType<typeof Language>) {
     };
   }
 
-  let loader = document.getElementsByClassName("loader")[0];
+  const loader = document.querySelector(".loader");
+  if (!loader) {
+    throw new Error(".loader element missing from index.html");
+  }
   loader.classList.add("hide");
 
   contentDiv = document.createElement("div");

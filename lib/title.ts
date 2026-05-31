@@ -22,7 +22,7 @@ export const Title = function (): Target & { destroy: () => void } {
       setTitle(node.hostname);
     },
 
-    gotoLink(link: Link[]) {
+    gotoLink(link: [Link, ...Link[]]) {
       setTitle(link[0].source.hostname + " \u21D4 " + link[0].target.hostname);
     },
 

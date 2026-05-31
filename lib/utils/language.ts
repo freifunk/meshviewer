@@ -32,7 +32,11 @@ export const Language = function () {
 
   function getLocale(input?: LanguageCode): LanguageCode {
     let language: LanguageCode = input || (navigator.languages && navigator.languages[0]) || navigator.language;
-    let locale = config.supportedLocale[0];
+    const defaultLocale = config.supportedLocale[0];
+    if (defaultLocale === undefined) {
+      throw new Error("config.supportedLocale must contain at least one locale");
+    }
+    let locale = defaultLocale;
     config.supportedLocale.some(function (item: string) {
       if (language.indexOf(item) !== -1) {
         locale = item;
