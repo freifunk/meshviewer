@@ -91,8 +91,8 @@ export const main = () => {
       return !node.is_online;
     });
 
-    const newnodes = helper.limit("firstseen", age, helper.sortByKey("firstseen", online as any));
-    const lostnodes = helper.limit("lastseen", age, helper.sortByKey("lastseen", offline as any));
+    const newnodes = helper.limit("firstseen", age, helper.sortByKey("firstseen", online));
+    const lostnodes = helper.limit("lastseen", age, helper.sortByKey("lastseen", offline));
 
     nodes.forEach(function (node) {
       node.neighbours = [];
@@ -109,7 +109,7 @@ export const main = () => {
       try {
         const source = L.latLng(link.source.location.latitude, link.source.location.longitude);
         const target = L.latLng(link.target.location.latitude, link.target.location.longitude);
-        (link as Link & { latlngs: L.LatLng[] }).latlngs = [source, target];
+        link.latlngs = [source, target];
 
         link.distance = source.distanceTo(target);
       } catch (e) {
@@ -117,7 +117,7 @@ export const main = () => {
       }
     });
 
-    return {
+    const result: ObjectsLinksAndNodes = {
       now: moment(),
       timestamp: moment.utc(timestamp).local(),
       nodes: {
@@ -129,7 +129,8 @@ export const main = () => {
       },
       links: validLinks,
       nodeDict: nodeDict,
-    } as unknown as ObjectsLinksAndNodes;
+    };
+    return result;
   }
 
   const config = window.config;
@@ -181,11 +182,12 @@ export const main = () => {
         });
       }, 60000);
     })
-    .catch(function (e: Error) {
+    .catch(function (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
       const loader = document.querySelector(".loader");
       if (loader) {
         loader.innerHTML +=
-          e.message +
+          message +
           '<br /><br /><button onclick="location.reload(true)" class="btn text" aria-label="Try to reload">Try to reload</button><br /> or report to your community';
       }
       console.warn(e);

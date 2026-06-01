@@ -8,7 +8,9 @@ import { Node } from "./utils/node.js";
 
 const patch = init([classModule, propsModule, styleModule, eventListenersModule]);
 
-export const SimpleNodelist = function (nodesState: string, field: string, title: string) {
+type TimestampField = "firstseen" | "lastseen";
+
+export const SimpleNodelist = function (nodesState: string, field: TimestampField, title: string) {
   let listContainer: VNode = h("div");
 
   return {
@@ -48,8 +50,7 @@ export const SimpleNodelist = function (nodesState: string, field: string, title
             node.hostname,
           );
 
-          const raw = node as unknown as Record<string, moment.MomentInput>;
-          return h("tr", [h("td", td0Content), h("td", td1Content), h("td", moment(raw[field]).from(data.now))]);
+          return h("tr", [h("td", td0Content), h("td", td1Content), h("td", moment(node[field]).from(data.now))]);
         });
 
         newContainer.children = [

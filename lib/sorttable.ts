@@ -68,8 +68,8 @@ export const SortTable = function (
       });
 
       const heading = headings[currentSortIndex];
-      const sortFn = heading?.sort ?? (() => 0);
-      let links = data.slice(0).sort(sortFn);
+      // Falling back to undefined → Array.sort uses default lexicographic order, matching pre-TS6 behavior.
+      let links = data.slice(0).sort(heading?.sort);
 
       if (heading?.reverse ? !sortReverse : sortReverse) {
         links = links.reverse();

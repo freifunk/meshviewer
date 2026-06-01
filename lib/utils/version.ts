@@ -61,11 +61,9 @@ export class Version implements VersionLike {
       }
       return 0;
     }
-    const caDiff = ca[diff];
+    // diff came from findIndex(ca, …), so ca[diff] is in bounds.
+    const caDiff = ca[diff]!;
     const cbDiff = cb[diff];
-    if (caDiff === undefined) {
-      return 0;
-    }
     if (cbDiff === undefined) {
       return caDiff === "~" ? -1 : 1;
     }

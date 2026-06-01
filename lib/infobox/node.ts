@@ -6,6 +6,7 @@ import * as helper from "../utils/helper.js";
 import nodef, { Neighbour, Node as NodeData, NodeId } from "../utils/node.js";
 import { NodeInfo } from "../config_default.js";
 import { createChartVNode } from "./chart.js";
+import { ObjectsLinksAndNodes } from "../datadistributor.js";
 
 // `config.nodeAttr.value` may be either a function or a string. When it is a
 // string the renderer first looks for a `show<value>` helper in nodef and falls
@@ -295,8 +296,8 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
       containerVnode = patch(containerVnode ?? container, newContainer);
     },
 
-    setData(data: { nodeDict: { [x: NodeId]: NodeData } }) {
-      const fresh = data.nodeDict[node.node_id];
+    setData(data: ObjectsLinksAndNodes) {
+      const fresh = data.nodeDict?.[node.node_id];
       if (fresh) {
         node = fresh;
       }

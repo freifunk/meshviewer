@@ -64,13 +64,13 @@ export const Main = function (
 
     gotoNode(nodeData: NodeData, nodeDict: { [k: NodeId]: NodeData }) {
       create();
-      node = NodeView(el!, nodeData, linkScale, nodeDict) as unknown as InfoboxPanel;
+      node = NodeView(el!, nodeData, linkScale, nodeDict);
       node.render();
     },
 
     gotoLink(linkData: [LinkData, ...LinkData[]]) {
       create();
-      link = LinkView(el!, linkData, linkScale) as unknown as InfoboxPanel;
+      link = LinkView(el!, linkData, linkScale);
       link.render();
     },
 

@@ -30,17 +30,17 @@ export const getJSON = function getJSON(url: string) {
   return get(url).then((text: unknown) => JSON.parse(String(text)));
 };
 
-export const sortByKey = function sortByKey<K extends string>(key: K, data: Array<Record<K, Moment>>) {
+export const sortByKey = function sortByKey<K extends string, T extends Record<K, Moment>>(key: K, data: T[]): T[] {
   return data.sort(function (a, b) {
     return b[key].unix() - a[key].unix();
   });
 };
 
-export const limit = function limit<K extends string>(
+export const limit = function limit<K extends string, T extends Record<K, { isAfter: (p: Moment) => boolean }>>(
   key: K,
   moment: Moment,
-  data: Array<Record<K, { isAfter: (p: Moment) => boolean }>>,
-) {
+  data: T[],
+): T[] {
   return data.filter(function (entry) {
     return entry[key].isAfter(moment);
   });
@@ -248,9 +248,11 @@ export const fullscreen = function fullscreen(btn: HTMLButtonElement) {
       document.exitFullscreen?.bind(document) ??
       document.webkitExitFullscreen?.bind(document) ??
       document.mozCancelFullScreen?.bind(document);
-    exit?.();
-    btn.classList.remove("ion-full-exit");
-    btn.classList.add("ion-full-enter");
+    if (exit) {
+      exit();
+      btn.classList.remove("ion-full-exit");
+      btn.classList.add("ion-full-enter");
+    }
   }
 };
 

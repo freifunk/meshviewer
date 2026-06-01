@@ -1,5 +1,6 @@
 import { h, VNode } from "snabbdom";
 import moment, { Moment } from "moment";
+import type { LatLng } from "leaflet";
 import { _ } from "./language.js";
 import * as helper from "./helper.js";
 
@@ -17,6 +18,7 @@ export interface Link {
   target_mac?: string; // Same as _addr
   source_tq: number;
   target_tq: number;
+  latlngs?: LatLng[];
 }
 
 export interface Neighbour {

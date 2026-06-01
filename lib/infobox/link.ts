@@ -2,6 +2,7 @@ import { classModule, eventListenersModule, h, init, propsModule, styleModule, V
 import { _ } from "../utils/language.js";
 import * as helper from "../utils/helper.js";
 import { LinkInfo } from "../config_default.js";
+import { ObjectsLinksAndNodes } from "../datadistributor.js";
 import { Link as LinkData } from "../utils/node.js";
 import { createChartVNode } from "./chart.js";
 
@@ -114,7 +115,7 @@ export const Link = function (el: HTMLElement, linkData: [LinkData, ...LinkData[
       containerVnode = patch(containerVnode ?? container, newContainer);
     },
 
-    setData(data: { links: LinkData[] }) {
+    setData(data: ObjectsLinksAndNodes) {
       const filtered = data.links.filter(function (link) {
         return link.id === linkData[0].id;
       });

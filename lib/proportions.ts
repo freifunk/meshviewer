@@ -14,7 +14,7 @@ type TableNode = {
   vnode?: VNode;
 };
 
-type Modifier = (value: any, ctx?: ObjectsLinksAndNodes) => string;
+type Modifier = (value: any, ctx?: ObjectsLinksAndNodes) => string | null;
 
 type MappingEntry = {
   keys: string[];
@@ -236,13 +236,13 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
 
     function gatewayNameFromNodeId(nodeid: string | null) {
       if (nodeid == null || !data.nodeDict) {
-        return "";
+        return null;
       }
       const gateway = data.nodeDict[nodeid];
       if (gateway) {
         return gateway.hostname;
       }
-      return "";
+      return null;
     }
 
     // set nodeValueModifier for selectedGatewayIP filter later

@@ -38,8 +38,8 @@ export const Tabs = function () {
 
       let anyVisible = false;
 
-      for (const child of tabs.children) {
-        if (child.classList.contains("visible")) {
+      for (const existing of tabs.children) {
+        if (existing.classList.contains("visible")) {
           anyVisible = true;
           break;
         }

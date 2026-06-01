@@ -8,7 +8,7 @@ export const GenericNodeFilter = function (
   name: string,
   keys: string[],
   value: string,
-  nodeValueModifier: (a: any) => string,
+  nodeValueModifier: (a: any) => string | null,
 ): GenericFilter & CanRender {
   let negate = false;
   let refresh: () => any;

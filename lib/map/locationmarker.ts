@@ -7,7 +7,7 @@ export class LocationMarker extends L.CircleMarker {
   constructor(latlng: L.LatLngExpression) {
     const config = window.config;
     super(latlng, config.locate.innerCircle);
-    this.accuracyCircle = L.circle(latlng, { radius: 0, ...config.locate.accuracyCircle });
+    this.accuracyCircle = L.circle(latlng, { ...config.locate.accuracyCircle, radius: 0 });
     this.outerCircle = L.circleMarker(latlng, config.locate.outerCircle);
 
     this.on("remove", () => {
