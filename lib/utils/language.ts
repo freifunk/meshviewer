@@ -9,7 +9,7 @@ export let _: Polyglot & { phrases?: { [k: string]: any } };
 
 export const Language = function () {
   let router: Router;
-  let config = globalThis.config;
+  const config = window.config;
 
   function languageSelect(el: HTMLElement) {
     let select = document.createElement("select");
@@ -32,7 +32,11 @@ export const Language = function () {
 
   function getLocale(input?: LanguageCode): LanguageCode {
     let language: LanguageCode = input || (navigator.languages && navigator.languages[0]) || navigator.language;
-    let locale = config.supportedLocale[0];
+    const defaultLocale = config.supportedLocale[0];
+    if (defaultLocale === undefined) {
+      throw new Error("config.supportedLocale must contain at least one locale");
+    }
+    let locale = defaultLocale;
     config.supportedLocale.some(function (item: string) {
       if (language.indexOf(item) !== -1) {
         locale = item;
@@ -65,9 +69,9 @@ export const Language = function () {
   function init(routing: Router) {
     router = routing;
     /** global: _ */
-    _ = new Polyglot({ locale: getLocale(routing.getLang()), allowMissing: true });
+    _ = new Polyglot({ locale: getLocale(routing.getLang() ?? undefined), allowMissing: true });
     helper.getJSON("locale/" + _.locale() + ".json?" + config.cacheBreaker).then(setTranslation);
-    document.querySelector("html").setAttribute("lang", _.locale());
+    document.querySelector("html")!.setAttribute("lang", _.locale());
   }
 
   return {

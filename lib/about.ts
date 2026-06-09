@@ -6,13 +6,13 @@ export const About = function (picturesSource: string, picturesLicense: string):
     const iconConfig = window.config.icon;
 
     // apply custom styling from config.json to reflect changes in config.json
-    const applyColor = (selector: string, key: string) => {
+    const applyColor = (selector: string, key: keyof typeof iconConfig) => {
       // this applies the color config like Leaflet circleMarker config does
       const el = d.querySelector(selector) as HTMLElement;
       const cfgIcon = iconConfig[key];
 
-      el.style.backgroundColor = cfgIcon.fillColor;
-      el.style.borderColor = cfgIcon.color;
+      el.style.backgroundColor = cfgIcon.fillColor ?? "";
+      el.style.borderColor = cfgIcon.color ?? "";
     };
     applyColor(".legend-new .symbol", "new");
     applyColor(".legend-online .symbol", "online");
