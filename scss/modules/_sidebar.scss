@@ -34,7 +34,8 @@
     padding-bottom: 15px;
   }
 
-  img {
+  img,
+  .node-chart svg {
     padding: 0 variables.$button-distance 1em;
     box-sizing: border-box;
   }

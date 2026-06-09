@@ -54,6 +54,30 @@ interface Info {
 export type LinkInfo = Info;
 export type NodeInfo = Info;
 
+export interface GrafanaConfig {
+  url: string;
+  orgId?: number;
+}
+
+export interface ChartSeries {
+  name: string;
+  color?: string;
+  negate?: boolean;
+}
+
+export interface Chart {
+  name: string;
+  datasourceUid: string;
+  datasourceType: string;
+  query: string;
+  format?: string;
+  unitSuffix?: string;
+  from?: string;
+  to?: string;
+  maxDataPoints?: number;
+  series?: ChartSeries[];
+}
+
 export interface Link {
   title: string;
   href: string;
@@ -171,6 +195,10 @@ export interface Config {
   linkTypeInfos: LinkInfo[];
   linkInfos: LinkInfo[];
   nodeInfos: NodeInfo[];
+  grafana?: GrafanaConfig;
+  nodeCharts: Chart[];
+  linkCharts: Chart[];
+  globalCharts: Chart[];
   deprecation_enabled: boolean;
   eol: string[];
   deprecated: string[];
@@ -478,6 +506,9 @@ export const config: Config = {
   linkTypeInfos: [],
   linkInfos: [],
   nodeInfos: [],
+  nodeCharts: [],
+  linkCharts: [],
+  globalCharts: [],
   node_custom: "",
   devicePictures: "https://map.aachen.freifunk.net/pictures-svg/{MODEL_NORMALIZED}.svg",
   devicePicturesSource:

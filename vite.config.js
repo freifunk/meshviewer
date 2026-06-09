@@ -20,6 +20,18 @@ function devFixturesPlugin() {
         return JSON.stringify(resolveRelativeFixtureTimes(JSON.parse(body)), null, 2);
       },
     },
+    "/grafana-node.json": {
+      filePath: resolve(fixtureRoot, "grafana-node.json"),
+      contentType: "application/json; charset=utf-8",
+    },
+    "/grafana-link.json": {
+      filePath: resolve(fixtureRoot, "grafana-link.json"),
+      contentType: "application/json; charset=utf-8",
+    },
+    "/grafana-global.json": {
+      filePath: resolve(fixtureRoot, "grafana-global.json"),
+      contentType: "application/json; charset=utf-8",
+    },
   };
 
   return {
