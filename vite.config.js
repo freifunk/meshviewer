@@ -20,6 +20,10 @@ function devFixturesPlugin() {
         return JSON.stringify(resolveRelativeFixtureTimes(JSON.parse(body)), null, 2);
       },
     },
+    "/grafana-query.json": {
+      filePath: resolve(fixtureRoot, "grafana-query.json"),
+      contentType: "application/json; charset=utf-8",
+    },
   };
 
   return {

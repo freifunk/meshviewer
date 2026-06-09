@@ -5,6 +5,7 @@ import { SortTable } from "../sorttable.js";
 import * as helper from "../utils/helper.js";
 import nodef, { Neighbour, Node as NodeData, NodeId } from "../utils/node.js";
 import { NodeInfo } from "../config_default.js";
+import { createNodeChartVNode } from "./nodechart.js";
 
 const patch = init([classModule, propsModule, styleModule, eventListenersModule]);
 
@@ -268,6 +269,15 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
         img.push(showStatImg(nodeInfo, node));
       });
       newContainer.children.push(h("div", img));
+    }
+
+    // // Charts
+    if (config.nodeCharts.length) {
+      const charts = config.nodeCharts.flatMap((nodeChart) => [
+        h("h4", nodeChart.name),
+        createNodeChartVNode(nodeChart, node),
+      ]);
+      newContainer.children.push(h("div", charts));
     }
 
     containerVnode = patch(containerVnode ?? container, newContainer);

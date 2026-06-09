@@ -129,6 +129,19 @@ variables.$color-online: color.adjust(variables.$color-online, $lightness: 25%);
     }
   }
 
+  //@import 'modules/infobox';
+  .node-chart {
+    .node-chart-bg {
+      fill: color.adjust(variables.$color-white, $lightness: 4%);
+    }
+
+    .node-chart-grid {
+      line {
+        stroke: color.adjust(variables.$color-white, $lightness: 16%);
+      }
+    }
+  }
+
   //@import 'modules/button';
   button {
     background: color.adjust(variables.$color-white, $lightness: 10%);
