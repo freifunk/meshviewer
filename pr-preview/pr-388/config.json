@@ -4,14 +4,14 @@
     "./"
   ],
   "grafana": {
-    "url": "/_grafana",
+    "url": "./_grafana",
     "orgId": 1
   },
   "nodeCharts": [
     {
       "name": "Traffic",
       "datasourceUid": "fixture",
-      "datasourceType": "influxdb",
+      "datasourceType": "fixture",
       "query": "SELECT mean(\"rx\") AS RX, mean(\"tx\") AS TX FROM \"traffic\" WHERE \"node\" = '$node' AND $timeFilter GROUP BY time($interval) fill(null)",
       "unitSuffix": "B/s",
       "from": "now-7d",
