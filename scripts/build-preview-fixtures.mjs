@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from "fs";
+import { copyFileSync, readFileSync, writeFileSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 import { resolveRelativeFixtureTimes } from "./fixture-times.mjs";
@@ -18,5 +18,7 @@ const config = JSON.parse(configSource);
 // directory prefixes. Point at the sibling fixture we just wrote.
 config.dataPath = ["./"];
 writeFileSync(resolve(buildRoot, "config.json"), JSON.stringify(config, null, 2));
+
+copyFileSync(resolve(fixtureRoot, "grafana-query.json"), resolve(buildRoot, "grafana-query.json"));
 
 writeFileSync(resolve(buildRoot, "PREVIEW.txt"), `Built for PR preview at ${new Date().toISOString()}\n`);

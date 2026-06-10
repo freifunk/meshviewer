@@ -157,6 +157,50 @@ Here are some examples:
   ],
 ```
 
+## Node Charts
+
+Renders charts in the node infobox, by querying json data directly from Grafana.
+This reduces the CPU load on the Grafana server and allows for higher resolutions than the image rendering API.
+
+Requires Grafana's HTTP API to be accessible from the browser via a reverse proxy
+or with CORS allowed on the Grafana server.
+
+```json
+  "grafana": {
+    "url": "/_grafana", # Base URL of Grafana; use a reverse-proxy path or full HTTPS URL
+    "orgId": 1          # Grafana org ID, see `/admin/orgs` (default 1)
+  },
+  "nodeCharts": [
+    {
+      "name": "Traffic",                        # Section heading shown above the chart
+      "datasourceUid": "abc123xyz",             # Datasource UID — see below
+      "datasourceType": "influxdb",             # Grafana datasource plugin ID
+      "query": "SELECT mean(\"rx\") AS RX, mean(\"tx\") AS TX FROM \"traffic\" WHERE \"node\" = '$node' AND $timeFilter GROUP BY time($interval) fill(null)",
+                                                # $node is replaced by meshviewer; $timeFilter/$interval is replaced by Grafana
+      "format": ".2~s",                         # optional, d3-format specifier for axis and stats values (default ".2~s")
+      "unitSuffix": "B/s",                      # optional, string appended to formatted values, e.g. "B/s"
+      "from": "now-7d",                         # optional, time range start (default "now-7d")
+      "to": "now-1m",                           # optional, time range end (default "now-1m")
+      "maxDataPoints": 300,
+      "series": [
+        { "name": "RX", "color": "#73BF69" },
+        { "name": "TX", "color": "#F2495C", "negate": true }
+      ]
+    }
+  ],
+```
+
+**Finding the datasource UID:** In Grafana, go to Configuration → Data Sources → select the datasource.
+The UID is visible in the browser URL: `/datasources/edit/{uid}`.
+
+**Finding the query:** In Grafana, go to your panel, Edit and copy the query.
+
+**`series[]` fields:**
+
+- `name` — must match the series name returned by the query (column alias or measurement name)
+- `color` — any CSS color value, e.g. `"#73BF69"`
+- `negate` — set `true` to flip the sign, e.g. for TX on a combined RX/TX chart
+
 ## Global Infos
 
 TODO

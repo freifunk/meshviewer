@@ -36,7 +36,9 @@
     "link": "Link |||| Links",
     "node": "Node |||| Nodes",
     "new": "New nodes",
-    "missing": "Disappeared nodes"
+    "missing": "Disappeared nodes",
+    "chartNoData": "%{name}: No data",
+    "chartError": "%{name}: Error loading chart"
   },
   "location": {
     "location": "Location",
