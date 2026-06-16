@@ -7,6 +7,7 @@ import * as helper from "./utils/helper.js";
 import { _ } from "./utils/language.js";
 import { Node } from "./utils/node.js";
 import { compare } from "./utils/version.js";
+import { createChartVNode } from "./infobox/chart.js";
 
 type TableNode = {
   element: HTMLTableElement;
@@ -318,6 +319,13 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
         img.push(helper.showStat(globalInfo, subst));
       });
       patch(images, h("div", img));
+    }
+
+    if (config.globalCharts.length) {
+      let chartsEl = document.createElement("div");
+      el.appendChild(chartsEl);
+      const charts = config.globalCharts.flatMap((chart) => [h("h2", chart.name), createChartVNode(chart, {})]);
+      patch(chartsEl, h("div", charts));
     }
   };
 
