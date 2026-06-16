@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-06-16T14:02:06.108Z",
+  "timestamp": "2026-06-16T14:07:30.000Z",
   "nodes": [
     {
       "node_id": "021122334401",
       "hostname": "Sirius",
       "domain": "lab",
-      "firstseen": "2026-06-10T14:02:06.108Z",
-      "lastseen": "2026-06-16T14:02:06.108Z",
+      "firstseen": "2026-06-10T14:07:30.000Z",
+      "lastseen": "2026-06-16T14:07:30.000Z",
       "is_online": true,
       "location": {
         "latitude": 52.5119,
@@ -16,7 +16,7 @@
         "release": "1.0.0",
         "base": "openwrt"
       },
-      "uptime": "2026-06-15T14:02:06.108Z",
+      "uptime": "2026-06-15T14:07:30.000Z",
       "nproc": 1,
       "loadavg": 0.12,
       "memory_usage": 0.32,
@@ -42,8 +42,8 @@
       "node_id": "1004",
       "hostname": "Vega",
       "domain": "lab",
-      "firstseen": "2026-06-09T14:02:06.108Z",
-      "lastseen": "2026-06-16T14:02:06.108Z",
+      "firstseen": "2026-06-09T14:07:30.000Z",
+      "lastseen": "2026-06-16T14:07:30.000Z",
       "is_online": true,
       "location": {
         "latitude": 52.5127,
@@ -53,7 +53,7 @@
         "release": "1.0.0",
         "base": "openwrt"
       },
-      "uptime": "2026-06-14T14:02:06.108Z",
+      "uptime": "2026-06-14T14:07:30.000Z",
       "nproc": 1,
       "loadavg": 0.2,
       "memory_usage": 0.28,
@@ -79,8 +79,8 @@
       "node_id": "node.a03",
       "hostname": "Arktur",
       "domain": "lab",
-      "firstseen": "2026-05-09T14:02:06.108Z",
-      "lastseen": "2026-06-16T14:02:06.108Z",
+      "firstseen": "2026-05-09T14:07:30.000Z",
+      "lastseen": "2026-06-16T14:07:30.000Z",
       "is_online": true,
       "location": {
         "latitude": 52.5219,
@@ -90,7 +90,7 @@
         "release": "1.0.0",
         "base": "openwrt"
       },
-      "uptime": "2026-06-13T14:02:06.108Z",
+      "uptime": "2026-06-13T14:07:30.000Z",
       "nproc": 1,
       "loadavg": 0.16,
       "memory_usage": 0.27,
@@ -116,8 +116,8 @@
       "node_id": "021122334404",
       "hostname": "Aldebaran",
       "domain": "lab",
-      "firstseen": "2026-05-08T14:02:06.108Z",
-      "lastseen": "2026-06-16T14:02:06.108Z",
+      "firstseen": "2026-05-08T14:07:30.000Z",
+      "lastseen": "2026-06-16T14:07:30.000Z",
       "is_online": true,
       "location": {
         "latitude": 52.5212,
@@ -127,7 +127,7 @@
         "release": "1.0.0",
         "base": "openwrt"
       },
-      "uptime": "2026-06-16T02:02:06.108Z",
+      "uptime": "2026-06-16T02:07:30.000Z",
       "nproc": 1,
       "loadavg": 0.08,
       "memory_usage": 0.21,
@@ -153,8 +153,8 @@
       "node_id": "rgl5x",
       "hostname": "Rigel",
       "domain": "lab",
-      "firstseen": "2026-06-06T14:02:06.108Z",
-      "lastseen": "2026-06-16T14:02:06.108Z",
+      "firstseen": "2026-06-06T14:07:30.000Z",
+      "lastseen": "2026-06-16T14:07:30.000Z",
       "is_online": true,
       "location": {
         "latitude": 52.4987,
@@ -164,7 +164,7 @@
         "release": "1.0.0",
         "base": "openwrt"
       },
-      "uptime": "2026-06-12T14:02:06.108Z",
+      "uptime": "2026-06-12T14:07:30.000Z",
       "nproc": 1,
       "loadavg": 0.24,
       "memory_usage": 0.31,
@@ -190,8 +190,8 @@
       "node_id": "021122334406",
       "hostname": "Deneb",
       "domain": "lab",
-      "firstseen": "2026-06-05T14:02:06.108Z",
-      "lastseen": "2026-06-15T10:02:06.108Z",
+      "firstseen": "2026-06-05T14:07:30.000Z",
+      "lastseen": "2026-06-15T10:07:30.000Z",
       "is_online": false,
       "location": {
         "latitude": 52.5001,
@@ -201,7 +201,7 @@
         "release": "1.0.0",
         "base": "openwrt"
       },
-      "uptime": "2026-06-14T16:02:06.108Z",
+      "uptime": "2026-06-14T16:07:30.000Z",
       "nproc": 1,
       "loadavg": 0.05,
       "memory_usage": 0.19,
@@ -227,8 +227,8 @@
       "node_id": "021122334407",
       "hostname": "Capella",
       "domain": "lab",
-      "firstseen": "2026-06-04T14:02:06.108Z",
-      "lastseen": "2026-06-14T08:02:06.108Z",
+      "firstseen": "2026-06-04T14:07:30.000Z",
+      "lastseen": "2026-06-14T08:07:30.000Z",
       "is_online": false,
       "location": {
         "latitude": 52.5074,
@@ -238,7 +238,7 @@
         "release": "1.0.0",
         "base": "openwrt"
       },
-      "uptime": "2026-06-14T00:02:06.108Z",
+      "uptime": "2026-06-14T00:07:30.000Z",
       "nproc": 1,
       "loadavg": 0.03,
       "memory_usage": 0.17,
@@ -264,8 +264,8 @@
       "node_id": "021122334408",
       "hostname": "Antares",
       "domain": "lab",
-      "firstseen": "2026-06-03T14:02:06.108Z",
-      "lastseen": "2026-06-16T14:02:06.108Z",
+      "firstseen": "2026-06-03T14:07:30.000Z",
+      "lastseen": "2026-06-16T14:07:30.000Z",
       "is_online": true,
       "location": {
         "latitude": 52.4995,
@@ -275,7 +275,7 @@
         "release": "1.0.0",
         "base": "openwrt"
       },
-      "uptime": "2026-06-15T02:02:06.108Z",
+      "uptime": "2026-06-15T02:07:30.000Z",
       "nproc": 1,
       "loadavg": 0.14,
       "memory_usage": 0.26,
@@ -301,8 +301,8 @@
       "node_id": "021122334409",
       "hostname": "Alderaan",
       "domain": "lab",
-      "firstseen": "2026-02-16T14:02:06.108Z",
-      "lastseen": "2026-05-27T14:02:06.108Z",
+      "firstseen": "2026-02-16T14:07:30.000Z",
+      "lastseen": "2026-05-27T14:07:30.000Z",
       "is_online": false,
       "location": {
         "latitude": 52.4892,
@@ -312,7 +312,7 @@
         "release": "1.0.0",
         "base": "openwrt"
       },
-      "uptime": "2026-05-23T14:02:06.108Z",
+      "uptime": "2026-05-23T14:07:30.000Z",
       "nproc": 1,
       "loadavg": 0.01,
       "memory_usage": 0.15,
@@ -338,8 +338,8 @@
       "node_id": "sparse.a77",
       "hostname": "Pollux",
       "domain": "lab",
-      "firstseen": "2026-06-13T14:02:06.108Z",
-      "lastseen": "2026-06-16T12:02:06.108Z",
+      "firstseen": "2026-06-13T14:07:30.000Z",
+      "lastseen": "2026-06-16T12:07:30.000Z",
       "is_online": false,
       "location": {
         "latitude": 52.5061,
