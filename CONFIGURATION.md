@@ -177,7 +177,7 @@ TODO
 Nodes can display a picture of the device type. These need to be provided as svg pictures. There is an existing repository with these pictures (see source below).
 
 ```json
-  "devicePictures": "https://map.aachen.freifunk.net/pictures-svg/{MODEL_NORMALIZED}.svg",
+  "devicePictures": "https://freifunk.github.io/device-pictures/pictures-svg/{MODEL_NORMALIZED}.svg",
   "devicePicturesSource": "<a href='https://github.com/freifunk/device-pictures'>https://github.com/freifunk/device-pictures</a>",
   "devicePicturesLicense": "CC-BY-NC-SA 4.0",
 ```

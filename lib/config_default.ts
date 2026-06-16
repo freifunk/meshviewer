@@ -479,7 +479,7 @@ export const config: Config = {
   linkInfos: [],
   nodeInfos: [],
   node_custom: "",
-  devicePictures: "https://map.aachen.freifunk.net/pictures-svg/{MODEL_NORMALIZED}.svg",
+  devicePictures: "https://freifunk.github.io/device-pictures/pictures-svg/{MODEL_NORMALIZED}.svg",
   devicePicturesSource:
     "<a href='https://github.com/freifunk/device-pictures'>https://github.com/freifunk/device-pictures</a>",
   devicePicturesLicense: "CC-BY-NC-SA 4.0",
