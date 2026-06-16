@@ -21,6 +21,7 @@
     "visible": "Visible on the map",
     "update": "Auto update",
     "domain": "Domain",
+    "owner": "Contact",
     "gateway": "Gateway",
     "coordinates": "Coordinates",
     "contact": "Contact",
