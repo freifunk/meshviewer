@@ -17,6 +17,12 @@ const config = JSON.parse(configSource);
 // lib/main.ts appends "meshviewer.json" to each dataPath entry, so entries are
 // directory prefixes. Point at the sibling fixture we just wrote.
 config.dataPath = ["./"];
+// On PR previews, surface the PR title as the site headline (config.siteName
+// renders into the <h1> via textContent, so it is safe from injection).
+const prTitle = (process.env.PR_TITLE ?? "").trim();
+if (prTitle) {
+  config.siteName = prTitle;
+}
 writeFileSync(resolve(buildRoot, "config.json"), JSON.stringify(config, null, 2));
 
 for (const fixture of ["grafana-node.json", "grafana-link.json", "grafana-global.json"]) {
