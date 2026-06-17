@@ -210,7 +210,7 @@ export interface Config {
   devicePicturesSource: string;
   devicePicturesLicense: string;
   geo?: Geo[];
-  fixedCenter: LatLngBoundsExpression;
+  fixedCenter?: LatLngBoundsExpression;
 }
 
 export const config: Config = {

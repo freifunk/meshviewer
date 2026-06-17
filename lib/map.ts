@@ -18,21 +18,29 @@ let options = {
 };
 
 export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typeof Sidebar>, buttons: HTMLElement) {
-  const self = {
-    setData: undefined,
-    resetView: undefined,
-    gotoNode: undefined,
-    gotoLink: undefined,
-    gotoLocation: undefined,
-    destroy: undefined,
-    render: undefined,
+  const self: {
+    setData: (data: ObjectsLinksAndNodes) => void;
+    resetView: () => void;
+    gotoNode: (node: Node, nodeDict: { [k: NodeId]: Node }) => void;
+    gotoLink: (link: [Link, ...Link[]]) => void;
+    gotoLocation: (destination: L.LatLngLiteral & { zoom: number }) => void;
+    destroy: () => void;
+    render: (d: HTMLElement) => void;
+  } = {
+    setData: () => {},
+    resetView: () => {},
+    gotoNode: (_n, _d) => {},
+    gotoLink: () => {},
+    gotoLocation: () => {},
+    destroy: () => {},
+    render: () => {},
   };
   let savedView: { center: LatLng; zoom: number } | undefined;
   let config = window.config;
 
   let map: L.Map & { setActiveArea?: any };
   let layerControl: L.Control.Layers;
-  let baseLayers = {};
+  let baseLayers: Record<string, L.Layer> = {};
 
   function saveView() {
     savedView = {
@@ -42,7 +50,7 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
   }
 
   function contextMenuOpenLayerMenu() {
-    document.querySelector(".leaflet-control-layers").classList.add("leaflet-control-layers-expanded");
+    document.querySelector(".leaflet-control-layers")!.classList.add("leaflet-control-layers-expanded");
   }
 
   function mapActiveArea() {
@@ -71,7 +79,7 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
       (typeof item.config.start === "number" && item.config.start <= now.getHours()) ||
       (typeof item.config.end === "number" && item.config.end > now.getHours())
     ) {
-      item.config.order = item.config.start * -1;
+      item.config.order = (typeof item.config.start === "number" ? item.config.start : (item.config.end ?? i)) * -1;
     } else {
       item.config.order = i;
     }
@@ -103,7 +111,11 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
     };
   });
 
-  map.addLayer(layers[0].layer);
+  const firstLayer = layers[0];
+  if (!firstLayer) {
+    throw new Error("config.mapLayers must contain at least one layer");
+  }
+  map.addLayer(firstLayer.layer);
 
   layers.forEach(function (layer) {
     baseLayers[layer.name] = layer.layer;
@@ -149,7 +161,7 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
   });
 
   map.on("baselayerchange", function (e: any & { name: string }) {
-    const selectedLayer = baseLayers[e.name];
+    const selectedLayer = baseLayers[e.name] as L.TileLayer & { options: L.TileLayerOptions & { mode?: string } };
     if (selectedLayer && selectedLayer.options.maxZoom !== undefined) {
       const maxZoom = selectedLayer.options.maxZoom;
       map.options.maxZoom = maxZoom;
@@ -171,20 +183,36 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
     });
   });
 
-  let nodeDict = {};
-  let linkDict = {};
+  let nodeDict: Record<
+    string,
+    {
+      setStyle: (s: any) => void;
+      getLatLng: () => L.LatLngExpression;
+      getBounds?: () => L.LatLngBoundsExpression;
+      resetStyle: () => void;
+    }
+  > = {};
+  let linkDict: Record<
+    string,
+    {
+      setStyle: (s: any) => void;
+      getLatLng: () => L.LatLngExpression;
+      getBounds?: () => L.LatLngBoundsExpression;
+      resetStyle: () => void;
+    }
+  > = {};
   let highlight: { type: "node"; o: Node } | { type: "link"; o: Link } | undefined;
 
   function resetMarkerStyles(
     nodes: { [k: NodeId]: { resetStyle: () => any } },
     links: { [k: LinkId]: { resetStyle: () => any } },
   ) {
-    Object.keys(nodes).forEach(function (id) {
-      nodes[id].resetStyle();
+    Object.values(nodes).forEach(function (entry) {
+      entry.resetStyle();
     });
 
-    Object.keys(links).forEach(function (id) {
-      links[id].resetStyle();
+    Object.values(links).forEach(function (entry) {
+      entry.resetStyle();
     });
   }
 
@@ -195,8 +223,8 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
   function goto(element: { getLatLng: () => L.LatLngExpression; getBounds?: () => L.LatLngBoundsExpression }) {
     let bounds: L.LatLngBoundsExpression;
 
-    if ("getBounds" in element) {
-      bounds = element.getBounds();
+    if ("getBounds" in element && typeof element.getBounds === "function") {
+      bounds = element.getBounds()!;
     } else {
       bounds = L.latLngBounds([element.getLatLng()]);
     }
@@ -208,15 +236,23 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
 
   function updateView(nopanzoom?: boolean) {
     resetMarkerStyles(nodeDict, linkDict);
-    let target: { setStyle: any; getLatLng: () => L.LatLngExpression; getBounds?: () => L.LatLngBoundsExpression };
+    let target:
+      | { setStyle: any; getLatLng: () => L.LatLngExpression; getBounds?: () => L.LatLngBoundsExpression }
+      | undefined;
 
     if (highlight !== undefined) {
-      if (highlight.type === "node" && nodeDict[highlight.o.node_id]) {
-        target = nodeDict[highlight.o.node_id];
-        target.setStyle(config.map.highlightNode);
-      } else if (highlight.type === "link" && linkDict[highlight.o.id]) {
-        target = linkDict[highlight.o.id];
-        target.setStyle(config.map.highlightLink);
+      if (highlight.type === "node") {
+        const candidate = nodeDict[highlight.o.node_id];
+        if (candidate) {
+          target = candidate;
+          target.setStyle(config.map.highlightNode);
+        }
+      } else if (highlight.type === "link") {
+        const candidate = linkDict[highlight.o.id];
+        if (candidate) {
+          target = candidate;
+          target.setStyle(config.map.highlightLink);
+        }
       }
     }
 
@@ -225,7 +261,7 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
         goto(target);
       } else if (savedView) {
         map.setView(savedView.center, savedView.zoom);
-      } else {
+      } else if (config.fixedCenter) {
         setView(config.fixedCenter);
       }
     }
@@ -247,13 +283,13 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
     updateView();
   };
 
-  self.gotoNode = function gotoNode(node: Node) {
+  self.gotoNode = function gotoNode(node: Node, _nodeDict: { [k: NodeId]: Node }) {
     button.disableTracking();
     highlight = { type: "node", o: node };
     updateView();
   };
 
-  self.gotoLink = function gotoLink(link: Link[]) {
+  self.gotoLink = function gotoLink(link: [Link, ...Link[]]) {
     button.disableTracking();
     highlight = { type: "link", o: link[0] };
     updateView();

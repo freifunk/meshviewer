@@ -1,5 +1,5 @@
 import * as d3Interpolate from "d3-interpolate";
-import { Moment } from "moment";
+import moment, { Moment } from "moment";
 import { classModule, eventListenersModule, h, init, propsModule, styleModule, VNode } from "snabbdom";
 import { DataDistributor, Filter, GenericFilter, ObjectsLinksAndNodes } from "./datadistributor.js";
 import { GenericNodeFilter } from "./filters/genericnode.js";
@@ -14,14 +14,26 @@ type TableNode = {
   vnode?: VNode;
 };
 
-type Modifier = (value: any, ctx?: ObjectsLinksAndNodes) => string;
+type Modifier = (value: any, ctx?: ObjectsLinksAndNodes) => string | null;
 
 type MappingEntry = {
   keys: string[];
   nodeValueModifier?: Modifier;
 };
 
-const statusFieldMapping: Record<string, MappingEntry> = {
+type StatusFieldKey =
+  | "node.status"
+  | "node.firmware"
+  | "node.baseversion"
+  | "node.deprecationStatus"
+  | "node.hardware"
+  | "node.visible"
+  | "node.update"
+  | "node.selectedGatewayIPv4"
+  | "node.selectedGatewayIPv6"
+  | "node.domain";
+
+const statusFieldMapping: Record<StatusFieldKey, MappingEntry> = {
   "node.status": {
     keys: ["is_online"],
     nodeValueModifier: function (d: any) {
@@ -85,14 +97,18 @@ const statusFieldMapping: Record<string, MappingEntry> = {
 const patch = init([classModule, propsModule, styleModule, eventListenersModule]);
 
 export const Proportions = function (filterManager: ReturnType<typeof DataDistributor>) {
-  const self = {
-    setData: undefined,
-    render: undefined,
-    renderSingle: undefined,
+  const self: {
+    setData: (data: ObjectsLinksAndNodes) => void;
+    render: (el: HTMLElement) => void;
+    renderSingle: (el: HTMLElement, mappingName: string) => void;
+  } = {
+    setData: () => {},
+    render: () => {},
+    renderSingle: () => {},
   };
   let config = window.config;
   let scale = d3Interpolate.interpolate(config.forceGraph.tqFrom, config.forceGraph.tqTo);
-  let time: Moment;
+  let time: Moment = moment();
 
   let tables: Record<string, TableNode> = {};
   // flag set while we apply filters programmatically from the URL hash
@@ -137,10 +153,11 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
   // Watch filter changes and sync the URL accordingly (but ignore when we are
   // programmatically applying filters from the hash).
   filterManager.watchFilters({
-    filtersChanged: function (filters: GenericFilter[]) {
+    filtersChanged: function (filters: Filter[]) {
+      const gf = filters as GenericFilter[];
       const params: { [param: string]: string[] } = {};
 
-      filters.forEach(function (f) {
+      gf.forEach(function (f) {
         if (!f.getKey) return;
 
         const name = f.getName();
@@ -215,10 +232,13 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
 
   self.setData = function setData(data: ObjectsLinksAndNodes) {
     let nodes = data.nodes.all;
-    time = data.timestamp;
+    time = data.timestamp ?? moment();
 
     function gatewayNameFromNodeId(nodeid: string | null) {
-      let gateway = data.nodeDict[nodeid];
+      if (nodeid == null || !data.nodeDict) {
+        return null;
+      }
+      const gateway = data.nodeDict[nodeid];
       if (gateway) {
         return gateway.hostname;
       }
@@ -230,14 +250,14 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     statusFieldMapping["node.selectedGatewayIPv4"].nodeValueModifier = gatewayNameFromNodeId;
     statusFieldMapping["node.selectedGatewayIPv6"].nodeValueModifier = gatewayNameFromNodeId;
 
-    function sortVersionCountAndName(a, b) {
+    function sortVersionCountAndName(a: unknown[], b: unknown[]) {
       // descending by count
-      if (b[1] !== a[1]) {
-        return b[1] - a[1];
+      if ((b[1] as number) !== (a[1] as number)) {
+        return (b[1] as number) - (a[1] as number);
       }
-      return compare(a[0], b[0]);
+      return compare(String(a[0]), String(b[0]));
     }
-    function processMapping(name: string, sorter?: (a: any, b: any) => number) {
+    function processMapping(name: StatusFieldKey, sorter?: (a: any, b: any) => number) {
       const m = statusFieldMapping[name];
       const arr = count(nodes, m.keys, m.nodeValueModifier, data);
       const sorted = sorter
@@ -272,12 +292,11 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     if (keys.length === 0) return;
 
     for (const [param, values] of Object.entries(params)) {
-      if (!statusFieldMapping[param]) {
+      if (!(param in statusFieldMapping)) {
         console.warn("unknown_filter_param", param);
         continue; // continue instead of return to process other params
       }
-
-      const mapping = statusFieldMapping[param];
+      const mapping = statusFieldMapping[param as StatusFieldKey];
 
       values.forEach(function (encodedValue) {
         const negate = encodedValue.startsWith("!");
@@ -285,7 +304,12 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
           encodedValue = encodedValue.slice(1);
         }
 
-        let filter = GenericNodeFilter(param, mapping.keys, normalizeKey(encodedValue), mapping.nodeValueModifier);
+        let filter = GenericNodeFilter(
+          param,
+          mapping.keys,
+          normalizeKey(encodedValue),
+          mapping.nodeValueModifier ?? ((v: unknown) => String(v)),
+        );
         if (negate) {
           filter.setNegate(true);
         }
@@ -309,7 +333,7 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     if (config.globalInfos) {
       let images = document.createElement("div");
       el.appendChild(images);
-      let img = [];
+      const img: VNode[] = [];
       let subst = {
         "{TIME}": String(time.unix()),
         "{LOCALE}": _.locale(),

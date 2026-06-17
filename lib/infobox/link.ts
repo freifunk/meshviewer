@@ -2,12 +2,13 @@ import { classModule, eventListenersModule, h, init, propsModule, styleModule, V
 import { _ } from "../utils/language.js";
 import * as helper from "../utils/helper.js";
 import { LinkInfo } from "../config_default.js";
+import { ObjectsLinksAndNodes } from "../datadistributor.js";
 import { Link as LinkData } from "../utils/node.js";
 import { createChartVNode } from "./chart.js";
 
 const patch = init([classModule, propsModule, styleModule, eventListenersModule]);
 
-function showStatImg(images: HTMLElement[], linkInfo: LinkInfo, link: LinkData, time: string) {
+function showStatImg(images: VNode[], linkInfo: LinkInfo, link: LinkData, time: string) {
   let subst: ReplaceMapping = {
     "{SOURCE_ID}": link.source.node_id,
     "{SOURCE_NAME}": link.source.hostname.replace(/[^a-z0-9\-]/gi, "_"),
@@ -22,108 +23,110 @@ function showStatImg(images: HTMLElement[], linkInfo: LinkInfo, link: LinkData, 
     "{LOCALE}": _.locale(),
   };
 
-  images.push(h("h4", helper.listReplace(linkInfo.name, subst)) as unknown as HTMLElement);
+  images.push(h("h4", helper.listReplace(linkInfo.name, subst)));
   images.push(helper.showStat(linkInfo, subst));
 }
 
-export const Link = function (el: HTMLElement, linkData: LinkData[], linkScale: (t: any) => any) {
-  const self = {
-    render: undefined,
-    setData: undefined,
-  };
-
+export const Link = function (el: HTMLElement, linkData: [LinkData, ...LinkData[]], linkScale: (t: any) => any) {
   let container = document.createElement("div");
   el.appendChild(container);
   let containerVnode: VNode | undefined;
 
-  self.render = function render() {
-    let config = window.config;
-    let router = window.router;
-    let children = [];
-    let img = [];
-    let time = linkData[0].target.lastseen.format("DDMMYYYYHmmss");
+  const self = {
+    render() {
+      let config = window.config;
+      let router = window.router;
+      let children: VNode[] = [];
+      let img: VNode[] = [];
+      let time = linkData[0].target.lastseen.format("DDMMYYYYHmmss");
 
-    let newContainer = h("div", [
-      h(
-        "div",
-        h("h2", [
-          h(
-            "a",
-            {
-              props: { href: router.generateLink({ node: linkData[0].source.node_id }) },
-            },
-            linkData[0].source.hostname,
-          ),
-          h("span", " - "),
-          h(
-            "a",
-            {
-              props: { href: router.generateLink({ node: linkData[0].target.node_id }) },
-            },
-            linkData[0].target.hostname,
-          ),
-        ]),
-      ),
-    ]);
-
-    helper.attributeEntry(
-      children,
-      "node.hardware",
-      (linkData[0].source.model ? linkData[0].source.model + " – " : "") +
-        (linkData[0].target.model ? linkData[0].target.model : ""),
-    );
-    helper.attributeEntry(children, "node.distance", helper.showDistance(linkData[0]));
-
-    linkData.forEach(function (link) {
-      children.push(
-        h("tr", { props: { className: "header" } }, [h("th", _.t("node.connectionType")), h("th", link.type)]),
-      );
       helper.attributeEntry(
         children,
-        "node.tq",
-        h(
-          "span",
-          { style: { color: linkScale((link.source_tq + link.target_tq) / 2) } },
-          helper.showTq(link.source_tq) + " - " + helper.showTq(link.target_tq),
-        ),
+        "node.hardware",
+        (linkData[0].source.model ? linkData[0].source.model + " – " : "") +
+          (linkData[0].target.model ? linkData[0].target.model : ""),
       );
+      helper.attributeEntry(children, "node.distance", helper.showDistance(linkData[0]));
 
-      if (config.linkTypeInfos) {
-        config.linkTypeInfos.forEach(function (linkTypeInfo) {
-          showStatImg(img, linkTypeInfo, link, time);
+      linkData.forEach(function (link) {
+        children.push(
+          h("tr", { props: { className: "header" } }, [h("th", _.t("node.connectionType")), h("th", link.type)]),
+        );
+        helper.attributeEntry(
+          children,
+          "node.tq",
+          h(
+            "span",
+            { style: { color: linkScale((link.source_tq + link.target_tq) / 2) } },
+            helper.showTq(link.source_tq) + " - " + helper.showTq(link.target_tq),
+          ),
+        );
+
+        if (config.linkTypeInfos) {
+          config.linkTypeInfos.forEach(function (linkTypeInfo) {
+            showStatImg(img, linkTypeInfo, link, time);
+          });
+        }
+      });
+
+      if (config.linkInfos) {
+        config.linkInfos.forEach(function (linkInfo) {
+          showStatImg(img, linkInfo, linkData[0], time);
         });
       }
-    });
 
-    if (config.linkInfos) {
-      config.linkInfos.forEach(function (linkInfo) {
-        showStatImg(img, linkInfo, linkData[0], time);
-      });
-    }
-
-    newContainer.children.push(h("table", { props: { className: "attributes" } }, children));
-    newContainer.children.push(h("div", img));
-
-    // Charts
-    if (config.linkCharts.length) {
-      const charts = config.linkCharts.flatMap((chart) => [
-        h("h4", chart.name),
-        createChartVNode(chart, {
-          source: linkData[0].source.node_id,
-          target: linkData[0].target.node_id,
-        }),
+      let newContainer = h("div", [
+        h(
+          "div",
+          h("h2", [
+            h(
+              "a",
+              {
+                props: { href: router.generateLink({ node: linkData[0].source.node_id }) },
+              },
+              linkData[0].source.hostname,
+            ),
+            h("span", " - "),
+            h(
+              "a",
+              {
+                props: { href: router.generateLink({ node: linkData[0].target.node_id }) },
+              },
+              linkData[0].target.hostname,
+            ),
+          ]),
+        ),
+        h("table", { props: { className: "attributes" } }, children),
+        h("div", img),
       ]);
-      newContainer.children.push(h("div", charts));
-    }
 
-    containerVnode = patch(containerVnode ?? container, newContainer);
+      // Charts
+      if (config.linkCharts.length) {
+        const charts = config.linkCharts.flatMap((chart) => [
+          h("h4", chart.name),
+          createChartVNode(chart, {
+            source: linkData[0].source.node_id,
+            target: linkData[0].target.node_id,
+          }),
+        ]);
+        newContainer.children!.push(h("div", charts));
+      }
+
+      containerVnode = patch(containerVnode ?? container, newContainer);
+    },
+
+    setData(data: ObjectsLinksAndNodes) {
+      const filtered = data.links.filter(function (link) {
+        return link.id === linkData[0].id;
+      });
+      const [first, ...rest] = filtered;
+      if (!first) {
+        return;
+      }
+      linkData = [first, ...rest];
+      self.render();
+    },
   };
 
-  self.setData = function setData(data: { links: LinkData[] }) {
-    linkData = data.links.filter(function (link) {
-      return link.id === linkData[0].id;
-    });
-    self.render();
-  };
   return self;
 };

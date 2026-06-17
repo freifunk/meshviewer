@@ -22,7 +22,7 @@ const deepMerge = <T>(defaults: T, overrides: unknown): T => {
 export const load = async () => {
   const configResponse = await fetch("config.json");
   if (!configResponse.ok) {
-    document.querySelector(".loader").innerHTML =
+    document.querySelector(".loader")!.innerHTML =
       "config.json can not be loaded:" +
       "<br>" +
       configResponse.statusText +
@@ -34,6 +34,6 @@ export const load = async () => {
     return;
   }
   const config = await configResponse.json();
-  globalThis.config = deepMerge(defaultConfig, config);
+  window.config = deepMerge(defaultConfig, config);
   main();
 };

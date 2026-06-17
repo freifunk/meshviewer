@@ -16,7 +16,8 @@ describe("resolveValidLinks", () => {
     });
 
     expect(validLinks).toHaveLength(1);
-    expect(validLinks[0].source).toBe(nodeA);
-    expect(validLinks[0].target).toBe(nodeB);
+    const [first] = validLinks;
+    expect(first?.source).toBe(nodeA);
+    expect(first?.target).toBe(nodeB);
   });
 });

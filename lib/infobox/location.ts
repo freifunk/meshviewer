@@ -74,7 +74,7 @@ export const location = function (el: HTMLElement, position: TargetLocation) {
   }
 
   function copy2clip(id: string) {
-    let copyField: HTMLTextAreaElement = document.querySelector("#" + id);
+    const copyField = document.querySelector("#" + id) as HTMLTextAreaElement;
     copyField.select();
     try {
       document.execCommand("copy");
