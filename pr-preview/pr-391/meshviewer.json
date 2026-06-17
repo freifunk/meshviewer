@@ -1,0 +1,389 @@
+{
+  "timestamp": "2026-06-17T20:08:45.965Z",
+  "nodes": [
+    {
+      "node_id": "021122334401",
+      "hostname": "Sirius",
+      "domain": "lab",
+      "firstseen": "2026-06-11T20:08:45.965Z",
+      "lastseen": "2026-06-17T20:08:45.965Z",
+      "is_online": true,
+      "location": {
+        "latitude": 52.5119,
+        "longitude": 13.3041
+      },
+      "firmware": {
+        "release": "1.0.0",
+        "base": "openwrt"
+      },
+      "uptime": "2026-06-16T20:08:45.965Z",
+      "nproc": 1,
+      "loadavg": 0.12,
+      "memory_usage": 0.32,
+      "model": "TP-Link Archer C7 v2",
+      "clients": 4,
+      "clients_wifi24": 2,
+      "clients_wifi5": 1,
+      "clients_other": 1,
+      "is_gateway": false,
+      "addresses": [
+        "fd00::11",
+        "10.0.0.11"
+      ],
+      "gateway_nexthop": "1004",
+      "gateway": "1004",
+      "gateway6": "1004",
+      "autoupdater": {
+        "enabled": true,
+        "branch": "stable"
+      }
+    },
+    {
+      "node_id": "1004",
+      "hostname": "Vega",
+      "domain": "lab",
+      "firstseen": "2026-06-10T20:08:45.965Z",
+      "lastseen": "2026-06-17T20:08:45.965Z",
+      "is_online": true,
+      "location": {
+        "latitude": 52.5127,
+        "longitude": 13.3056
+      },
+      "firmware": {
+        "release": "1.0.0",
+        "base": "openwrt"
+      },
+      "uptime": "2026-06-15T20:08:45.965Z",
+      "nproc": 1,
+      "loadavg": 0.2,
+      "memory_usage": 0.28,
+      "model": "Ubiquiti NanoStation M5",
+      "clients": 3,
+      "clients_wifi24": 1,
+      "clients_wifi5": 2,
+      "clients_other": 0,
+      "is_gateway": true,
+      "addresses": [
+        "fd00::12",
+        "10.0.0.12"
+      ],
+      "gateway_nexthop": "1004",
+      "gateway": "1004",
+      "gateway6": "1004",
+      "autoupdater": {
+        "enabled": true,
+        "branch": "stable"
+      }
+    },
+    {
+      "node_id": "node.a03",
+      "hostname": "Arktur",
+      "domain": "lab",
+      "firstseen": "2026-05-10T20:08:45.965Z",
+      "lastseen": "2026-06-17T20:08:45.965Z",
+      "is_online": true,
+      "location": {
+        "latitude": 52.5219,
+        "longitude": 13.4132
+      },
+      "firmware": {
+        "release": "1.0.0",
+        "base": "openwrt"
+      },
+      "uptime": "2026-06-14T20:08:45.965Z",
+      "nproc": 1,
+      "loadavg": 0.16,
+      "memory_usage": 0.27,
+      "model": "MikroTik hAP ac2",
+      "clients": 6,
+      "clients_wifi24": 2,
+      "clients_wifi5": 3,
+      "clients_other": 1,
+      "is_gateway": true,
+      "addresses": [
+        "fd00::13",
+        "10.0.0.13"
+      ],
+      "gateway_nexthop": "node.a03",
+      "gateway": "node.a03",
+      "gateway6": "node.a03",
+      "autoupdater": {
+        "enabled": true,
+        "branch": "stable"
+      }
+    },
+    {
+      "node_id": "021122334404",
+      "hostname": "Aldebaran",
+      "domain": "lab",
+      "firstseen": "2026-05-09T20:08:45.965Z",
+      "lastseen": "2026-06-17T20:08:45.965Z",
+      "is_online": true,
+      "location": {
+        "latitude": 52.5212,
+        "longitude": 13.4148
+      },
+      "firmware": {
+        "release": "1.0.0",
+        "base": "openwrt"
+      },
+      "uptime": "2026-06-17T08:08:45.965Z",
+      "nproc": 1,
+      "loadavg": 0.08,
+      "memory_usage": 0.21,
+      "model": "AVM FRITZ!Box 4040",
+      "clients": 2,
+      "clients_wifi24": 1,
+      "clients_wifi5": 1,
+      "clients_other": 0,
+      "is_gateway": false,
+      "addresses": [
+        "fd00::14",
+        "10.0.0.14"
+      ],
+      "gateway_nexthop": "node.a03",
+      "gateway": "node.a03",
+      "gateway6": "node.a03",
+      "autoupdater": {
+        "enabled": true,
+        "branch": "stable"
+      }
+    },
+    {
+      "node_id": "rgl5x",
+      "hostname": "Rigel",
+      "domain": "lab",
+      "firstseen": "2026-06-07T20:08:45.965Z",
+      "lastseen": "2026-06-17T20:08:45.965Z",
+      "is_online": true,
+      "location": {
+        "latitude": 52.4987,
+        "longitude": 13.4035
+      },
+      "firmware": {
+        "release": "1.0.0",
+        "base": "openwrt"
+      },
+      "uptime": "2026-06-13T20:08:45.965Z",
+      "nproc": 1,
+      "loadavg": 0.24,
+      "memory_usage": 0.31,
+      "model": "TP-Link EAP225",
+      "clients": 8,
+      "clients_wifi24": 3,
+      "clients_wifi5": 4,
+      "clients_other": 1,
+      "is_gateway": true,
+      "addresses": [
+        "fd00::15",
+        "10.0.0.15"
+      ],
+      "gateway_nexthop": "rgl5x",
+      "gateway": "rgl5x",
+      "gateway6": "rgl5x",
+      "autoupdater": {
+        "enabled": true,
+        "branch": "stable"
+      }
+    },
+    {
+      "node_id": "021122334406",
+      "hostname": "Deneb",
+      "domain": "lab",
+      "firstseen": "2026-06-06T20:08:45.965Z",
+      "lastseen": "2026-06-16T16:08:45.965Z",
+      "is_online": false,
+      "location": {
+        "latitude": 52.5001,
+        "longitude": 13.4067
+      },
+      "firmware": {
+        "release": "1.0.0",
+        "base": "openwrt"
+      },
+      "uptime": "2026-06-15T22:08:45.965Z",
+      "nproc": 1,
+      "loadavg": 0.05,
+      "memory_usage": 0.19,
+      "model": "GL.iNet GL-B1300",
+      "clients": 0,
+      "clients_wifi24": 0,
+      "clients_wifi5": 0,
+      "clients_other": 0,
+      "is_gateway": false,
+      "addresses": [
+        "fd00::16",
+        "10.0.0.16"
+      ],
+      "gateway_nexthop": "rgl5x",
+      "gateway": "rgl5x",
+      "gateway6": "rgl5x",
+      "autoupdater": {
+        "enabled": false,
+        "branch": "stable"
+      }
+    },
+    {
+      "node_id": "021122334407",
+      "hostname": "Capella",
+      "domain": "lab",
+      "firstseen": "2026-06-05T20:08:45.965Z",
+      "lastseen": "2026-06-15T14:08:45.965Z",
+      "is_online": false,
+      "location": {
+        "latitude": 52.5074,
+        "longitude": 13.3221
+      },
+      "firmware": {
+        "release": "1.0.0",
+        "base": "openwrt"
+      },
+      "uptime": "2026-06-15T06:08:45.965Z",
+      "nproc": 1,
+      "loadavg": 0.03,
+      "memory_usage": 0.17,
+      "model": "Linksys EA8300",
+      "clients": 0,
+      "clients_wifi24": 0,
+      "clients_wifi5": 0,
+      "clients_other": 0,
+      "is_gateway": false,
+      "addresses": [
+        "fd00::17",
+        "10.0.0.17"
+      ],
+      "gateway_nexthop": "rgl5x",
+      "gateway": "rgl5x",
+      "gateway6": "rgl5x",
+      "autoupdater": {
+        "enabled": false,
+        "branch": "stable"
+      }
+    },
+    {
+      "node_id": "021122334408",
+      "hostname": "Antares",
+      "domain": "lab",
+      "firstseen": "2026-06-04T20:08:45.965Z",
+      "lastseen": "2026-06-17T20:08:45.965Z",
+      "is_online": true,
+      "location": {
+        "latitude": 52.4995,
+        "longitude": 13.4051
+      },
+      "firmware": {
+        "release": "1.0.0",
+        "base": "openwrt"
+      },
+      "uptime": "2026-06-16T08:08:45.965Z",
+      "nproc": 1,
+      "loadavg": 0.14,
+      "memory_usage": 0.26,
+      "model": "CPE210 v3",
+      "clients": 2,
+      "clients_wifi24": 1,
+      "clients_wifi5": 1,
+      "clients_other": 0,
+      "is_gateway": false,
+      "addresses": [
+        "fd00::18",
+        "10.0.0.18"
+      ],
+      "gateway_nexthop": "rgl5x",
+      "gateway": "rgl5x",
+      "gateway6": "rgl5x",
+      "autoupdater": {
+        "enabled": true,
+        "branch": "stable"
+      }
+    },
+    {
+      "node_id": "021122334409",
+      "hostname": "Alderaan",
+      "domain": "lab",
+      "firstseen": "2026-02-17T20:08:45.965Z",
+      "lastseen": "2026-05-28T20:08:45.965Z",
+      "is_online": false,
+      "location": {
+        "latitude": 52.4892,
+        "longitude": 13.3914
+      },
+      "firmware": {
+        "release": "1.0.0",
+        "base": "openwrt"
+      },
+      "uptime": "2026-05-24T20:08:45.965Z",
+      "nproc": 1,
+      "loadavg": 0.01,
+      "memory_usage": 0.15,
+      "model": "Netgear EX6150",
+      "clients": 0,
+      "clients_wifi24": 0,
+      "clients_wifi5": 0,
+      "clients_other": 0,
+      "is_gateway": false,
+      "addresses": [
+        "fd00::19",
+        "10.0.0.19"
+      ],
+      "gateway_nexthop": "021122334405",
+      "gateway": "021122334405",
+      "gateway6": "021122334405",
+      "autoupdater": {
+        "enabled": false,
+        "branch": "stable"
+      }
+    },
+    {
+      "node_id": "sparse.a77",
+      "hostname": "Pollux",
+      "domain": "lab",
+      "firstseen": "2026-06-14T20:08:45.965Z",
+      "lastseen": "2026-06-17T18:08:45.965Z",
+      "is_online": false,
+      "location": {
+        "latitude": 52.5061,
+        "longitude": 13.3958
+      },
+      "is_gateway": false
+    }
+  ],
+  "links": [
+    {
+      "type": "wifi24",
+      "source": "021122334401",
+      "target": "1004",
+      "source_addr": "02:11:22:33:44:01",
+      "target_addr": "02:11:22:33:44:02",
+      "source_tq": 0.93,
+      "target_tq": 0.91
+    },
+    {
+      "type": "wifi24",
+      "source": "node.a03",
+      "target": "021122334404",
+      "source_addr": "02:11:22:33:44:03",
+      "target_addr": "02:11:22:33:44:04",
+      "source_tq": 0.91,
+      "target_tq": 0.89
+    },
+    {
+      "type": "wifi5",
+      "source": "rgl5x",
+      "target": "021122334408",
+      "source_addr": "02:11:22:33:44:05",
+      "target_addr": "02:11:22:33:44:08",
+      "source_tq": 0.95,
+      "target_tq": 0.93
+    },
+    {
+      "type": "wifi24",
+      "source": "1004",
+      "target": "missing.a99",
+      "source_addr": "02:11:22:33:44:02",
+      "target_addr": "02:11:22:33:44:99",
+      "source_tq": 0.42,
+      "target_tq": 0.17
+    }
+  ]
+}
