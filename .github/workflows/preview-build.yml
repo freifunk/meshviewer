@@ -20,6 +20,8 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: node scripts/build-preview-fixtures.mjs
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
       - run: echo "${{ github.event.pull_request.number }}" > build/.pr-number
       - uses: actions/upload-artifact@v7
         with:
