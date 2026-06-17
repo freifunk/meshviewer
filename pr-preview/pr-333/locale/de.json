@@ -36,7 +36,9 @@
     "link": "Verbindung |||| Verbindungen",
     "node": "Knoten",
     "new": "Neue Knoten",
-    "missing": "Verschwundene Knoten"
+    "missing": "Verschwundene Knoten",
+    "chartNoData": "%{name}: Keine Daten",
+    "chartError": "%{name}: Fehler beim Laden des Diagramms"
   },
   "location": {
     "location": "Standort",
