@@ -1,0 +1,86 @@
+{
+  "siteName": "FIX: vector map layers + code-split maplibre-gl out of the main bundle",
+  "dataPath": [
+    "./"
+  ],
+  "grafana": {
+    "url": "./_grafana",
+    "orgId": 1
+  },
+  "nodeCharts": [
+    {
+      "name": "Traffic",
+      "datasourceUid": "grafana-node.json",
+      "datasourceType": "fixture",
+      "query": "SELECT mean(\"rx\") AS RX, mean(\"tx\") AS TX FROM \"traffic\" WHERE \"node\" = '$node' AND $timeFilter GROUP BY time($interval) fill(null)",
+      "unitSuffix": "B/s",
+      "from": "now-7d",
+      "to": "now-1m",
+      "maxDataPoints": 300,
+      "series": [
+        {
+          "name": "RX",
+          "color": "#73BF69"
+        },
+        {
+          "name": "TX",
+          "color": "#F2495C",
+          "negate": true
+        }
+      ]
+    }
+  ],
+  "linkCharts": [
+    {
+      "name": "TQ",
+      "datasourceUid": "grafana-link.json",
+      "datasourceType": "fixture",
+      "query": "union(alias(avg by () (avg_over_time(link_tq{source.id=~\"^$source$\",target.id=~\"^$target$\"})), \"Source → Target\"), alias(avg by () (avg_over_time(link_tq{source.id=~\"^$target$\",target.id=~\"^$source$\"})), \"Target → Source\"))",
+      "series": [
+        {
+          "name": "Source → Target",
+          "color": "#73BF69"
+        },
+        {
+          "name": "Target → Source",
+          "color": "#F2495C"
+        }
+      ]
+    }
+  ],
+  "globalCharts": [
+    {
+      "name": "Clients",
+      "datasourceUid": "grafana-global.json",
+      "datasourceType": "fixture",
+      "query": "alias(sum(node_clients.total), \"Clients\")",
+      "format": ".0f",
+      "series": [
+        {
+          "name": "Clients",
+          "color": "#73BF69"
+        }
+      ]
+    }
+  ],
+  "fixedCenter": [
+    [
+      52.54,
+      13
+    ],
+    [
+      52.48,
+      13.45
+    ]
+  ],
+  "mapLayers": [
+    {
+      "name": "CartoDB",
+      "url": "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+      "config": {
+        "maxZoom": 22,
+        "attribution": "&copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>, &copy; | <a href=\"https://carto.com/attribution\">CARTO</a>"
+      }
+    }
+  ]
+}
