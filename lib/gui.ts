@@ -75,7 +75,10 @@ export const Gui = function (language: ReturnType<typeof Language>) {
 
   function mkView(mapViewComponent: typeof Map | typeof ForceGraph) {
     return function () {
-      void addContent(mapViewComponent);
+      // Return the promise so the router can await the (possibly async) content
+      // mount before it applies the view — otherwise resetView/gotoNode run
+      // before the target is registered and the initial setView is lost.
+      return addContent(mapViewComponent);
     };
   }
 
