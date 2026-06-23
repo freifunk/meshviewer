@@ -19,4 +19,5 @@ RUN npm run lint && npm run build
 FROM nginx:1.31.2-alpine
 COPY --from=build /code/build/ /usr/share/nginx/html
 COPY --from=build /code/config.example.json /usr/share/nginx/html/
+COPY --from=build /code/embed/embed.js /usr/share/nginx/html/
 EXPOSE 80
