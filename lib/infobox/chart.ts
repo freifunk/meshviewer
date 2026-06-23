@@ -183,13 +183,18 @@ function renderD3Chart(
         .tickFormat(() => ""),
     );
 
+  // Pick an x-axis tick format that fits the visible span: time-of-day for
+  // short ranges (<= 2 days), day.month otherwise.
+  const spanMs = xDomain[1] - xDomain[0];
+  const xTickFormat = spanMs <= 2 * 864e5 ? timeFormat("%H:%M") : timeFormat("%d.%m.");
+
   svg
     .append("g")
     .attr("transform", `translate(0,${innerHeight})`)
     .call(
       axisBottom(xScale)
         .ticks(5)
-        .tickFormat(timeFormat("%m/%d") as (d: Date | { valueOf(): number }) => string),
+        .tickFormat(xTickFormat as (d: Date | { valueOf(): number }) => string),
     );
   svg.append("g").call(yAxis);
 
