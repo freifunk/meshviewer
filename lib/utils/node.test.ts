@@ -39,6 +39,21 @@ describe("node utils with sparse nodes", () => {
     expect(nodef.showAutoupdate(sparseNode)).toBeUndefined();
   });
 
+  it("brackets IPv6 but not IPv4 addresses in node web-interface links", () => {
+    const node = { addresses: ["10.200.7.237", "2001:db8::1", "fe80::1"] } as any;
+
+    const td = nodef.showIPs(node) as any;
+    const parts: any[] = td.args[1];
+    const anchors = parts.filter((p) => p && p.args && p.args[0] === "a");
+    const hrefs = anchors.map((a) => a.args[1].props.href);
+    const linkedIps = anchors.map((a) => a.args[2]);
+
+    // IPv4: no brackets; IPv6: brackets; link-local (fe80::) not linked at all
+    expect(hrefs).toContain("http://10.200.7.237/");
+    expect(hrefs).toContain("http://[2001:db8::1]/");
+    expect(linkedIps).not.toContain("fe80::1");
+  });
+
   it("returns undefined for null optional node attributes from live data", () => {
     const nullNode = {
       node_id: "1450",
