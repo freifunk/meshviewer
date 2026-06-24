@@ -216,10 +216,12 @@ const self = {
         parts.push(h("br"));
       }
 
-      if (ip.indexOf("fe80:") !== 0) {
-        parts.push(h("a", { props: { href: "http://[" + ip + "]/", target: "_blank" } }, ip));
-      } else {
+      if (ip.indexOf("fe80:") === 0) {
         parts.push(ip);
+      } else {
+        // Bracket notation is only valid for IPv6 literals; IPv4 must stay unbracketed
+        const host = ip.indexOf(":") !== -1 ? "[" + ip + "]" : ip;
+        parts.push(h("a", { props: { href: "http://" + host + "/", target: "_blank" } }, ip));
       }
     });
     return h("td", parts);
