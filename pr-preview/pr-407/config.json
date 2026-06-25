@@ -73,6 +73,12 @@
       13.45
     ]
   ],
+  "domainNames": [
+    {
+      "domain": "lab",
+      "name": "Lab Domain"
+    }
+  ],
   "mapLayers": [
     {
       "name": "CartoDB",
