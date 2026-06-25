@@ -13,6 +13,7 @@ vi.mock("./language.js", () => ({
   },
 }));
 
+import { h } from "snabbdom";
 import nodef from "./node.js";
 
 describe("node utils with sparse nodes", () => {
@@ -39,19 +40,18 @@ describe("node utils with sparse nodes", () => {
     expect(nodef.showAutoupdate(sparseNode)).toBeUndefined();
   });
 
-  it("brackets IPv6 but not IPv4 addresses in node web-interface links", () => {
+  it("renders IPv4 unbracketed, IPv6 bracketed, and fe80 as unlinked text", () => {
     const node = { addresses: ["10.200.7.237", "2001:db8::1", "fe80::1"] } as any;
 
     const td = nodef.showIPs(node) as any;
-    const parts: any[] = td.args[1];
-    const anchors = parts.filter((p) => p && p.args && p.args[0] === "a");
-    const hrefs = anchors.map((a) => a.args[1].props.href);
-    const linkedIps = anchors.map((a) => a.args[2]);
 
-    // IPv4: no brackets; IPv6: brackets; link-local (fe80::) not linked at all
-    expect(hrefs).toContain("http://10.200.7.237/");
-    expect(hrefs).toContain("http://[2001:db8::1]/");
-    expect(linkedIps).not.toContain("fe80::1");
+    expect(td.args[1]).toEqual([
+      h("a", { props: { href: "http://10.200.7.237/", target: "_blank" } }, "10.200.7.237"),
+      h("br"),
+      h("a", { props: { href: "http://[2001:db8::1]/", target: "_blank" } }, "2001:db8::1"),
+      h("br"),
+      "fe80::1",
+    ]);
   });
 
   it("returns undefined for null optional node attributes from live data", () => {
