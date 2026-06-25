@@ -2,47 +2,56 @@
 
 ## Building
 
-### Build yourself
+For all methods you need to clone this repository and `cd` into it.
 
-- Clone this repository
-- Run `npm install`
-- Place your config file in `public/config.json`.
-  You can copy the example config for testing/development: `cp config.example.json public/config.json`.
-- Run `npm run build`
-- A production build can then be found in [`/build`](./build)
+### Using npm
 
-Hint: You can start a development server with `npm run dev`
+```bash
+npm install
+npm run build
+```
 
-### Local fixture mode
+A production build can then be found in `/build`.
 
-If you want to work against a committed local dummy dataset without touching `public/config.json`, use:
-
-`npm run dev:fixtures`
-
-This mode serves `dev-fixtures/config.json` as `/config.json` and `dev-fixtures/meshviewer.json` as `/fixtures/meshviewer.json` only in the Vite dev server. The files stay outside `public/` and are therefore not included in regular builds or release artifacts.
-
-For timestamps in `dev-fixtures/meshviewer.json` you can use relative markers like `@now`, `@now-6d`, `@now-28h` or `@now-1w+2d`. They are expanded to ISO timestamps when the fixture endpoint is requested.
-
-### Unit tests
-
-For unit tests run:
-
-`npm run test:unit`
-
-### Build and run using Docker
-
-You have to copy `config.example.json` to `public/config.json`.
-
-Static local instance:
+### Using docker
 
 ```bash
 docker run -it --rm -u $(id -u):$(id -g) -v "$PWD":/app -w /app node npm install
 docker run -it --rm -u $(id -u):$(id -g) -v "$PWD":/app -w /app node npm run build
-docker run -it --rm -v "$PWD/build":/usr/share/nginx/html -p 8080:80 --name nginx nginx
 ```
 
-The map is reachable at [localhost:8080](http://localhost:8080).
-Start a development environment with hot-reload:
+Now you should have a production build in `/build`.
+
+### Using nix
+
+_Note that the nix build will only include files checked into git._
+
+```bash
+nix --experimental-features 'nix-command flakes' build .#default
+```
+
+You will find a symlink called `result` in your working directory, with the resulting webroot inside.
+
+## Developing
+
+In order to develop meshviewer you will need npm. You can obtain it via your package manager, or use one of the dev environments explained below.
+
+There are two options for running meshviewer in development mode:
+
+- Use your own config
+
+  Provide your own config in `public/config.json` and run `npm run dev`. You will need to provide a working configuration with a `dataPath` that has a working `meshviewer.json`.
+
+- Use the fixture mode
+
+  Run `npm run dev:fixtures`.
+  This mode serves `dev-fixtures/config.json` as `/config.json` and `dev-fixtures/meshviewer.json` as `/fixtures/meshviewer.json`.
+
+  For timestamps in `dev-fixtures/meshviewer.json` you can use relative markers like `@now`, `@now-6d`, `@now-28h` or `@now-1w+2d`. They are expanded to ISO timestamps when the fixture endpoint is requested.
+
+### Development environments
+
+You can start npm in a docker container with the following command
 
 ```bash
 docker run -it --rm --name meshviewer-dev \
@@ -52,6 +61,18 @@ docker run -it --rm --name meshviewer-dev \
   -p 5173:5173 \
   node npm run dev -- --host 0.0.0.0
 ```
+
+Replace `npm run dev` with `npm run dev:fixtures` if you want the fixture mode.
+
+### Developing with nix
+
+There is a nix flake which provides a development environment. You can enter it by running `nix --experimental-features 'nix-command flakes' develop`. This will drop you into a temporary shell with npm installed.
+
+## Testing
+
+For unit tests run:
+
+`npm run test:unit`
 
 ## Workflow
 
