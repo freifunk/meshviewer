@@ -5,7 +5,7 @@ import { DataDistributor, Filter, GenericFilter, ObjectsLinksAndNodes } from "./
 import { GenericNodeFilter } from "./filters/genericnode.js";
 import * as helper from "./utils/helper.js";
 import { _ } from "./utils/language.js";
-import { Node } from "./utils/node.js";
+import { getDomainName, Node } from "./utils/node.js";
 import { compare } from "./utils/version.js";
 import { createChartVNode } from "./infobox/chart.js";
 
@@ -80,17 +80,7 @@ const statusFieldMapping: Record<StatusFieldKey, MappingEntry> = {
   },
   "node.domain": {
     keys: ["domain"],
-    nodeValueModifier: function (d: any) {
-      if (window.config.domainNames) {
-        window.config.domainNames.some(function (t) {
-          if (d === t.domain) {
-            d = t.name;
-            return true;
-          }
-        });
-      }
-      return d;
-    },
+    nodeValueModifier: getDomainName,
   },
 };
 
