@@ -7,6 +7,7 @@ import * as d3Timer from "d3-timer";
 import * as d3Zoom from "d3-zoom";
 
 import math from "./utils/math.js";
+import * as helper from "./utils/helper.js";
 import draw, { MapLink, MapNode } from "./forcegraph/draw.js";
 import { Sidebar } from "./sidebar.js";
 import { ClientPointEvent } from "d3-selection";
@@ -163,7 +164,8 @@ export const ForceGraph = function (linkScale: (t: any) => any, sidebar: ReturnT
         return 0.02;
       }
       // @ts-expect-error d3 node
-      return Math.max(0.5, node.o.source_tq);
+      const metric = helper.linkMetric(node.o.source_tq, node.o.source_tp) ?? 0;
+      return Math.max(0.5, metric);
     });
 
   const zoom = d3Zoom
@@ -261,8 +263,8 @@ export const ForceGraph = function (linkScale: (t: any) => any, sidebar: ReturnT
           o: link,
           source,
           target,
-          color: linkScale(link.source_tq),
-          color_to: linkScale(link.target_tq),
+          color: linkScale(helper.linkMetric(link.source_tq, link.source_tp) ?? 0),
+          color_to: linkScale(helper.linkMetric(link.target_tq, link.target_tp) ?? 0),
           x: 0,
           y: 0,
         },
