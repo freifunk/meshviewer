@@ -25,7 +25,12 @@ export const Gui = function (language: ReturnType<typeof Language>) {
   const self: { setData: (data: ObjectsLinksAndNodes) => void } = {
     setData: () => {},
   };
-  let content: ReturnType<typeof Map> | ReturnType<typeof ForceGraph> | null = null;
+  type Content = Awaited<ReturnType<typeof Map>> | ReturnType<typeof ForceGraph>;
+  let content: Content | null = null;
+  // Bumped on every add/remove. An in-flight async addContent that finishes
+  // after the user has toggled the view checks this to avoid mounting stale
+  // content over whatever is now showing.
+  let contentVersion = 0;
   let contentDiv: HTMLDivElement;
   let router = window.router;
   let config = window.config;
@@ -41,6 +46,7 @@ export const Gui = function (language: ReturnType<typeof Language>) {
   fanoutUnfiltered.add(fanout);
 
   function removeContent() {
+    contentVersion++;
     if (!content) {
       return;
     }
@@ -53,19 +59,26 @@ export const Gui = function (language: ReturnType<typeof Language>) {
     content = null;
   }
 
-  function addContent(mapViewComponent: typeof Map | typeof ForceGraph) {
+  async function addContent(mapViewComponent: typeof Map | typeof ForceGraph) {
     removeContent();
-
-    content = mapViewComponent(linkScale, sidebar, buttons);
+    const version = contentVersion;
+    const newContent = await mapViewComponent(linkScale, sidebar, buttons);
+    if (version !== contentVersion) {
+      newContent.destroy();
+      return;
+    }
+    content = newContent;
     content.render(contentDiv);
-
     fanout.add(content);
     router.addTarget(content);
   }
 
   function mkView(mapViewComponent: typeof Map | typeof ForceGraph) {
     return function () {
-      addContent(mapViewComponent);
+      // Return the promise so the router can await the (possibly async) content
+      // mount before it applies the view — otherwise resetView/gotoNode run
+      // before the target is registered and the initial setView is lost.
+      return addContent(mapViewComponent);
     };
   }
 
