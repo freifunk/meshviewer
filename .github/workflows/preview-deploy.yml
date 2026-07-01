@@ -27,7 +27,7 @@ jobs:
       - id: pr
         run: echo "number=$(cat build/.pr-number)" >> "$GITHUB_OUTPUT"
       - run: rm build/.pr-number
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: gh-pages
           path: gh-pages
