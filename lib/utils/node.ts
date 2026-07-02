@@ -76,6 +76,14 @@ function showBar(value: string, width: number, warning: boolean) {
   ]);
 }
 
+export function getDomainName(domain: string): string {
+  const domainNames = window.config.domainNames;
+  if (!domainNames) return domain;
+
+  const match = domainNames.find((entry) => entry.domain === domain);
+  return match ? match.name : domain;
+}
+
 const self = {
   showStatus(node: Node) {
     return h(
@@ -143,18 +151,7 @@ const self = {
   },
 
   showDomain(node: Node) {
-    let domainTitle = node.domain;
-    const config = window.config;
-    if (config.domainNames) {
-      config.domainNames.some(function (domain) {
-        if (domainTitle === domain.domain) {
-          domainTitle = domain.name;
-          return true;
-        }
-        return false;
-      });
-    }
-    return domainTitle;
+    return node.domain === undefined ? undefined : getDomainName(node.domain);
   },
 
   countLocalClients(node: Node, visited: Record<string, number> = {}) {
