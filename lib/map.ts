@@ -237,8 +237,7 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
   function updateView(nopanzoom?: boolean) {
     resetMarkerStyles(nodeDict, linkDict);
     let target:
-      | { setStyle: any; getLatLng: () => L.LatLngExpression; getBounds?: () => L.LatLngBoundsExpression }
-      | undefined;
+      { setStyle: any; getLatLng: () => L.LatLngExpression; getBounds?: () => L.LatLngBoundsExpression } | undefined;
 
     if (highlight !== undefined) {
       if (highlight.type === "node") {
