@@ -39,6 +39,7 @@ variables.$color-online: color.adjust(variables.$color-online, $lightness: 40%);
 
     .invert-in-dark-mode {
       filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+      will-change: filter;
     }
   }
 
