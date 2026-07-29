@@ -47,6 +47,7 @@ Defines a List of Maps that are used as a background.
       "config": {
         "type": "osm",
         "maxZoom": 19,
+        "invertInDarkMode": true,
         "attribution": "<a href='https://github.com/freifunk/meshviewer/issues' target='_blank'>Report Bug</a> | Map data &copy; <a href\"http://openstreetmap.org\">OpenStreetMap</a> contributor"
       }
     },
@@ -60,6 +61,8 @@ Defines a List of Maps that are used as a background.
     }
   ],
 ```
+
+The `invertInDarkMode` boolean allows you to automatically invert standard map tiles (like light OpenStreetMap) via CSS when the app switches to dark mode, matching the dark aesthetic without needing a dedicated dark tile server. Note that this property is ignored for vector map layers.
 
 `fixedCenter` defines the default area that is visible when opening the map.
 
