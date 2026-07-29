@@ -91,14 +91,18 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
   });
 
   let layers = config.mapLayers.map(function (layer) {
+    let layerConfig = Object.assign({}, layer.config);
+    if (layerConfig.invertInDarkMode) {
+      layerConfig.className = (layerConfig.className ? layerConfig.className + " " : "") + "invert-in-dark-mode";
+    }
     return {
       name: layer.name,
       layer:
         layer.type == "vector"
           ? L.maplibreGL({
               style: layer.url,
-              attributionControl: { customAttribution: layer.config.attribution },
-              maxZoom: layer.config.maxZoom,
+              attributionControl: { customAttribution: layerConfig.attribution },
+              maxZoom: layerConfig.maxZoom,
             })
           : L.tileLayer(
               layer.url.replace(
@@ -107,7 +111,7 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
                   ? "webp"
                   : "png",
               ),
-              layer.config,
+              layerConfig,
             ),
     };
   });
@@ -162,15 +166,17 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
   });
 
   map.on("baselayerchange", function (e: any & { name: string }) {
-    const selectedLayer = baseLayers[e.name] as L.TileLayer & { options: L.TileLayerOptions & { mode?: string } };
-    if (selectedLayer && selectedLayer.options.maxZoom !== undefined) {
-      const maxZoom = selectedLayer.options.maxZoom;
-      map.options.maxZoom = maxZoom;
-      clientLayer.options.maxZoom = maxZoom;
-      labelLayer.options.maxZoom = maxZoom;
+    const selectedLayer = baseLayers[e.name] as L.TileLayer;
+    if (selectedLayer) {
+      if (selectedLayer.options.maxZoom !== undefined) {
+        const maxZoom = selectedLayer.options.maxZoom;
+        map.options.maxZoom = maxZoom;
+        clientLayer.options.maxZoom = maxZoom;
+        labelLayer.options.maxZoom = maxZoom;
 
-      if (map.getZoom() > maxZoom) {
-        map.setZoom(maxZoom);
+        if (map.getZoom() > maxZoom) {
+          map.setZoom(maxZoom);
+        }
       }
     }
   });

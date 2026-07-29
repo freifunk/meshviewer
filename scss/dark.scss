@@ -8,7 +8,7 @@ variables.$color-white: #1c1c13;
 variables.$color-black: #fefefe;
 variables.$color-map-background: #0d151c;
 
-variables.$color-online: color.adjust(variables.$color-online, $lightness: 25%);
+variables.$color-online: color.adjust(variables.$color-online, $lightness: 40%);
 
 .theme_dark {
   //@import 'modules/base';
@@ -36,6 +36,10 @@ variables.$color-online: color.adjust(variables.$color-online, $lightness: 25%);
   //@import 'modules/leaflet';
   .leaflet-container {
     background: variables.$color-map-background;
+
+    .invert-in-dark-mode {
+      filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+    }
   }
 
   .leaflet-label {
@@ -48,6 +52,10 @@ variables.$color-online: color.adjust(variables.$color-online, $lightness: 25%);
     .leaflet-control-layers-toggle {
       background: color.adjust(variables.$color-white, $lightness: 10%);
       color: variables.$color-black;
+    }
+
+    .leaflet-control-attribution {
+      background: color.adjust(variables.$color-white, $alpha: -0.3);
     }
   }
 
