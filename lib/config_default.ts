@@ -91,6 +91,7 @@ export interface MapLayer {
     start?: number; // Hour
     end?: number; // Hour
     order: number;
+    invertInDarkMode?: boolean;
   };
 }
 
