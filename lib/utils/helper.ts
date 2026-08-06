@@ -1,6 +1,6 @@
 import { Moment } from "moment";
 import { h, VNode } from "snabbdom";
-import { Map } from "leaflet";
+import { Map as LeafletMap } from "leaflet";
 import { _ } from "./language.js";
 import { Node } from "./node.js";
 import { LinkInfo } from "../config_default.js";
@@ -181,7 +181,7 @@ export const showDevicePicture = function showDevicePicture(pictures: string, su
   });
 };
 
-export const getTileBBox = function getTileBBox(size: Point, map: Map, tileSize: number, margin: number) {
+export const getTileBBox = function getTileBBox(size: Point, map: LeafletMap, tileSize: number, margin: number) {
   let tl = map.unproject([size.x - margin, size.y - margin]);
   let br = map.unproject([size.x + margin + tileSize, size.y + margin + tileSize]);
 
