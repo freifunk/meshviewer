@@ -83,6 +83,11 @@ export default defineConfig(({ command, mode }) => ({
         offline: resolve(__dirname, "offline.html"),
       },
     },
+    // The main bundle sits comfortably under 500 kB. The only remaining
+    // large chunk is the dynamically-imported maplibre-gl bundle (~1 MB,
+    // only loaded on demand for vector layers), so raise the threshold
+    // slightly above its size rather than nagging on every build.
+    chunkSizeWarningLimit: 1100,
   },
   plugins: [
     command === "serve" && mode === "fixtures" ? devFixturesPlugin() : null,
@@ -91,6 +96,11 @@ export default defineConfig(({ command, mode }) => ({
       : new VitePWA({
           workbox: {
             globPatterns: ["**/*.{js,css,html,ico,png,svg,ttf,woff,woff2}"],
+            // The maplibre-gl chunk (~1 MB) is only fetched when a vector
+            // map layer is configured. Don't waste bandwidth precaching it
+            // on every install — the service worker can still serve it
+            // from runtime cache when it is actually requested.
+            globIgnores: ["**/leaflet-maplibre-gl-*.js"],
             navigateFallbackDenylist: [new RegExp(".*\.json")],
           },
           manifest: {

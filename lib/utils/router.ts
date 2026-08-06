@@ -90,16 +90,18 @@ export class Router extends Navigo {
     }
   }
 
-  view(data: { view: string }) {
+  async view(data: { view: string }) {
     const view = this.views[data.view];
     if (view) {
-      view();
+      // The view factory may be async (the map lazy-loads maplibre-gl). Await
+      // it so the target is registered before resetView applies the view.
+      await view();
       this.state.view = data.view;
       this.resetView();
     }
   }
 
-  customRoute(match?: Match) {
+  async customRoute(match?: Match) {
     const d = match?.data as RouteData;
     const lang = routeGroup(d, 0);
     let viewValue: "map" | "graph" | string | undefined = routeGroup(d, 1);
@@ -129,7 +131,7 @@ export class Router extends Navigo {
       if (!viewValue) {
         viewValue = this.state.view;
       }
-      this.view({ view: viewValue });
+      await this.view({ view: viewValue });
       this.init = true;
     }
 
@@ -167,7 +169,7 @@ export class Router extends Navigo {
         // lang, viewValue, node, link, zoom, lat, lon
         MESHVIEWER_ROUTE_PATTERN,
         (match?: Match) => {
-          this.customRoute(match);
+          void this.customRoute(match);
         },
       )
       // Default response
