@@ -69,6 +69,41 @@ export const dictGet = function dictGet(dict: { [x: string]: any }, keys: string
   return dictGet(dict[key], keys);
 };
 
+// Firmware versions spell the same value differently ("ZyXEL WSM20" became
+// "Zyxel WSM20" in newer OpenWrt), splitting it across unfilterable rows.
+export const collapseWhitespace = function collapseWhitespace(value: unknown) {
+  if (value === null || value === undefined) {
+    return "";
+  }
+  return String(value).replace(/\s+/g, " ").trim();
+};
+
+export const normalizeFilterValue = function normalizeFilterValue(value: unknown) {
+  return collapseWhitespace(value).toLowerCase();
+};
+
+// The sort makes the most common spelling win the label, deterministically.
+export const mergeSpellingVariants = function mergeSpellingVariants(counts: Map<unknown, number>) {
+  const merged = new Map<string, [string, number]>();
+
+  [...counts]
+    .sort(function (a, b) {
+      return b[1] - a[1] || (String(a[0]) < String(b[0]) ? -1 : 1);
+    })
+    .forEach(function ([value, count]) {
+      const key = normalizeFilterValue(value);
+      const group = merged.get(key);
+
+      if (group === undefined) {
+        merged.set(key, [collapseWhitespace(value), count]);
+      } else {
+        group[1] += count;
+      }
+    });
+
+  return [...merged.values()];
+};
+
 export const listReplace = function listReplace(template: string, subst: ReplaceMapping) {
   for (const [key, value] of Object.entries(subst)) {
     let re = new RegExp(key, "g");

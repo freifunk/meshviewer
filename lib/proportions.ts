@@ -104,12 +104,7 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
   // flag set while we apply filters programmatically from the URL hash
   let appliedUrlFilters = false;
 
-  function normalizeKey(s: string | null | undefined) {
-    if (!s) return "";
-    return String(s).replace(/\s+/g, " ").trim();
-  }
-
-  function count(nodes: Node[], keys: string[], nodeValueModifier?: (k: any, ctx?: any) => any, ctx?: any) {
+  function count(nodes: Node[], keys: string[], nodeValueModifier?: (k: any, ctx?: any) => any, ctx?: any): any[][] {
     const counts = new Map<any, number>();
 
     nodes.forEach(function (node) {
@@ -120,17 +115,14 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
         dictKey = nodeValueModifier(dictKey, ctx);
       }
 
-      if (dictKey === null) return;
+      if (dictKey === null || dictKey === undefined) return;
 
       counts.set(dictKey, (counts.get(dictKey) || 0) + 1);
     });
 
-    const result: any[] = [];
-    counts.forEach(function (countValue, k) {
-      result.push([k, countValue, keys, nodeValueModifier]);
+    return helper.mergeSpellingVariants(counts).map(function ([value, total]) {
+      return [value, total, keys, nodeValueModifier];
     });
-
-    return result;
   }
 
   function addFilter(filter: Filter) {
@@ -297,8 +289,8 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
         let filter = GenericNodeFilter(
           param,
           mapping.keys,
-          normalizeKey(encodedValue),
-          mapping.nodeValueModifier ?? ((v: unknown) => String(v)),
+          helper.collapseWhitespace(encodedValue),
+          mapping.nodeValueModifier ?? ((v: unknown) => (v === null || v === undefined ? null : String(v))),
         );
         if (negate) {
           filter.setNegate(true);
