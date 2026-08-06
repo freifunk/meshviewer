@@ -1,4 +1,5 @@
-import * as L from "leaflet";
+// Default import: a namespace snapshots leaflet's exports before the plugin below adds maplibreGL.
+import L from "leaflet";
 import "@maplibre/maplibre-gl-leaflet";
 
 import { ClientLayer } from "./map/clientlayer.js";
