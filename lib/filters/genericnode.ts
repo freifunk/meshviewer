@@ -13,6 +13,8 @@ export const GenericNodeFilter = function (
   let negate = false;
   let refresh: () => any;
 
+  const normalizedValue = helper.normalizeFilterValue(value);
+
   let label = document.createElement("label");
   let strong = document.createElement("strong");
   label.textContent = _.t(name) + ": ";
@@ -25,7 +27,11 @@ export const GenericNodeFilter = function (
       nodeValue = nodeValueModifier(nodeValue);
     }
 
-    return nodeValue === value ? !negate : negate;
+    if (nodeValue === null || nodeValue === undefined) {
+      return negate;
+    }
+
+    return helper.normalizeFilterValue(nodeValue) === normalizedValue ? !negate : negate;
   }
 
   function setRefresh(f: () => any) {
@@ -62,7 +68,7 @@ export const GenericNodeFilter = function (
   }
 
   function getKey() {
-    return value.concat(name);
+    return normalizedValue.concat(name);
   }
 
   function getName() {
