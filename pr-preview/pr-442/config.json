@@ -85,7 +85,28 @@
       "url": "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
       "config": {
         "maxZoom": 22,
-        "attribution": "&copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a>, &copy; | <a href=\"https://carto.com/attribution\">CARTO</a>"
+        "invertInDarkMode": true,
+        "attribution": "&copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> | Map Data &copy; <a href=\"https://carto.com/attribution\">CARTO</a>"
+      }
+    },
+    {
+      "name": "OpenStreetMap",
+      "url": "https://tiles.aachen.freifunk.net/{z}/{x}/{y}.png",
+      "config": {
+        "type": "osm",
+        "maxZoom": 19,
+        "invertInDarkMode": true,
+        "attribution": "Map data &copy; <a href=\"http://openstreetmap.org/copyright\">OpenStreetMap</a>",
+        "start": 10
+      }
+    },
+    {
+      "name": "EsriWorldImagery",
+      "url": "https://tiles.aachen.freifunk.net/EsriWorldImagery/{z}/{y}/{x}.png",
+      "config": {
+        "maxZoom": 19,
+        "start": 30,
+        "attribution": "&copy; <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> | Map Data &copy;  <a href=\"http://arcgis.com/about/\" target=\"_blank\">ArcGIS Sattelite</a>"
       }
     }
   ]
