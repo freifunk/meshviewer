@@ -86,41 +86,44 @@ export default defineConfig(({ command, mode }) => ({
   },
   plugins: [
     command === "serve" && mode === "fixtures" ? devFixturesPlugin() : null,
-    process.env.VITE_PREVIEW === "1"
-      ? null
-      : new VitePWA({
-          workbox: {
-            globPatterns: ["**/*.{js,css,html,ico,png,svg,ttf,woff,woff2}"],
-            navigateFallbackDenylist: [new RegExp(".*\.json")],
+    // Must stay loaded even when disabled: lib/index.ts imports
+    // "virtual:pwa-register", which only resolves while the plugin is present.
+    new VitePWA({
+      disable: process.env.VITE_PREVIEW === "1",
+      registerType: "autoUpdate",
+      workbox: {
+        globPatterns: ["**/*.{js,css,html,ico,png,svg,ttf,woff,woff2}"],
+        navigateFallbackDenylist: [new RegExp(".*.json")],
+        cleanupOutdatedCaches: true,
+      },
+      manifest: {
+        name: "Meshviewer",
+        short_name: "Meshviewer",
+        description:
+          "Meshviewer is an online visualization app to represent nodes and links on a map for Freifunk open mesh network.",
+        theme_color: "#ffffff",
+        icons: [
+          {
+            src: "pwa-64x64.png",
+            sizes: "64x64",
+            type: "image/png",
           },
-          manifest: {
-            name: "Meshviewer",
-            short_name: "Meshviewer",
-            description:
-              "Meshviewer is an online visualization app to represent nodes and links on a map for Freifunk open mesh network.",
-            theme_color: "#ffffff",
-            icons: [
-              {
-                src: "pwa-64x64.png",
-                sizes: "64x64",
-                type: "image/png",
-              },
-              {
-                src: "pwa-192x192.png",
-                sizes: "192x192",
-                type: "image/png",
-              },
-              {
-                src: "pwa-512x512.png",
-                sizes: "512x512",
-                type: "image/png",
-              },
-            ],
+          {
+            src: "pwa-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
           },
-          devOptions: {
-            enabled: true,
+          {
+            src: "pwa-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
           },
-        }),
+        ],
+      },
+      devOptions: {
+        enabled: false,
+      },
+    }),
     checker({
       // Run TypeScript checks
       typescript: true,
