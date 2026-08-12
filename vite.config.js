@@ -80,7 +80,6 @@ export default defineConfig(({ command, mode }) => ({
       input: {
         embed: resolve(__dirname, "embed/index.html"),
         index: resolve(__dirname, "index.html"),
-        offline: resolve(__dirname, "offline.html"),
       },
     },
   },
