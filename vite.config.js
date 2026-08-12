@@ -93,7 +93,9 @@ export default defineConfig(({ command, mode }) => ({
       registerType: "autoUpdate",
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg,ttf,woff,woff2}"],
-        navigateFallbackDenylist: [new RegExp(".*.json")],
+        // Matched against pathname + search: keep the index.html fallback off
+        // real files, otherwise /sw.js is served as the app itself.
+        navigateFallbackDenylist: [/\.[a-z0-9]+(\?|$)/i],
         cleanupOutdatedCaches: true,
       },
       manifest: {
