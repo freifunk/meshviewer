@@ -17,6 +17,7 @@ COPY . .
 RUN npm run lint && npm run build
 
 FROM nginx:1.31.3-alpine
+COPY --from=build /code/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /code/build/ /usr/share/nginx/html
 COPY --from=build /code/config.example.json /usr/share/nginx/html/
 COPY --from=build /code/embed/embed.js /usr/share/nginx/html/
