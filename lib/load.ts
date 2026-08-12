@@ -19,18 +19,28 @@ const deepMerge = <T>(defaults: T, overrides: unknown): T => {
   return result as T;
 };
 
+const showLoaderError = (message: string, hint = "") => {
+  document.querySelector(".loader")!.innerHTML =
+    message +
+    "<br><br>" +
+    '<button onclick="location.reload(true)" class="btn text" aria-label="Try to reload">' +
+    "Try to reload" +
+    "</button><br>" +
+    hint;
+};
+
 export const load = async () => {
-  const configResponse = await fetch("config.json");
+  let configResponse: Response;
+  try {
+    configResponse = await fetch("config.json");
+  } catch {
+    // When offline, the service worker still loads the app shell, but this fetch()
+    // throws a network error instead of returning a non-ok response.
+    showLoaderError("No connection available.");
+    return;
+  }
   if (!configResponse.ok) {
-    document.querySelector(".loader")!.innerHTML =
-      "config.json can not be loaded:" +
-      "<br>" +
-      configResponse.statusText +
-      "<br><br>" +
-      '<button onclick="location.reload(true)" class="btn text" aria-label="Try to reload">' +
-      "Try to reload" +
-      "</button><br>" +
-      "or report to your community";
+    showLoaderError("config.json can not be loaded:<br>" + configResponse.statusText, "or report to your community");
     return;
   }
   const config = await configResponse.json();
