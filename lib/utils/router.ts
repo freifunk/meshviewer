@@ -204,7 +204,14 @@ export class Router extends Navigo {
       result = "#";
       merged = Object.assign({}, this.currentState, data);
     }
-
+    if (data && ("node" in data || "link" in data)) {
+      if ("node" in data) {
+        merged.link = undefined;
+      }
+      if ("link" in data) {
+        merged.node = undefined;
+      }
+    }
     for (const key in merged) {
       if (!Object.prototype.hasOwnProperty.call(merged, key)) {
         continue;
