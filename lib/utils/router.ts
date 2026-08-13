@@ -195,27 +195,39 @@ export class Router extends Navigo {
   }
 
   generateLink(data?: Record<string, unknown>, full?: boolean) {
-    let result = "";
+    let result = full ? "" : "#";
+    // Cast to Record<string, any> to avoid TS strict errors when accessing properties
+    const base: Record<string, any> = full ? this.state : this.currentState;
 
-    let merged: Record<string, unknown>;
-    if (full) {
-      merged = Object.assign({}, this.state, data);
-    } else {
-      result = "#";
-      merged = Object.assign({}, this.currentState, data);
+    // 1. Resolve values (prioritizing new data)
+    const lang = data && data.lang !== undefined ? data.lang : base.lang;
+    const view = data && data.view !== undefined ? data.view : base.view;
+    const zoom = data && data.zoom !== undefined ? data.zoom : base.zoom;
+    const lat = data && data.lat !== undefined ? data.lat : base.lat;
+    const lng = data && data.lng !== undefined ? data.lng : base.lng;
+
+    // 2. Append base path config
+    if (lang) result += "/" + String(lang);
+    if (view) result += "/" + String(view);
+
+    // 3. Append the single valid target (Prioritize incoming 'data' overrides, fallback to base)
+    if (data && data.node !== undefined) {
+      result += "/" + String(data.node);
+    } else if (data && data.link !== undefined) {
+      result += "/" + String(data.link);
+    } else if (data && (data.zoom !== undefined || data.lat !== undefined || data.lng !== undefined)) {
+      if (lat !== undefined) {
+        result += "/" + String(zoom) + "/" + String(lat) + "/" + String(lng);
+      }
+    } else if (base.node) {
+      result += "/" + String(base.node);
+    } else if (base.link) {
+      result += "/" + String(base.link);
+    } else if (lat !== undefined) {
+      result += "/" + String(zoom) + "/" + String(lat) + "/" + String(lng);
     }
 
-    for (const key in merged) {
-      if (!Object.prototype.hasOwnProperty.call(merged, key)) {
-        continue;
-      }
-      const v = merged[key];
-      if (v === undefined || v === "") {
-        continue;
-      }
-      result += "/" + String(v);
-    }
-
+    // 4. Append query params
     const params = this.getParams();
     result += this.paramsToUrl(params);
 
