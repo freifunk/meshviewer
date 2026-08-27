@@ -1,6 +1,6 @@
 import { Moment } from "moment";
 import { h, VNode } from "snabbdom";
-import { Map } from "leaflet";
+import { Map as LeafletMap } from "leaflet";
 import { _ } from "./language.js";
 import { Node } from "./node.js";
 import { LinkInfo } from "../config_default.js";
@@ -67,6 +67,41 @@ export const dictGet = function dictGet(dict: { [x: string]: any }, keys: string
   }
 
   return dictGet(dict[key], keys);
+};
+
+// Firmware versions spell the same value differently ("ZyXEL WSM20" became
+// "Zyxel WSM20" in newer OpenWrt), splitting it across unfilterable rows.
+export const collapseWhitespace = function collapseWhitespace(value: unknown) {
+  if (value === null || value === undefined) {
+    return "";
+  }
+  return String(value).replace(/\s+/g, " ").trim();
+};
+
+export const normalizeFilterValue = function normalizeFilterValue(value: unknown) {
+  return collapseWhitespace(value).toLowerCase();
+};
+
+// The sort makes the most common spelling win the label, deterministically.
+export const mergeSpellingVariants = function mergeSpellingVariants(counts: Map<unknown, number>) {
+  const merged = new Map<string, [string, number]>();
+
+  [...counts]
+    .sort(function (a, b) {
+      return b[1] - a[1] || (String(a[0]) < String(b[0]) ? -1 : 1);
+    })
+    .forEach(function ([value, count]) {
+      const key = normalizeFilterValue(value);
+      const group = merged.get(key);
+
+      if (group === undefined) {
+        merged.set(key, [collapseWhitespace(value), count]);
+      } else {
+        group[1] += count;
+      }
+    });
+
+  return [...merged.values()];
 };
 
 export const listReplace = function listReplace(template: string, subst: ReplaceMapping) {
@@ -181,7 +216,7 @@ export const showDevicePicture = function showDevicePicture(pictures: string, su
   });
 };
 
-export const getTileBBox = function getTileBBox(size: Point, map: Map, tileSize: number, margin: number) {
+export const getTileBBox = function getTileBBox(size: Point, map: LeafletMap, tileSize: number, margin: number) {
   let tl = map.unproject([size.x - margin, size.y - margin]);
   let br = map.unproject([size.x + margin + tileSize, size.y + margin + tileSize]);
 
