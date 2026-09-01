@@ -56,13 +56,14 @@ Defines a List of Maps that are used as a background.
       "url": "https://sgx.geodatenzentrum.de/gdz_basemapworld_vektor/styles/bm_web_wld_col.json",
       "type": "vector",
       "config": {
+        "invertInDarkMode": true,
         "attribution": "&copy; basemap.de / <a href='https://www.bkg.bund.de'>BKG</a> (2025) <a href='https://creativecommons.org/licenses/by/4.0/'>CC BY 4.0</a>; Datenquellen: &copy; GeoBasis-DE / <a href='https://www.bkg.bund.de'>BKG</a> (2025) <a href='https://creativecommons.org/licenses/by/4.0/'>CC BY 4.0</a>; außerhalb Deutschlands: &copy; <a href='https://www.openstreetmap.org/copyright'>Open Street Map Mitwirkende ODbL v. 1.0</a> ; © <a href='https://openmaptiles.org/'>OpenMapTiles</a>"
       }
     }
   ],
 ```
 
-The `invertInDarkMode` boolean allows you to automatically invert standard map tiles (like light OpenStreetMap) via CSS when the app switches to dark mode, matching the dark aesthetic without needing a dedicated dark tile server. Note that this property is ignored for vector map layers.
+The `invertInDarkMode` boolean allows you to automatically invert standard map tiles (like light OpenStreetMap) via CSS when the app switches to dark mode, matching the dark aesthetic without needing a dedicated dark tile server. It works for raster tile layers as well as for vector layers, where the filter is applied to the rendered WebGL canvas.
 
 `fixedCenter` defines the default area that is visible when opening the map.
 

@@ -103,7 +103,8 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
               style: layer.url,
               attributionControl: { customAttribution: layerConfig.attribution },
               maxZoom: layerConfig.maxZoom,
-            })
+              className: layerConfig.className,
+            } as L.LeafletMaplibreGLOptions)
           : L.tileLayer(
               layer.url.replace(
                 "{format}",
