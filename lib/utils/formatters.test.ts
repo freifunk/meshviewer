@@ -34,6 +34,10 @@ describe("formatters utilities", () => {
     expect(dictGet(obj, ["a", "b", "c"])).toBe(42);
     expect(dictGet(obj, ["a", "nonexistent"])).toBeNull();
     expect(dictGet(obj, ["invalid", "path"])).toBeNull();
+
+    const keys = ["a", "b", "c"];
+    dictGet(obj, keys);
+    expect(keys).toEqual(["a", "b", "c"]);
   });
 
   it("listReplace replaces all keys in template", () => {

@@ -6,6 +6,11 @@ import { ObjectsLinksAndNodes } from "../datadistributor.js";
 import { Coords } from "leaflet";
 import { nodeIdToStartAngle } from "./clientlayerUtils.js";
 
+export interface ClientLayerInstance extends L.GridLayer {
+  options: L.GridLayerOptions;
+  setData(data: ObjectsLinksAndNodes): void;
+}
+
 export const ClientLayer = L.GridLayer.extend({
   mapRTree: function mapRTree(node: Node) {
     return {
@@ -64,4 +69,4 @@ export const ClientLayer = L.GridLayer.extend({
 
     return tile;
   },
-});
+}) as unknown as { new (options?: L.GridLayerOptions): ClientLayerInstance };

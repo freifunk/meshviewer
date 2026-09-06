@@ -1,29 +1,29 @@
 import { classModule, eventListenersModule, h, init, propsModule, styleModule, VNode } from "snabbdom";
 import { _ } from "./utils/language.js";
 
-export interface Heading {
+export interface Heading<T = any> {
   name: string;
-  sort?: (a: any, b: any) => number;
-  reverse?: Boolean;
+  sort?: (a: T, b: T) => number;
+  reverse?: boolean;
   class?: string;
 }
 
 const patch = init([classModule, propsModule, styleModule, eventListenersModule]);
 
-export const SortTable = function (
-  headings: Heading[],
+export const SortTable = function <T>(
+  headings: Heading<T>[],
   sortIndex: number,
-  renderRow: (element: any, i: number, all: any[]) => any,
+  renderRow: (element: T, i: number, all: T[]) => VNode,
   className: string[] = [],
 ) {
-  let data: any[] = [];
+  let data: T[] = [];
   let sortReverse = false;
   let currentSortIndex = sortIndex;
 
   const self: {
     el: HTMLElement;
     vnode: VNode | null;
-    setData: (data: any[]) => void;
+    setData: (data: T[]) => void;
   } = {
     el: document.createElement("table"),
     vnode: null,
@@ -88,7 +88,7 @@ export const SortTable = function (
     self.vnode = patch(self.vnode ?? self.el, elNew);
   }
 
-  self.setData = function setData(d: any[]) {
+  self.setData = function setData(d: T[]) {
     data = d;
     updateView();
   };

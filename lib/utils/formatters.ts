@@ -26,17 +26,19 @@ export const one = function one() {
   return 1;
 };
 
-export const dictGet = function dictGet(dict: { [x: string]: any }, keys: string[]) {
-  const key = keys.shift();
-  if (key === undefined || !(key in dict)) {
+export const dictGet = function dictGet(dict: object | null | undefined, keys: readonly string[]): unknown {
+  if (keys.length === 0) {
     return null;
   }
 
-  if (keys.length === 0) {
-    return dict[key];
+  let current: unknown = dict;
+  for (const key of keys) {
+    if (!current || typeof current !== "object" || !(key in current)) {
+      return null;
+    }
+    current = (current as Record<string, unknown>)[key];
   }
-
-  return dictGet(dict[key], keys);
+  return current;
 };
 
 export const collapseWhitespace = function collapseWhitespace(value: unknown) {

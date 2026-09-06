@@ -5,10 +5,10 @@ import { Router } from "./router.js";
 
 export type LanguageCode = string;
 
-export let _: Polyglot & { phrases?: { [k: string]: any } } = new Polyglot({
+export let _: Polyglot & { phrases?: Record<string, string> } = new Polyglot({
   phrases: {},
   allowMissing: true,
-}) as any;
+});
 
 export const Language = function () {
   let router: Router;
@@ -29,8 +29,9 @@ export const Language = function () {
     }
   }
 
-  function setSelectLocale(event: any) {
-    router.deepUrl({ lang: event.target.value });
+  function setSelectLocale(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    router.deepUrl({ lang: target.value });
   }
 
   function getLocale(input?: LanguageCode): LanguageCode {
@@ -50,10 +51,18 @@ export const Language = function () {
     return locale;
   }
 
-  function setTranslation(translationJson: { [k: string]: any }) {
-    _.extend(translationJson);
+  interface TranslationData {
+    momentjs?: {
+      calendar?: Record<string, string>;
+      relativeTime?: Record<string, string>;
+    };
+    [k: string]: unknown;
+  }
 
-    if (moment.locale(_.locale()) !== _.locale()) {
+  function setTranslation(translationJson: TranslationData) {
+    _.extend(translationJson as Record<string, string>);
+
+    if (moment.locale(_.locale()) !== _.locale() && translationJson.momentjs) {
       moment.defineLocale(_.locale(), {
         longDateFormat: {
           LT: "HH:mm",
@@ -73,7 +82,7 @@ export const Language = function () {
     router = routing;
     /** global: _ */
     _ = new Polyglot({ locale: getLocale(routing.getLang() ?? undefined), allowMissing: true });
-    getJSON("locale/" + _.locale() + ".json?" + config.cacheBreaker).then(setTranslation);
+    getJSON<TranslationData>("locale/" + _.locale() + ".json?" + config.cacheBreaker).then(setTranslation);
     document.querySelector("html")!.setAttribute("lang", _.locale());
   }
 
