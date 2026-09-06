@@ -1,11 +1,14 @@
 import moment from "moment";
-import * as helper from "./helper.js";
+import { getJSON } from "./http.js";
 import Polyglot from "node-polyglot";
 import { Router } from "./router.js";
 
 export type LanguageCode = string;
 
-export let _: Polyglot & { phrases?: { [k: string]: any } };
+export let _: Polyglot & { phrases?: { [k: string]: any } } = new Polyglot({
+  phrases: {},
+  allowMissing: true,
+}) as any;
 
 export const Language = function () {
   let router: Router;
@@ -70,7 +73,7 @@ export const Language = function () {
     router = routing;
     /** global: _ */
     _ = new Polyglot({ locale: getLocale(routing.getLang() ?? undefined), allowMissing: true });
-    helper.getJSON("locale/" + _.locale() + ".json?" + config.cacheBreaker).then(setTranslation);
+    getJSON("locale/" + _.locale() + ".json?" + config.cacheBreaker).then(setTranslation);
     document.querySelector("html")!.setAttribute("lang", _.locale());
   }
 
