@@ -6,7 +6,7 @@ import { Filter } from "../datadistributor.js";
 export const HostnameFilter = function (): CanRender & Filter {
   let refreshFunctions: ((preserveFocus?: boolean) => void)[] = [];
   let timer: ReturnType<typeof setTimeout>;
-  let input = document.createElement("input");
+  let input: HTMLInputElement | undefined;
 
   function refresh() {
     clearTimeout(timer);
@@ -20,6 +20,9 @@ export const HostnameFilter = function (): CanRender & Filter {
   }
 
   function run(node: Node) {
+    if (!input) {
+      return true;
+    }
     return node.hostname.toLowerCase().includes(input.value.toLowerCase());
   }
 
@@ -28,6 +31,7 @@ export const HostnameFilter = function (): CanRender & Filter {
   }
 
   function render(el: HTMLElement) {
+    input = document.createElement("input");
     input.type = "search";
     input.placeholder = _.t("sidebar.nodeFilter");
     input.setAttribute("aria-label", _.t("sidebar.nodeFilter"));
