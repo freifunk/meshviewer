@@ -26,7 +26,7 @@ export const HostnameFilter = function (): CanRender & Filter {
     return node.hostname.toLowerCase().includes(input.value.toLowerCase());
   }
 
-  function setRefresh(f: () => any) {
+  function setRefresh(f: (preserveFocus?: boolean) => void) {
     refreshFunctions.push(f);
   }
 

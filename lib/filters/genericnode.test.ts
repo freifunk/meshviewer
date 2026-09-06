@@ -17,15 +17,15 @@ describe("GenericNodeFilter", () => {
   }
 
   it("matches direct property value", () => {
-    const filter = GenericNodeFilter("model", ["model"], "TP-Link Archer C7 v2", (v) => v);
+    const filter = GenericNodeFilter("model", ["model"], "TP-Link Archer C7 v2", (v) => v as string);
     expect(filter.run(sampleNode)).toBe(true);
 
-    const filterMismatch = GenericNodeFilter("model", ["model"], "Ubiquiti", (v) => v);
+    const filterMismatch = GenericNodeFilter("model", ["model"], "Ubiquiti", (v) => v as string);
     expect(filterMismatch.run(sampleNode)).toBe(false);
   });
 
   it("matches nested property value", () => {
-    const filter = GenericNodeFilter("site", ["system", "site_code"], "ffm", (v) => v);
+    const filter = GenericNodeFilter("site", ["system", "site_code"], "ffm", (v) => v as string);
     expect(filter.run(sampleNode)).toBe(true);
   });
 
@@ -86,7 +86,7 @@ describe("GenericNodeFilter", () => {
   });
 
   it("provides metadata getters", () => {
-    const filter = GenericNodeFilter("Site Code", ["system", "site_code"], "ffm", (v) => v);
+    const filter = GenericNodeFilter("Site Code", ["system", "site_code"], "ffm", (v) => v as string);
     expect(filter.getName()).toBe("Site Code");
     expect(filter.getValue()).toBe("ffm");
     expect(filter.getKey?.()).toBe("ffmSite Code");
@@ -108,7 +108,7 @@ describe("GenericNodeFilter", () => {
     };
     vi.stubGlobal("document", mockDoc);
 
-    const filter = GenericNodeFilter("model", ["model"], "TP-Link Archer C7 v2", (v) => v);
+    const filter = GenericNodeFilter("model", ["model"], "TP-Link Archer C7 v2", (v) => v as string);
     const container = mockElement();
     const refreshSpy = vi.fn();
 

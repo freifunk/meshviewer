@@ -57,8 +57,11 @@ export const showDevicePicture = function showDevicePicture(pictures: string, su
     class: { "hw-img": true },
     on: {
       // hide non-existent images
-      error: function (e: any) {
-        e.target.style.display = "none";
+      error: function (e: Event) {
+        const target = e.target as HTMLElement | null;
+        if (target) {
+          target.style.display = "none";
+        }
       },
     },
   });
