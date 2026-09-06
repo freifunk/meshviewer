@@ -12,13 +12,13 @@ export interface TargetLocation {
 
 export interface Target {
   resetView(): void;
-  gotoNode(node: Node, nodeDict: { [k: NodeId]: Node }): any;
-  gotoLink(link: [Link, ...Link[]]): any;
-  gotoLocation(locationData: TargetLocation): any;
+  gotoNode(node: Node, nodeDict: { [k: NodeId]: Node }): void;
+  gotoLink(link: [Link, ...Link[]]): void;
+  gotoLocation(locationData: TargetLocation): void;
 }
 
 interface Views {
-  [k: string]: () => any;
+  [k: string]: () => void;
 }
 
 type RouteData = Record<string, string> | string[] | null;
@@ -300,7 +300,7 @@ export class Router extends Navigo {
     });
   }
 
-  addView(key: string, view: () => any) {
+  addView(key: string, view: () => void) {
     this.views[key] = view;
   }
 

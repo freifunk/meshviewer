@@ -3,11 +3,11 @@ import { resolve } from "path";
 import { defineConfig } from "vite";
 import { checker } from "vite-plugin-checker";
 import { VitePWA } from "vite-plugin-pwa";
-import pkg from "./package.json";
+import pkg from "./package.json" with { type: "json" };
 import { resolveRelativeFixtureTimes } from "./scripts/fixture-times.mjs";
 
 function devFixturesPlugin() {
-  const fixtureRoot = resolve(__dirname, "dev-fixtures");
+  const fixtureRoot = resolve(import.meta.dirname, "dev-fixtures");
   const routes = {
     "/config.json": {
       filePath: resolve(fixtureRoot, "config.json"),
@@ -66,8 +66,8 @@ export default defineConfig(({ command, mode }) => ({
   base: "./",
   resolve: {
     alias: {
-      "@fonts": resolve(__dirname, "assets/fonts"),
-      "@icons": resolve(__dirname, "assets/icons/svg"),
+      "@fonts": resolve(import.meta.dirname, "assets/fonts"),
+      "@icons": resolve(import.meta.dirname, "assets/icons/svg"),
     },
   },
   define: {
@@ -78,9 +78,9 @@ export default defineConfig(({ command, mode }) => ({
     sourcemap: true,
     rollupOptions: {
       input: {
-        embed: resolve(__dirname, "embed/index.html"),
-        index: resolve(__dirname, "index.html"),
-        offline: resolve(__dirname, "offline.html"),
+        embed: resolve(import.meta.dirname, "embed/index.html"),
+        index: resolve(import.meta.dirname, "index.html"),
+        offline: resolve(import.meta.dirname, "offline.html"),
       },
     },
   },

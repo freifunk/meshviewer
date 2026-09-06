@@ -2,18 +2,32 @@
  * https://github.com/Mappy/Leaflet-active-area
  * Apache 2.0 license https://www.apache.org/licenses/LICENSE-2.0
  */
-import * as L from "leaflet";
+import L from "leaflet";
+
+declare module "leaflet" {
+  interface Map {
+    _viewport?: HTMLElement;
+    _zoom?: number;
+    _limitZoom(zoom: number): number;
+    getViewport(): HTMLElement | undefined;
+    getViewportBounds(): L.Bounds;
+    getViewportLatLngBounds(): L.LatLngBounds;
+    getOffset(): L.Point;
+    setActiveArea(css: string | Record<string, string | number>, keepCenter?: boolean, animate?: boolean): this;
+    getCenter(withoutViewport?: boolean | unknown): L.LatLng;
+  }
+}
 
 let previousMethods = {
   getCenter: L.Map.prototype.getCenter,
   setView: L.Map.prototype.setView,
-  setZoomAround: L.Map.prototype.setZoomAround,
+  setZoomAround: (L.Map.prototype as unknown as { setZoomAround: typeof L.Map.prototype.setZoomAround }).setZoomAround,
   getBoundsZoom: L.Map.prototype.getBoundsZoom,
-  RendererUpdate: L.Renderer.prototype._update,
+  RendererUpdate: (L.Renderer.prototype as unknown as { _update: () => void })._update,
 };
 
-L.Map.include({
-  getBounds: function () {
+(L.Map as unknown as { include: (methods: Record<string, unknown>) => void }).include({
+  getBounds: function (this: L.Map) {
     if (this._viewport) {
       return this.getViewportLatLngBounds();
     }
@@ -24,14 +38,17 @@ L.Map.include({
     return new L.LatLngBounds(sw, ne);
   },
 
-  getViewport: function () {
+  getViewport: function (this: L.Map) {
     return this._viewport;
   },
 
-  getViewportBounds: function () {
+  getViewportBounds: function (this: L.Map) {
     let viewport = this._viewport;
-    let topleft = L.point(viewport.offsetLeft, viewport.offsetTop);
-    let vpsize = L.point(viewport.clientWidth, viewport.clientHeight);
+    if (!viewport) {
+      viewport = this.getContainer();
+    }
+    let topleft = viewport ? L.point(viewport.offsetLeft, viewport.offsetTop) : L.point(0, 0);
+    let vpsize = viewport ? L.point(viewport.clientWidth, viewport.clientHeight) : L.point(0, 0);
 
     if (vpsize.x === 0 || vpsize.y === 0) {
       // Our own viewport has no good size - so we fall back to the container size:
@@ -45,19 +62,21 @@ L.Map.include({
     return L.bounds(topleft, topleft.add(vpsize));
   },
 
-  getViewportLatLngBounds: function () {
+  getViewportLatLngBounds: function (this: L.Map) {
     let bounds = this.getViewportBounds();
-    return L.latLngBounds(this.containerPointToLatLng(bounds.min), this.containerPointToLatLng(bounds.max));
+    let min = bounds.min ?? L.point(0, 0);
+    let max = bounds.max ?? L.point(0, 0);
+    return L.latLngBounds(this.containerPointToLatLng(min), this.containerPointToLatLng(max));
   },
 
-  getOffset: function () {
+  getOffset: function (this: L.Map) {
     let mCenter = this.getSize().divideBy(2);
     let vCenter = this.getViewportBounds().getCenter();
 
     return mCenter.subtract(vCenter);
   },
 
-  getCenter: function (withoutViewport) {
+  getCenter: function (this: L.Map, withoutViewport?: boolean) {
     let center = previousMethods.getCenter.call(this);
 
     if (this.getViewport() && !withoutViewport) {
@@ -71,9 +90,9 @@ L.Map.include({
     return center;
   },
 
-  setView: function (center, zoom, options) {
+  setView: function (this: L.Map, center: L.LatLngExpression, zoom?: number, options?: L.ZoomPanOptions) {
     center = L.latLng(center);
-    zoom = zoom === undefined ? this._zoom : this._limitZoom(zoom);
+    zoom = zoom === undefined ? this.getZoom() : this._limitZoom(zoom);
 
     if (this.getViewport()) {
       let point = this.project(center, this._limitZoom(zoom));
@@ -84,25 +103,30 @@ L.Map.include({
     return previousMethods.setView.call(this, center, zoom, options);
   },
 
-  setZoomAround: function (latlng, zoom, options) {
+  setZoomAround: function (this: L.Map, latlng: L.LatLngExpression | L.Point, zoom: number, options?: L.ZoomOptions) {
     let viewport = this.getViewport();
 
     if (viewport) {
       let scale = this.getZoomScale(zoom);
       let viewHalf = this.getViewportBounds().getCenter();
-      let containerPoint = latlng instanceof L.Point ? latlng : this.latLngToContainerPoint(latlng);
+      let containerPoint =
+        latlng instanceof L.Point ? latlng : this.latLngToContainerPoint(latlng as L.LatLngExpression);
 
       let centerOffset = containerPoint.subtract(viewHalf).multiplyBy(1 - 1 / scale);
       let newCenter = this.containerPointToLatLng(viewHalf.add(centerOffset));
 
-      return this.setView(newCenter, zoom, { zoom: options });
+      return this.setView(newCenter, zoom, { zoom: options } as L.ZoomPanOptions);
     }
     return previousMethods.setZoomAround.call(this, latlng, zoom, options);
   },
 
-  getBoundsZoom: function (bounds, inside, padding) {
-    // (LatLngBounds[, Boolean, Point]) -> Number
-    bounds = L.latLngBounds(bounds);
+  getBoundsZoom: function (
+    this: L.Map,
+    bounds: L.LatLngBoundsExpression,
+    inside?: boolean,
+    padding?: L.PointExpression,
+  ) {
+    bounds = L.latLngBounds(bounds as L.LatLngBoundsLiteral);
     padding = L.point(padding || [0, 0]);
 
     let zoom = this.getZoom() || 0;
@@ -120,25 +144,25 @@ L.Map.include({
     zoom = this.getScaleZoom(scale, zoom);
 
     if (snap) {
-      zoom = Math.round(zoom / (snap / 100)) * (snap / 100); // don't jump if within 1% of a snap level
+      zoom = Math.round(zoom / (snap / 100)) * (snap / 100);
       zoom = inside ? Math.ceil(zoom / snap) * snap : Math.floor(zoom / snap) * snap;
     }
 
     return Math.max(min, Math.min(max, zoom));
   },
-});
 
-L.Map.include({
-  setActiveArea: function (css, keepCenter, animate) {
+  setActiveArea: function (
+    this: L.Map,
+    css: string | Record<string, string | number>,
+    keepCenter?: boolean,
+    animate?: boolean,
+  ) {
     let center;
-    if (keepCenter && this._zoom) {
-      // save center if map is already initialized
-      // and keepCenter is passed
+    if (keepCenter && this.getZoom()) {
       center = this.getCenter();
     }
 
     if (!this._viewport) {
-      // Make viewport if not already made
       let container = this.getContainer();
       this._viewport = L.DomUtil.create("div", "");
       container.insertBefore(this._viewport, container.firstChild);
@@ -157,31 +181,32 @@ L.Map.include({
   },
 });
 
-L.Renderer.include({
-  _onZoom: function () {
+(L.Renderer as unknown as { include: (methods: Record<string, unknown>) => void }).include({
+  _onZoom: function (this: any) {
     this._updateTransform(this._map.getCenter(true), this._map.getZoom());
   },
 
-  _update: function () {
+  _update: function (this: any) {
     previousMethods.RendererUpdate.call(this);
     this._center = this._map.getCenter(true);
   },
 });
 
-L.GridLayer.include({
-  _updateLevels: function () {
+(L.GridLayer as unknown as { include: (methods: Record<string, unknown>) => void }).include({
+  _updateLevels: function (this: any) {
     let zoom = this._tileZoom;
-    let maxZoom = this.options.maxZoom;
+    let maxZoom = this.options.maxZoom ?? 18;
 
     if (zoom === undefined) {
       return undefined;
     }
 
     for (let zoomLevel in this._levels) {
-      if (this._levels[zoomLevel].el.children.length || zoomLevel === zoom) {
-        this._levels[zoomLevel].el.style.zIndex = maxZoom - Math.abs(zoom - zoomLevel);
-      } else {
-        L.DomUtil.remove(this._levels[zoomLevel].el);
+      const levelObj = this._levels[zoomLevel];
+      if (levelObj?.el && (levelObj.el.children.length || zoomLevel === String(zoom))) {
+        levelObj.el.style.zIndex = String(maxZoom - Math.abs(zoom - Number(zoomLevel)));
+      } else if (levelObj?.el) {
+        L.DomUtil.remove(levelObj.el);
         this._removeTilesAtZoom(zoomLevel);
         delete this._levels[zoomLevel];
       }
@@ -191,18 +216,17 @@ L.GridLayer.include({
     let map = this._map;
 
     if (!level) {
-      level = this._levels[zoom] = {};
+      level = this._levels[zoom] = {
+        el: L.DomUtil.create("div", "leaflet-tile-container leaflet-zoom-animated", this._container),
+      };
 
-      level.el = L.DomUtil.create("div", "leaflet-tile-container leaflet-zoom-animated", this._container);
-      level.el.style.zIndex = maxZoom;
-
+      level.el.style.zIndex = String(maxZoom);
       level.origin = map.project(map.unproject(map.getPixelOrigin()), zoom).round();
       level.zoom = zoom;
 
       this._setZoomTransform(level, map.getCenter(true), map.getZoom());
 
-      // force the browser to consider the newly added element for transition
-      L.Util.falseFn(level.el.offsetWidth);
+      void level.el.offsetWidth;
     }
 
     this._level = level;
@@ -210,12 +234,12 @@ L.GridLayer.include({
     return level;
   },
 
-  _resetView: function (e) {
+  _resetView: function (this: any, e: { pinch?: boolean; flyTo?: boolean }) {
     let animating = e && (e.pinch || e.flyTo);
     this._setView(this._map.getCenter(true), this._map.getZoom(), animating, animating);
   },
 
-  _update: function (center) {
+  _update: function (this: any, center?: L.LatLng) {
     let map = this._map;
     if (!map) {
       return;
@@ -227,28 +251,30 @@ L.GridLayer.include({
     }
     if (this._tileZoom === undefined) {
       return;
-    } // if out of minzoom/maxzoom
+    }
 
     let pixelBounds = this._getTiledPixelBounds(center);
     let tileRange = this._pxBoundsToTileRange(pixelBounds);
+    if (!tileRange.min || !tileRange.max) {
+      return;
+    }
     let tileCenter = tileRange.getCenter();
-    let queue = [];
+    let queue: L.Coords[] = [];
 
     for (let key in this._tiles) {
-      this._tiles[key].current = false;
+      if (this._tiles[key]) {
+        this._tiles[key].current = false;
+      }
     }
 
-    // _update just loads more tiles. If the tile zoom level differs too much
-    // from the map's, let _setView reset levels and prune old tiles.
     if (Math.abs(zoom - this._tileZoom) > 1) {
       this._setView(center, zoom);
       return;
     }
 
-    // create a queue of coordinates to load tiles from
     for (let j = tileRange.min.y; j <= tileRange.max.y; j++) {
       for (let i = tileRange.min.x; i <= tileRange.max.x; i++) {
-        let coords = new L.Point(i, j);
+        let coords = new L.Point(i, j) as L.Coords;
         coords.z = this._tileZoom;
 
         if (!this._isValidTile(coords)) {
@@ -264,25 +290,20 @@ L.GridLayer.include({
       }
     }
 
-    // sort tile queue to load tiles in order of their distance to center
     queue.sort(function (a, b) {
       return a.distanceTo(tileCenter) - b.distanceTo(tileCenter);
     });
 
     if (queue.length !== 0) {
-      // if it's the first batch of tiles to load
       if (!this._loading) {
         this._loading = true;
-        // @event loading: Event
-        // Fired when the grid layer starts loading tiles
         this.fire("loading");
       }
 
-      // create DOM fragment to append tiles in one batch
       let fragment = document.createDocumentFragment();
 
       for (let i = 0; i < queue.length; i++) {
-        this._addTile(queue[i], fragment);
+        this._addTile(queue[i]!, fragment);
       }
 
       this._level.el.appendChild(fragment);

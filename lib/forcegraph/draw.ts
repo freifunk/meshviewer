@@ -1,19 +1,24 @@
+import * as d3Force from "d3-force";
 import * as helper from "../utils/helper.js";
 import { ZoomTransform } from "d3-zoom";
 import { Link, Node } from "../utils/node.js";
 
 type Highlight = { type: string; id: string } | null;
 
-export interface MapNode extends Point {
+export interface MapNode extends d3Force.SimulationNodeDatum {
+  x: number;
+  y: number;
   o: Node;
 }
 
-export interface MapLink extends Point {
+export interface MapLink extends d3Force.SimulationLinkDatum<MapNode> {
   o: Link;
   source: MapNode;
   target: MapNode;
   color: string;
   color_to: string;
+  x: number;
+  y: number;
 }
 
 let ctx: CanvasRenderingContext2D;

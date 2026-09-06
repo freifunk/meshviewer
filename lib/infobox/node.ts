@@ -1,9 +1,9 @@
 import { h, classModule, eventListenersModule, init, propsModule, styleModule, VNode } from "snabbdom";
 import { _ } from "../utils/language.js";
 
-import { SortTable } from "../sorttable.js";
+import { Heading, SortTable } from "../sorttable.js";
 import * as helper from "../utils/helper.js";
-import nodef, { Neighbour, Node as NodeData, NodeId } from "../utils/node.js";
+import nodef, { LinkScale, Neighbour, Node as NodeData, NodeId } from "../utils/node.js";
 import { NodeInfo } from "../config_default.js";
 import { createChartVNode } from "./chart.js";
 import { ObjectsLinksAndNodes } from "../datadistributor.js";
@@ -53,7 +53,7 @@ function showDevicePictures(pictures: string, device: NodeData) {
   return helper.showDevicePicture(pictures, subst);
 }
 
-export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any, nodeDict: { [k: NodeId]: NodeData }) {
+export function Node(el: HTMLElement, node: NodeData, linkScale: LinkScale, nodeDict: { [k: NodeId]: NodeData }) {
   let config = window.config;
   let router = window.router;
 
@@ -137,7 +137,7 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
     ]);
   }
 
-  let headings = [
+  let headings: Heading<Neighbour>[] = [
     {
       name: "",
       sort: function (a: Neighbour, b: Neighbour) {
@@ -184,7 +184,7 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: (t: any) => any
   el.appendChild(container);
   let containerVnode: VNode | undefined;
 
-  let tableNeighbour = SortTable(headings, 1, renderNeighbourRow, ["node-links"]);
+  let tableNeighbour = SortTable<Neighbour>(headings, 1, renderNeighbourRow, ["node-links"]);
 
   const self = {
     render() {
