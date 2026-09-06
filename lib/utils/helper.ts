@@ -5,30 +5,7 @@ import { _ } from "./language.js";
 import { Node } from "./node.js";
 import { LinkInfo } from "../config_default.js";
 
-export const get = function get(url: string) {
-  return new Promise(function (resolve, reject) {
-    let req = new XMLHttpRequest();
-    req.open("GET", url);
-
-    req.onload = function onload() {
-      if (req.status === 200) {
-        resolve(req.response);
-      } else {
-        reject(Error(req.statusText));
-      }
-    };
-
-    req.onerror = function onerror() {
-      reject(Error("Network Error"));
-    };
-
-    req.send();
-  });
-};
-
-export const getJSON = function getJSON(url: string) {
-  return get(url).then((text: unknown) => JSON.parse(String(text)));
-};
+export { get, getJSON } from "./http.js";
 
 export const sortByKey = function sortByKey<K extends string, T extends Record<K, Moment>>(key: K, data: T[]): T[] {
   return data.sort(function (a, b) {
