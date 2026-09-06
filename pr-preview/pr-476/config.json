@@ -1,5 +1,5 @@
 {
-  "siteName": "feat(map): allow loading external geojson via url (#41)",
+  "siteName": "feat(map): allow loading external geojson via url",
   "dataPath": [
     "./"
   ],
