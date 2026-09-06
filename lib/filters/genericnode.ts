@@ -1,4 +1,4 @@
-import * as helper from "../utils/helper.js";
+import { dictGet, normalizeFilterValue } from "../utils/formatters.js";
 import { GenericFilter } from "../datadistributor.js";
 import { CanRender } from "../container.js";
 import { Node } from "../utils/node.js";
@@ -8,20 +8,15 @@ export const GenericNodeFilter = function (
   name: string,
   keys: string[],
   value: string,
-  nodeValueModifier: (a: any) => string | null,
+  nodeValueModifier?: ((a: any) => string | null) | null,
 ): GenericFilter & CanRender {
   let negate = false;
-  let refresh: () => any;
+  let refresh: (() => void) | undefined;
 
-  const normalizedValue = helper.normalizeFilterValue(value);
-
-  let label = document.createElement("label");
-  let strong = document.createElement("strong");
-  label.textContent = _.t(name) + ": ";
-  label.appendChild(strong);
+  const normalizedValue = normalizeFilterValue(value);
 
   function run(node: Node) {
-    let nodeValue = helper.dictGet(node, keys.slice(0));
+    let nodeValue = dictGet(node, keys.slice(0));
 
     if (nodeValueModifier) {
       nodeValue = nodeValueModifier(nodeValue);
@@ -31,14 +26,14 @@ export const GenericNodeFilter = function (
       return negate;
     }
 
-    return helper.normalizeFilterValue(nodeValue) === normalizedValue ? !negate : negate;
+    return normalizeFilterValue(nodeValue) === normalizedValue ? !negate : negate;
   }
 
-  function setRefresh(f: () => any) {
+  function setRefresh(f: () => void) {
     refresh = f;
   }
 
-  function draw(el: HTMLElement) {
+  function draw(el: HTMLElement, strong: HTMLElement) {
     if (negate) {
       el.classList.add("not");
     } else {
@@ -49,13 +44,17 @@ export const GenericNodeFilter = function (
   }
 
   function render(el: HTMLElement) {
+    let label = document.createElement("label");
+    let strong = document.createElement("strong");
+    label.textContent = _.t(name) + ": ";
+    label.appendChild(strong);
     el.appendChild(label);
-    draw(el);
+    draw(el, strong);
 
     label.onclick = function onclick() {
       negate = !negate;
 
-      draw(el);
+      draw(el, strong);
 
       if (refresh) {
         refresh();
