@@ -135,14 +135,20 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
 
   let isDestroyed = false;
   let geoLayers: L.GeoJSON[] = [];
+  const geoAbortController = new AbortController();
 
   if (config.geo) {
-    loadGeoLayers(config.geo, function (layer) {
-      if (!isDestroyed) {
-        geoLayers.push(layer);
-        layer.addTo(map);
-      }
-    });
+    loadGeoLayers(
+      config.geo,
+      function (layer) {
+        if (!isDestroyed) {
+          geoLayers.push(layer);
+          layer.addTo(map);
+        }
+      },
+      fetch,
+      geoAbortController.signal,
+    );
   }
 
   button.init();
@@ -312,6 +318,7 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
 
   self.destroy = function destroy() {
     isDestroyed = true;
+    geoAbortController.abort();
     geoLayers.forEach(function (layer) {
       layer.remove();
     });

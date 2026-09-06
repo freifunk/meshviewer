@@ -254,6 +254,30 @@ describe("geoUtils", () => {
       expect(result).toBeUndefined();
       expect(addToMap).not.toHaveBeenCalled();
     });
+
+    it("passes AbortSignal to fetch and ignores aborted requests cleanly", async () => {
+      const addToMap = vi.fn();
+      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      const controller = new AbortController();
+
+      const mockFetch = vi.fn().mockImplementation(() => {
+        controller.abort();
+        const err = new Error("The operation was aborted");
+        err.name = "AbortError";
+        return Promise.reject(err);
+      });
+
+      const geo: Geo = {
+        url: "/map/aborted.geojson",
+      };
+
+      const result = await loadGeoLayer(geo, addToMap, mockFetch as any, controller.signal);
+      expect(mockFetch).toHaveBeenCalledWith("/map/aborted.geojson", { signal: controller.signal });
+      expect(result).toBeUndefined();
+      expect(addToMap).not.toHaveBeenCalled();
+      expect(consoleSpy).not.toHaveBeenCalled();
+      consoleSpy.mockRestore();
+    });
   });
 
   describe("loadGeoLayers", () => {
@@ -267,6 +291,22 @@ describe("geoUtils", () => {
       const geoList: Geo[] = [{ json: sampleFeature }, { url: "/map/external.geojson" }];
 
       await loadGeoLayers(geoList, addToMap, mockFetch as any);
+      expect(addToMap).toHaveBeenCalledTimes(2);
+    });
+
+    it("forwards AbortSignal to each layer load", async () => {
+      const addToMap = vi.fn();
+      const controller = new AbortController();
+      const mockFetch = vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => sampleFeature,
+      });
+
+      const geoList: Geo[] = [{ url: "/map/test1.geojson" }, { url: "/map/test2.geojson" }];
+
+      await loadGeoLayers(geoList, addToMap, mockFetch as any, controller.signal);
+      expect(mockFetch).toHaveBeenCalledWith("/map/test1.geojson", { signal: controller.signal });
+      expect(mockFetch).toHaveBeenCalledWith("/map/test2.geojson", { signal: controller.signal });
       expect(addToMap).toHaveBeenCalledTimes(2);
     });
 
