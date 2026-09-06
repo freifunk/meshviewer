@@ -137,6 +137,7 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
 
   let isDestroyed = false;
   let geoLayers: L.GeoJSON[] = [];
+  const geoAbortController = new AbortController();
   const notice = Notice(map);
 
   if (config.geo) {
@@ -154,6 +155,7 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
           notice.show(message + " " + (err instanceof Error ? err.message : String(err)));
         }
       },
+      geoAbortController.signal,
     );
   }
 
@@ -324,6 +326,7 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
 
   self.destroy = function destroy() {
     isDestroyed = true;
+    geoAbortController.abort();
     notice.clear();
     geoLayers.forEach(function (layer) {
       layer.remove();

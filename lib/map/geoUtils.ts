@@ -27,6 +27,7 @@ export function loadGeoLayer(
   addToMap: (layer: L.GeoJSON) => void,
   fetchFn: typeof fetch = fetch,
   onError?: GeoErrorHandler,
+  signal?: AbortSignal,
 ): Promise<L.GeoJSON | void> {
   if (!geo) {
     return Promise.resolve();
@@ -35,7 +36,8 @@ export function loadGeoLayer(
 
   if (geo.url) {
     const url = geo.url;
-    return fetchFn(url)
+    const fetchPromise = signal ? fetchFn(url, { signal }) : fetchFn(url);
+    return fetchPromise
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP ${response.status} ${response.statusText}`);
@@ -43,11 +45,17 @@ export function loadGeoLayer(
         return response.json();
       })
       .then((data) => {
+        if (signal?.aborted) {
+          return;
+        }
         const layer = L.geoJSON(data, options);
         addToMap(layer);
         return layer;
       })
       .catch((err) => {
+        if (err?.name === "AbortError" || signal?.aborted) {
+          return;
+        }
         reportError(`Failed to load GeoJSON from ${url}:`, err, onError);
       });
   } else if (geo.json && typeof geo.json === "object") {
@@ -68,11 +76,14 @@ export function loadGeoLayers(
   addToMap: (layer: L.GeoJSON) => void,
   fetchFn: typeof fetch = fetch,
   onError?: GeoErrorHandler,
+  signal?: AbortSignal,
 ): Promise<(L.GeoJSON | void)[]> {
   if (!Array.isArray(geoList)) {
     return Promise.resolve([]);
   }
   return Promise.all(
-    geoList.filter((geo): geo is Geo => Boolean(geo)).map((geo) => loadGeoLayer(geo, addToMap, fetchFn, onError)),
+    geoList
+      .filter((geo): geo is Geo => Boolean(geo))
+      .map((geo) => loadGeoLayer(geo, addToMap, fetchFn, onError, signal)),
   );
 }
