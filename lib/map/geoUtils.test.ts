@@ -48,17 +48,17 @@ describe("geoUtils", () => {
       expect(layer.bindTooltip).toHaveBeenCalledWith("Test Area");
     });
 
-    it("escapes HTML in feature name to prevent XSS", () => {
+    it("escapes HTML in feature name to prevent XSS (including &)", () => {
       const options = getGeoOptions();
       const layer = {
         bindTooltip: vi.fn(),
       };
       const maliciousFeature = {
         ...sampleFeature,
-        properties: { name: '<script>alert("xss")</script>' },
+        properties: { name: '<script>alert("xss")</script> & Test' },
       };
       options.onEachFeature!(maliciousFeature, layer as any);
-      expect(layer.bindTooltip).toHaveBeenCalledWith("&lt;script&gt;alert(&#34;xss&#34;)&lt;/script&gt;");
+      expect(layer.bindTooltip).toHaveBeenCalledWith("&lt;script&gt;alert(&#34;xss&#34;)&lt;/script&gt; &amp; Test");
     });
 
     it("handles numeric name such as 0", () => {
@@ -246,6 +246,13 @@ describe("geoUtils", () => {
       expect(addToMap).not.toHaveBeenCalled();
       expect(consoleSpy).toHaveBeenCalledWith("Failed to load GeoJSON from /map/invalid.geojson:", expect.any(Error));
       consoleSpy.mockRestore();
+    });
+
+    it("handles null or undefined geo safely", async () => {
+      const addToMap = vi.fn();
+      const result = await loadGeoLayer(null as any, addToMap);
+      expect(result).toBeUndefined();
+      expect(addToMap).not.toHaveBeenCalled();
     });
   });
 

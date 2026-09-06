@@ -18,6 +18,9 @@ export function loadGeoLayer(
   addToMap: (layer: L.GeoJSON) => void,
   fetchFn: typeof fetch = fetch,
 ): Promise<L.GeoJSON | void> {
+  if (!geo) {
+    return Promise.resolve();
+  }
   const rawOption = geo.option ?? geo.options;
   const options = getGeoOptions(rawOption);
   const url = geo.url || (typeof geo.json === "string" ? geo.json : undefined);
