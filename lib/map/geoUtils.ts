@@ -28,6 +28,9 @@ export function loadGeoLayer(
   fetchFn: typeof fetch = fetch,
   onError?: GeoErrorHandler,
 ): Promise<L.GeoJSON | void> {
+  if (!geo) {
+    return Promise.resolve();
+  }
   const options = getGeoOptions(geo.option);
 
   if (geo.url) {
