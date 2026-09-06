@@ -4,19 +4,21 @@ import { CanRender } from "../container.js";
 import { Node } from "../utils/node.js";
 import { _ } from "../utils/language.js";
 
+export type NodeValueModifier = (a: any) => unknown;
+
 export const GenericNodeFilter = function (
   name: string,
   keys: string[],
   value: string,
-  nodeValueModifier?: ((a: any) => string | null) | null,
+  nodeValueModifier?: NodeValueModifier | null,
 ): GenericFilter & CanRender {
   let negate = false;
-  let refresh: (() => void) | undefined;
+  let refresh: ((preserveFocus?: boolean) => void) | undefined;
 
   const normalizedValue = normalizeFilterValue(value);
 
   function run(node: Node) {
-    let nodeValue = dictGet(node, keys.slice(0));
+    let nodeValue: unknown = dictGet(node, keys.slice(0));
 
     if (nodeValueModifier) {
       nodeValue = nodeValueModifier(nodeValue);
@@ -29,7 +31,7 @@ export const GenericNodeFilter = function (
     return normalizeFilterValue(nodeValue) === normalizedValue ? !negate : negate;
   }
 
-  function setRefresh(f: () => void) {
+  function setRefresh(f: (preserveFocus?: boolean) => void) {
     refresh = f;
   }
 
