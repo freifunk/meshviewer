@@ -96,8 +96,10 @@ export interface MapLayer {
 }
 
 export interface Geo {
-  json: GeoJsonObject;
-  option: GeoJSONOptions;
+  url?: string;
+  json?: GeoJsonObject | GeoJsonObject[] | string;
+  option?: GeoJSONOptions;
+  options?: GeoJSONOptions;
 }
 
 export interface Config {

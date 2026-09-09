@@ -76,54 +76,74 @@ The `invertInDarkMode` boolean allows you to automatically invert standard map t
 
 ### Custom Features
 
-Via `geojson` you can add custom features to the map like district boundaries.
+Via `geo` you can add custom features to the map like district boundaries or event areas. You can either load an external GeoJSON file via `url` or provide the GeoJSON object directly inline via `json`. If a feature has a `name` property, it is automatically displayed as a tooltip on hover.
 
 ```json
-    "geo": [
-        {
-            "json": {
-                "type": "FeatureCollection",
-                "features": [
-                    {
-                        "type": "Feature",
-                        "properties": {
-                            "stroke": "#555555",
-                            "stroke-width": 2,
-                            "stroke-opacity": 1,
-                            "fill": "#6db743",
-                            "fill-opacity": 0.5,
-                            "segment": 3
-                        },
-                        "geometry": {
-                            "type": "Polygon",
-                            "coordinates": [
-                                [
-                                    [
-                                        6.170628106033859,
-                                        50.80453937432226
-                                    ],
-                                    [
-                                        6.173592924692929,
-                                        50.80457163351845
-                                    ]
-                                ]
-                            ]
-                        }
-                    }
-                ]
-            },
-            "option": {
-                "style": {
-                    "color": "#555555",
-                    "weight": 5,
-                    "opacity": 0.4,
-                    "fillColor": "#555555",
-                    "fillOpacity": 0.1
-                }
-            }
+  "geo": [
+    {
+      "url": "/map/boundaries.geojson",
+      "option": {
+        "style": {
+          "color": "#ffa500",
+          "weight": 2,
+          "opacity": 1,
+          "fillColor": "#ffa500",
+          "fillOpacity": 0.5
         }
-    ],
-}
+      }
+    },
+    {
+      "json": {
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "type": "Feature",
+            "properties": {
+              "name": "District A",
+              "stroke": "#555555",
+              "stroke-width": 2,
+              "stroke-opacity": 1,
+              "fill": "#6db743",
+              "fill-opacity": 0.5,
+              "segment": 3
+            },
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    6.170628,
+                    50.804539
+                  ],
+                  [
+                    6.173592,
+                    50.804571
+                  ],
+                  [
+                    6.172000,
+                    50.806000
+                  ],
+                  [
+                    6.170628,
+                    50.804539
+                  ]
+                ]
+              ]
+            }
+          }
+        ]
+      },
+      "option": {
+        "style": {
+          "color": "#555555",
+          "weight": 5,
+          "opacity": 0.4,
+          "fillColor": "#555555",
+          "fillOpacity": 0.1
+        }
+      }
+    }
+  ],
 ```
 
 ## Domain Names
