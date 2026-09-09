@@ -82,6 +82,8 @@ async function fetchChartData(
           resultFormat: "time_series",
           intervalMs,
           maxDataPoints,
+          // InfluxDB ALIAS BY, e.g. "$tag_domain" to name per-tag series from a GROUP BY
+          ...(chart.alias ? { alias: applySubst(chart.alias, subst) } : {}),
         },
       ],
       from: fromStr,
