@@ -3,14 +3,19 @@ import { classModule, eventListenersModule, h, init, propsModule, styleModule, V
 
 import { _ } from "./utils/language.js";
 import * as helper from "./utils/helper.js";
-import { NodesByState, ObjectsLinksAndNodes } from "./datadistributor.js";
+import { CanSetData, NodesByState, ObjectsLinksAndNodes } from "./datadistributor.js";
+import { CanRender } from "./container.js";
 import { Node } from "./utils/node.js";
 
 const patch = init([classModule, propsModule, styleModule, eventListenersModule]);
 
 type TimestampField = "firstseen" | "lastseen";
 
-export const SimpleNodelist = function (nodesState: string, field: TimestampField, title: string) {
+export const SimpleNodelist = function (
+  nodesState: keyof NodesByState,
+  field: TimestampField,
+  title: string,
+): CanRender & CanSetData {
   let listContainer: VNode = h("div");
 
   return {
