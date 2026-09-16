@@ -3,6 +3,7 @@
  * Apache 2.0 license https://www.apache.org/licenses/LICENSE-2.0
  */
 import L from "leaflet";
+import { getLayerMaxZoom } from "../utils/mapUtils.js";
 
 declare module "leaflet" {
   interface Map {
@@ -195,7 +196,7 @@ let previousMethods = {
 (L.GridLayer as unknown as { include: (methods: Record<string, unknown>) => void }).include({
   _updateLevels: function (this: any) {
     let zoom = this._tileZoom;
-    let maxZoom = this.options.maxZoom ?? 18;
+    let maxZoom = getLayerMaxZoom(this, this._map);
 
     if (zoom === undefined) {
       return undefined;
