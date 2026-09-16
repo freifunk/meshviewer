@@ -1,6 +1,21 @@
 import { Map } from "leaflet";
 import { Node } from "./node.js";
 
+/**
+ * Zoom ceiling used when neither the grid layer nor any base layer declares a maxZoom.
+ * Matches the Leaflet default tile pyramid depth; only reached when the config is incomplete.
+ */
+export const DEFAULT_MAX_ZOOM = 18;
+
+/**
+ * Effective maxZoom for a grid layer: its own option first, then the map's, which Leaflet
+ * derives from the active base layer (so satellite stacks deeper than 18 are honoured).
+ */
+export const getLayerMaxZoom = function getLayerMaxZoom(layer: { options: { maxZoom?: number } }, map: Map) {
+  const maxZoom = layer.options.maxZoom ?? map.getMaxZoom();
+  return Number.isFinite(maxZoom) ? maxZoom : DEFAULT_MAX_ZOOM;
+};
+
 export const getTileBBox = function getTileBBox(size: Point, map: Map, tileSize: number, margin: number) {
   let tl = map.unproject([size.x - margin, size.y - margin]);
   let br = map.unproject([size.x + margin + tileSize, size.y + margin + tileSize]);

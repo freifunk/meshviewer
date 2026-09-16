@@ -4,16 +4,11 @@ import * as helper from "../utils/helper.js";
 import RBush from "rbush";
 import { Link, LinkScale, Node } from "../utils/node.js";
 import { ObjectsLinksAndNodes } from "../datadistributor.js";
+import { getLayerMaxZoom } from "../utils/mapUtils.js";
 
-let groupOnline: L.FeatureGroup | undefined;
-let groupOffline: L.FeatureGroup | undefined;
-let groupNew: L.FeatureGroup | undefined;
-let groupLost: L.FeatureGroup | undefined;
-let groupLines: L.FeatureGroup | undefined;
+type LabelLocation = [CanvasTextAlign, CanvasTextBaseline, number];
 
-type LabelLocation = [string, CanvasTextBaseline, number];
-
-let labelLocations: LabelLocation[] = [
+const labelLocations: LabelLocation[] = [
   ["left", "middle", 0 / 8],
   ["center", "top", 6 / 8],
   ["right", "middle", 4 / 8],
@@ -23,16 +18,29 @@ let labelLocations: LabelLocation[] = [
   ["center", "ideographic", 2 / 8],
   ["right", "ideographic", 3 / 8],
 ];
-let labelShadow: string;
-let bodyStyle = { fontFamily: "sans-serif", backgroundColor: "", color: "" };
-let nodeRadius = 4;
+const nodeRadius = 4;
 
-let cFont = document.createElement("canvas").getContext("2d");
+interface LabelTheme {
+  fontFamily: string;
+  color: string;
+  shadow: string;
+}
 
-function measureText(font: string, text: string) {
-  if (cFont?.measureText) {
-    cFont.font = font;
-    return cFont.measureText(text);
+const defaultTheme: LabelTheme = { fontFamily: "sans-serif", color: "", shadow: "" };
+
+function readTheme(): LabelTheme {
+  const computedStyle = window.getComputedStyle(document.body);
+  return {
+    fontFamily: computedStyle.fontFamily,
+    color: computedStyle.color,
+    shadow: computedStyle.backgroundColor.replace(/rgb/i, "rgba").replace(/\)/i, ",0.7)"),
+  };
+}
+
+function measureText(ctx: CanvasRenderingContext2D | null, font: string, text: string) {
+  if (ctx?.measureText) {
+    ctx.font = font;
+    return ctx.measureText(text);
   }
   return { width: text.length * 7 };
 }
@@ -40,14 +48,20 @@ function measureText(font: string, text: string) {
 export interface PreparedLabel {
   position: L.LatLng;
   label: string;
-  offset: [number, number];
+  /** Distance in pixels from the node marker to the label; direction is chosen during placement. */
+  distance: number;
   fillStyle: string | null;
   height: number;
   font: string;
   stroke: boolean;
   width: number;
-  minZoom?: number;
-  anchor?: LabelLocation;
+}
+
+/** A label that has been assigned a collision-free anchor, pixel offset and minimum zoom. */
+export interface PlacedLabel extends PreparedLabel {
+  offset: [number, number];
+  anchor: LabelLocation;
+  minZoom: number;
 }
 
 export interface LabelRTreeItem {
@@ -55,7 +69,7 @@ export interface LabelRTreeItem {
   minY: number;
   maxX: number;
   maxY: number;
-  label: PreparedLabel;
+  label: PlacedLabel;
 }
 
 export interface RectItem {
@@ -65,7 +79,7 @@ export interface RectItem {
   maxY: number;
 }
 
-function mapRTree(element: PreparedLabel): LabelRTreeItem {
+function mapRTree(element: PlacedLabel): LabelRTreeItem {
   return {
     minX: element.position.lat,
     minY: element.position.lng,
@@ -75,22 +89,29 @@ function mapRTree(element: PreparedLabel): LabelRTreeItem {
   };
 }
 
-function calcOffset(offset: number, loc: LabelLocation): [number, number] {
-  return [offset * Math.cos(loc[2] * 2 * Math.PI), offset * Math.sin(loc[2] * 2 * Math.PI)];
+function calcOffset(distance: number, loc: LabelLocation): [number, number] {
+  return [distance * Math.cos(loc[2] * 2 * Math.PI), distance * Math.sin(loc[2] * 2 * Math.PI)];
 }
 
-function prepareLabel(fillStyle: string | null, fontSize: number, offset: number, stroke: boolean) {
+function prepareLabel(
+  measureCtx: CanvasRenderingContext2D | null,
+  fontFamily: string,
+  fillStyle: string | null,
+  fontSize: number,
+  distance: number,
+  stroke: boolean,
+) {
   return function (node: Node): PreparedLabel {
-    let font = fontSize + "px " + bodyStyle.fontFamily;
+    let font = fontSize + "px " + fontFamily;
     return {
       position: L.latLng(node.location.latitude, node.location.longitude),
       label: node.hostname,
-      offset: calcOffset(offset, labelLocations[0]!),
+      distance: distance,
       fillStyle: fillStyle,
       height: fontSize * 1.2,
       font: font,
       stroke: stroke,
-      width: measureText(font, node.hostname).width,
+      width: measureText(measureCtx, font, node.hostname).width,
     };
   };
 }
@@ -104,7 +125,8 @@ function labelRect(
   maxZoom: number,
   z: number,
 ): RectItem {
-  let margin = 1 + 1.41 * (1 - (z - minZoom) / (maxZoom - minZoom));
+  let zoomSpan = maxZoom - minZoom;
+  let margin = zoomSpan > 0 ? 1 + 1.41 * (1 - (z - minZoom) / zoomSpan) : 1;
 
   let width = label.width * margin;
   let height = label.height * margin;
@@ -211,14 +233,29 @@ export interface LabelLayerData {
   new: Node[];
   lost: Node[];
 }
+
+interface LabelLayerGroups {
+  online: L.FeatureGroup;
+  offline: L.FeatureGroup;
+  new: L.FeatureGroup;
+  lost: L.FeatureGroup;
+  lines: L.FeatureGroup;
+}
+
+export type LabelLayerOptions = L.GridLayerOptions & { minZoom?: number; maxZoom?: number };
+
 export interface LabelLayerInstance {
   data?: LabelLayerData;
   _map?: L.Map;
   _onThemeChange?: (() => void) | null;
+  _groups?: LabelLayerGroups;
+  _theme: LabelTheme;
+  _measureCtx: CanvasRenderingContext2D | null;
   labels?: RBush<LabelRTreeItem>;
   margin?: number;
-  options: L.GridLayerOptions & { minZoom?: number; maxZoom?: number };
+  options: LabelLayerOptions;
   addTo(map: L.Map): this;
+  getTileSize(): L.Point;
   redraw(): this;
   setZIndex(zIndex: number): this;
   prepareLabels(): void;
@@ -233,6 +270,11 @@ export interface LabelLayerInstance {
 }
 
 export const LabelLayer = L.GridLayer.extend({
+  initialize: function (this: LabelLayerInstance, options?: LabelLayerOptions) {
+    L.Util.setOptions(this, options);
+    this._theme = defaultTheme;
+    this._measureCtx = document.createElement("canvas").getContext("2d");
+  },
   onAdd: function (this: LabelLayerInstance, map: L.Map) {
     L.GridLayer.prototype.onAdd.call(this, map);
     if (this.data) {
@@ -266,16 +308,14 @@ export const LabelLayer = L.GridLayer.extend({
     let iconNewUplink = Object.assign({}, iconNew, config.icon["new.uplink"]);
 
     // Check if init or data is already set
-    if (groupLines) {
-      groupOffline?.clearLayers();
-      groupOnline?.clearLayers();
-      groupNew?.clearLayers();
-      groupLost?.clearLayers();
-      groupLines?.clearLayers();
+    if (this._groups) {
+      Object.values(this._groups).forEach((group) => {
+        group.clearLayers();
+        map.removeLayer(group);
+      });
     }
 
     let lines = addLinksToMap(linkDict, linkScale, data.links);
-    groupLines = L.featureGroup(lines).addTo(map);
 
     let nodesOnline = helper.subtract(data.nodes.online, data.nodes.new).filter(helper.hasLocation);
     let nodesOffline = helper.subtract(data.nodes.offline, data.nodes.lost).filter(helper.hasLocation);
@@ -320,10 +360,14 @@ export const LabelLayer = L.GridLayer.extend({
       }),
     );
 
-    groupOffline = L.featureGroup(markersOffline).addTo(map);
-    groupLost = L.featureGroup(markersLost).addTo(map);
-    groupOnline = L.featureGroup(markersOnline).addTo(map);
-    groupNew = L.featureGroup(markersNew).addTo(map);
+    // Order determines stacking: lines below markers, online/new on top
+    this._groups = {
+      lines: L.featureGroup(lines).addTo(map),
+      offline: L.featureGroup(markersOffline).addTo(map),
+      lost: L.featureGroup(markersLost).addTo(map),
+      online: L.featureGroup(markersOnline).addTo(map),
+      new: L.featureGroup(markersNew).addTo(map),
+    };
 
     this.data = {
       online: nodesOnline,
@@ -344,20 +388,23 @@ export const LabelLayer = L.GridLayer.extend({
       return;
     }
     let config = window.config;
+    let map = this._map;
 
-    let labelsOnline = nodes.online.map(prepareLabel(null, 11, 8, true));
-    let labelsOffline = nodes.offline.map(prepareLabel(config.icon?.offline?.color ?? null, 9, 5, false));
-    let labelsNew = nodes.new.map(prepareLabel(config.map?.labelNewColor ?? null, 11, 8, true));
-    let labelsLost = nodes.lost.map(prepareLabel(config.icon?.lost?.color ?? null, 11, 8, true));
+    this._theme = readTheme();
+    const label = (fillStyle: string | null, fontSize: number, distance: number, stroke: boolean) =>
+      prepareLabel(this._measureCtx, this._theme.fontFamily, fillStyle, fontSize, distance, stroke);
 
-    let labels: PreparedLabel[] = [...labelsNew, ...labelsLost, ...labelsOnline, ...labelsOffline];
+    let labelsOnline = nodes.online.map(label(null, 11, 8, true));
+    let labelsOffline = nodes.offline.map(label(config.icon?.offline?.color ?? null, 9, 5, false));
+    let labelsNew = nodes.new.map(label(config.map?.labelNewColor ?? null, 11, 8, true));
+    let labelsLost = nodes.lost.map(label(config.icon?.lost?.color ?? null, 11, 8, true));
+
+    let prepared: PreparedLabel[] = [...labelsNew, ...labelsLost, ...labelsOnline, ...labelsOffline];
 
     let minZoom = this.options.minZoom ?? 0;
-    let maxZoom = this.options.maxZoom ?? 18;
+    let maxZoom = getLayerMaxZoom(this, map);
 
     let trees: RBush<RectItem>[] = [];
-
-    let map = this._map;
 
     function nodeToRect(z: number) {
       return function (element: PreparedLabel): RectItem {
@@ -373,14 +420,14 @@ export const LabelLayer = L.GridLayer.extend({
 
     for (let z = minZoom; z <= maxZoom; z++) {
       trees[z] = new RBush<RectItem>(9);
-      trees[z]!.load(labels.map(nodeToRect(z)));
+      trees[z]!.load(prepared.map(nodeToRect(z)));
     }
 
-    labels = labels
-      .map(function (label: PreparedLabel) {
+    let labels = prepared
+      .map(function (label: PreparedLabel): PlacedLabel | undefined {
         let best = labelLocations
           .map(function (loc) {
-            let offset = calcOffset(label.offset[0], loc);
+            let offset = calcOffset(label.distance, loc);
             let i: number;
 
             for (i = maxZoom; i >= minZoom; i--) {
@@ -402,22 +449,26 @@ export const LabelLayer = L.GridLayer.extend({
             return a.z - b.z;
           })[0];
 
-        if (best !== undefined) {
-          label.offset = calcOffset(label.offset[0], best.loc);
-          label.minZoom = best.z;
-          label.anchor = best.loc;
-
-          for (let i = maxZoom; i >= best.z; i--) {
-            let point = map.project(label.position, i);
-            let rect = labelRect(point, label.offset, best.loc, label, minZoom, maxZoom, i);
-            trees[i]!.insert(rect);
-          }
-
-          return label;
+        if (best === undefined) {
+          return undefined;
         }
-        return undefined;
+
+        let placed: PlacedLabel = {
+          ...label,
+          offset: calcOffset(label.distance, best.loc),
+          minZoom: best.z,
+          anchor: best.loc,
+        };
+
+        for (let i = maxZoom; i >= best.z; i--) {
+          let point = map.project(placed.position, i);
+          let rect = labelRect(point, placed.offset, placed.anchor, placed, minZoom, maxZoom, i);
+          trees[i]!.insert(rect);
+        }
+
+        return placed;
       })
-      .filter(function (label): label is PreparedLabel {
+      .filter(function (label): label is PlacedLabel {
         return label !== undefined;
       });
 
@@ -425,7 +476,7 @@ export const LabelLayer = L.GridLayer.extend({
 
     if (labels.length > 0) {
       this.margin += labels
-        .map(function (label: PreparedLabel) {
+        .map(function (label: PlacedLabel) {
           return label.width;
         })
         .sort((a, b) => b - a)[0]!;
@@ -439,7 +490,7 @@ export const LabelLayer = L.GridLayer.extend({
   createTile: function (this: LabelLayerInstance, tilePoint: L.Coords) {
     let tile = L.DomUtil.create("canvas", "leaflet-tile") as HTMLCanvasElement;
 
-    let tileSize = Number(this.options.tileSize ?? 256);
+    let tileSize = this.getTileSize().x;
     tile.width = tileSize;
     tile.height = tileSize;
 
@@ -449,13 +500,7 @@ export const LabelLayer = L.GridLayer.extend({
 
     let size = tilePoint.multiplyBy(tileSize);
     let map = this._map;
-    const computedStyle = window.getComputedStyle(document.querySelector("body")!);
-    bodyStyle = {
-      fontFamily: computedStyle.fontFamily,
-      backgroundColor: computedStyle.backgroundColor,
-      color: computedStyle.color,
-    };
-    labelShadow = bodyStyle.backgroundColor.replace(/rgb/i, "rgba").replace(/\)/i, ",0.7)");
+    let theme = this._theme;
 
     function projectNodes(d: LabelRTreeItem) {
       let point = map.project(d.label.position);
@@ -471,14 +516,14 @@ export const LabelLayer = L.GridLayer.extend({
     let ctx = tile.getContext("2d")!;
 
     ctx.lineWidth = 5;
-    ctx.strokeStyle = labelShadow;
+    ctx.strokeStyle = theme.shadow;
     ctx.miterLimit = 2;
 
-    function drawLabel(labelPoint: { p: L.Point; label: PreparedLabel }) {
+    function drawLabel(labelPoint: { p: L.Point; label: PlacedLabel }) {
       ctx.font = labelPoint.label.font;
-      ctx.textAlign = (labelPoint.label.anchor?.[0] as CanvasTextAlign) ?? "left";
-      ctx.textBaseline = (labelPoint.label.anchor?.[1] as CanvasTextBaseline) ?? "middle";
-      ctx.fillStyle = labelPoint.label.fillStyle === null ? bodyStyle.color : labelPoint.label.fillStyle;
+      ctx.textAlign = labelPoint.label.anchor[0];
+      ctx.textBaseline = labelPoint.label.anchor[1];
+      ctx.fillStyle = labelPoint.label.fillStyle ?? theme.color;
 
       if (labelPoint.label.stroke) {
         ctx.strokeText(
@@ -497,10 +542,10 @@ export const LabelLayer = L.GridLayer.extend({
 
     labels
       .filter(function (label) {
-        return label.label.minZoom !== undefined && tilePoint.z >= label.label.minZoom;
+        return tilePoint.z >= label.label.minZoom;
       })
       .forEach(drawLabel);
 
     return tile;
   },
-}) as unknown as { new (options?: L.GridLayerOptions & { minZoom?: number }): LabelLayerInstance };
+}) as unknown as { new (options?: LabelLayerOptions): LabelLayerInstance };
