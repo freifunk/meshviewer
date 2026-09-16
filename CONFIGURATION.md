@@ -76,54 +76,81 @@ The `invertInDarkMode` boolean allows you to automatically invert standard map t
 
 ### Custom Features
 
-Via `geojson` you can add custom features to the map like district boundaries.
+Via `geo` you can add custom features to the map like district boundaries or event areas. Each entry takes exactly one source and an optional `option` object that is passed to [`L.geoJSON`](https://leafletjs.com/reference.html#geojson-option):
+
+- `url` — path or URL of a GeoJSON file that is fetched when the map is created. If it points to another origin (e.g. a separate static file server), that server must send an `Access-Control-Allow-Origin` header that permits the meshviewer origin, otherwise the browser blocks the request (CORS).
+- `json` — a GeoJSON object (or array of objects) embedded directly in the config. A string is not accepted here; use `url` for that.
+
+If a feature has a `name` property, it is automatically displayed as a tooltip on hover.
+
+Geo layers are loaded independently of the node data: if one cannot be fetched or parsed, the map still works without it, a dismissable notice is shown in the map's bottom-left corner and details are logged to the browser console.
 
 ```json
-    "geo": [
-        {
-            "json": {
-                "type": "FeatureCollection",
-                "features": [
-                    {
-                        "type": "Feature",
-                        "properties": {
-                            "stroke": "#555555",
-                            "stroke-width": 2,
-                            "stroke-opacity": 1,
-                            "fill": "#6db743",
-                            "fill-opacity": 0.5,
-                            "segment": 3
-                        },
-                        "geometry": {
-                            "type": "Polygon",
-                            "coordinates": [
-                                [
-                                    [
-                                        6.170628106033859,
-                                        50.80453937432226
-                                    ],
-                                    [
-                                        6.173592924692929,
-                                        50.80457163351845
-                                    ]
-                                ]
-                            ]
-                        }
-                    }
-                ]
-            },
-            "option": {
-                "style": {
-                    "color": "#555555",
-                    "weight": 5,
-                    "opacity": 0.4,
-                    "fillColor": "#555555",
-                    "fillOpacity": 0.1
-                }
-            }
+  "geo": [
+    {
+      "url": "/map/boundaries.geojson",
+      "option": {
+        "style": {
+          "color": "#ffa500",
+          "weight": 2,
+          "opacity": 1,
+          "fillColor": "#ffa500",
+          "fillOpacity": 0.5
         }
-    ],
-}
+      }
+    },
+    {
+      "json": {
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "type": "Feature",
+            "properties": {
+              "name": "District A",
+              "stroke": "#555555",
+              "stroke-width": 2,
+              "stroke-opacity": 1,
+              "fill": "#6db743",
+              "fill-opacity": 0.5,
+              "segment": 3
+            },
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": [
+                [
+                  [
+                    6.170628,
+                    50.804539
+                  ],
+                  [
+                    6.173592,
+                    50.804571
+                  ],
+                  [
+                    6.172000,
+                    50.806000
+                  ],
+                  [
+                    6.170628,
+                    50.804539
+                  ]
+                ]
+              ]
+            }
+          }
+        ]
+      },
+      "option": {
+        "style": {
+          "color": "#555555",
+          "weight": 5,
+          "opacity": 0.4,
+          "fillColor": "#555555",
+          "fillOpacity": 0.1
+        }
+      }
+    }
+  ],
 ```
 
 ## Domain Names

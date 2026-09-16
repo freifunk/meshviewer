@@ -50,6 +50,11 @@ variables.$color-online: color.adjust(variables.$color-online, $lightness: 40%);
   }
 
   .leaflet-control-container {
+    .map-notice {
+      background: color.adjust(variables.$color-white, $lightness: 10%);
+      color: variables.$color-black;
+    }
+
     .leaflet-control-layers-toggle {
       background: color.adjust(variables.$color-white, $lightness: 10%);
       color: variables.$color-black;

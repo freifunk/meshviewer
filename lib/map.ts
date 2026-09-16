@@ -8,9 +8,10 @@ import { Button } from "./map/button.js";
 import "./map/activearea.js";
 import { Sidebar } from "./sidebar.js";
 import { LatLng } from "leaflet";
-import { Geo } from "./config_default.js";
 import { Link, LinkId, Node, NodeId } from "./utils/node.js";
 import { ObjectsLinksAndNodes } from "./datadistributor.js";
+import { loadGeoLayers } from "./map/geoUtils.js";
+import { Notice } from "./map/notice.js";
 
 let options = {
   worldCopyJump: true,
@@ -134,12 +135,28 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
   map.on("dragend", saveView);
   map.on("contextmenu", contextMenuOpenLayerMenu);
 
+  let isDestroyed = false;
+  let geoLayers: L.GeoJSON[] = [];
+  const geoAbortController = new AbortController();
+  const notice = Notice(map);
+
   if (config.geo) {
-    [].forEach.call(config.geo, function (geo?: Geo) {
-      if (geo) {
-        L.geoJSON(geo.json, geo.option).addTo(map);
-      }
-    });
+    loadGeoLayers(
+      config.geo,
+      function (layer) {
+        if (!isDestroyed) {
+          geoLayers.push(layer);
+          layer.addTo(map);
+        }
+      },
+      fetch,
+      function (message, err) {
+        if (!isDestroyed) {
+          notice.show(message + " " + (err instanceof Error ? err.message : String(err)));
+        }
+      },
+      geoAbortController.signal,
+    );
   }
 
   button.init();
@@ -308,6 +325,13 @@ export const Map = function (linkScale: (t: any) => any, sidebar: ReturnType<typ
   };
 
   self.destroy = function destroy() {
+    isDestroyed = true;
+    geoAbortController.abort();
+    notice.clear();
+    geoLayers.forEach(function (layer) {
+      layer.remove();
+    });
+    geoLayers = [];
     button.clearButtons();
     sidebar.button.removeEventListener("visibility", setActiveArea);
     map.remove();

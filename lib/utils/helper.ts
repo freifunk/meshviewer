@@ -291,6 +291,4 @@ export const fullscreen = function fullscreen(btn: HTMLButtonElement) {
   }
 };
 
-export const escape = function escape(string: string) {
-  return string.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&#34;").replace(/'/g, "&#39;");
-};
+export { escape } from "./escape.js";
