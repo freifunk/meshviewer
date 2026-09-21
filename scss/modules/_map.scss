@@ -62,3 +62,32 @@
   height: 100%;
   width: 100%;
 }
+
+.map-notice {
+  background: variables.$color-white;
+  border-left: 4px solid variables.$color-offline;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+  color: variables.$color-black;
+  font-size: variables.$font-size-map-control;
+  max-width: 24rem;
+  padding: 0.5rem 2rem 0.5rem 0.75rem;
+  position: relative;
+
+  p {
+    margin: 0.2rem 0;
+    word-break: break-word;
+  }
+
+  .map-notice-close {
+    background: none;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+    font-size: 1.2rem;
+    line-height: 1;
+    padding: 0.25rem;
+    position: absolute;
+    right: 0.25rem;
+    top: 0.25rem;
+  }
+}
