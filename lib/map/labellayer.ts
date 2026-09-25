@@ -244,54 +244,41 @@ interface LabelLayerGroups {
 
 export type LabelLayerOptions = L.GridLayerOptions & { minZoom?: number; maxZoom?: number };
 
-export interface LabelLayerInstance {
-  data?: LabelLayerData;
-  _map?: L.Map;
-  _onThemeChange?: (() => void) | null;
-  _groups?: LabelLayerGroups;
-  _theme: LabelTheme;
-  _measureCtx: CanvasRenderingContext2D | null;
-  labels?: RBush<LabelRTreeItem>;
-  margin?: number;
-  options: LabelLayerOptions;
-  addTo(map: L.Map): this;
-  getTileSize(): L.Point;
-  redraw(): this;
-  setZIndex(zIndex: number): this;
-  prepareLabels(): void;
-  updateLayer(): void;
-  setData(
-    data: ObjectsLinksAndNodes,
-    map: L.Map,
-    nodeDict: Record<string, StyledMarker>,
-    linkDict: Record<string, StyledPolyline>,
-    linkScale: LinkScale,
-  ): void;
-}
+export class LabelLayer extends L.GridLayer {
+  declare options: LabelLayerOptions;
+  private data?: LabelLayerData;
+  private _onThemeChange: (() => void) | null = null;
+  private _groups?: LabelLayerGroups;
+  private _theme: LabelTheme;
+  private _measureCtx: CanvasRenderingContext2D | null;
+  private labels?: RBush<LabelRTreeItem>;
+  private margin = 16;
 
-export const LabelLayer = L.GridLayer.extend({
-  initialize: function (this: LabelLayerInstance, options?: LabelLayerOptions) {
-    L.Util.setOptions(this, options);
+  constructor(options?: LabelLayerOptions) {
+    super(options);
     this._theme = defaultTheme;
     this._measureCtx = document.createElement("canvas").getContext("2d");
-  },
-  onAdd: function (this: LabelLayerInstance, map: L.Map) {
-    L.GridLayer.prototype.onAdd.call(this, map);
+  }
+
+  onAdd(map: L.Map) {
+    super.onAdd(map);
     if (this.data) {
       this.prepareLabels();
     }
     this._onThemeChange = () => this.updateLayer();
     document.documentElement.addEventListener("themechange", this._onThemeChange);
-  },
-  onRemove: function (this: LabelLayerInstance, map: L.Map) {
+    return this;
+  }
+
+  onRemove(map: L.Map) {
     if (this._onThemeChange) {
       document.documentElement.removeEventListener("themechange", this._onThemeChange);
       this._onThemeChange = null;
     }
-    L.GridLayer.prototype.onRemove.call(this, map);
-  },
-  setData: function (
-    this: LabelLayerInstance,
+    return super.onRemove(map);
+  }
+
+  setData(
     data: ObjectsLinksAndNodes,
     map: L.Map,
     nodeDict: Record<string, StyledMarker>,
@@ -376,13 +363,15 @@ export const LabelLayer = L.GridLayer.extend({
       lost: nodesLost,
     };
     this.updateLayer();
-  },
-  updateLayer: function (this: LabelLayerInstance) {
+  }
+
+  private updateLayer() {
     if (this._map) {
       this.prepareLabels();
     }
-  },
-  prepareLabels: function (this: LabelLayerInstance) {
+  }
+
+  private prepareLabels() {
     let nodes = this.data;
     if (!nodes || !this._map) {
       return;
@@ -486,8 +475,9 @@ export const LabelLayer = L.GridLayer.extend({
     this.labels.load(labels.map(mapRTree));
 
     this.redraw();
-  },
-  createTile: function (this: LabelLayerInstance, tilePoint: L.Coords) {
+  }
+
+  protected createTile(tilePoint: L.Coords) {
     let tile = L.DomUtil.create("canvas", "leaflet-tile") as HTMLCanvasElement;
 
     let tileSize = this.getTileSize().x;
@@ -511,7 +501,7 @@ export const LabelLayer = L.GridLayer.extend({
       return { p: point, label: d.label };
     }
 
-    let bbox = helper.getTileBBox(size, map, tileSize, this.margin ?? 16);
+    let bbox = helper.getTileBBox(size, map, tileSize, this.margin);
     let labels = this.labels.search(bbox).map(projectNodes);
     let ctx = tile.getContext("2d")!;
 
@@ -547,5 +537,5 @@ export const LabelLayer = L.GridLayer.extend({
       .forEach(drawLabel);
 
     return tile;
-  },
-}) as unknown as { new (options?: LabelLayerOptions): LabelLayerInstance };
+  }
+}
