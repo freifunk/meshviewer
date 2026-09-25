@@ -70,6 +70,9 @@ export interface Chart {
   datasourceUid: string;
   datasourceType: string;
   query: string;
+  // InfluxDB ALIAS BY pattern (e.g. "$tag_domain"); names the per-series frames
+  // returned by a GROUP BY tag query. Optional; single-series queries don't need it.
+  alias?: string;
   format?: string;
   unitSuffix?: string;
   from?: string;
