@@ -2,7 +2,7 @@ import { h } from "snabbdom";
 import { _ } from "./utils/language.js";
 import { Heading, SortTable } from "./sorttable.js";
 import * as helper from "./utils/helper.js";
-import { Link } from "./utils/node.js";
+import { Link, LinkScale } from "./utils/node.js";
 import { CanSetData, ObjectsLinksAndNodes } from "./datadistributor.js";
 import { CanRender } from "./container.js";
 
@@ -10,7 +10,7 @@ function linkName(link: Link) {
   return (link.source ? link.source.hostname : link.id) + " – " + link.target.hostname;
 }
 
-const headings: Heading[] = [
+const headings: Heading<Link>[] = [
   {
     name: "",
     sort: function (a, b) {
@@ -42,9 +42,9 @@ const headings: Heading[] = [
   },
 ];
 
-export const Linklist = function (linkScale: (t: any) => any): CanRender & CanSetData {
+export const Linklist = function (linkScale: LinkScale): CanRender & CanSetData {
   const router = window.router;
-  const table = SortTable(headings, 3, renderRow);
+  const table = SortTable<Link>(headings, 3, renderRow);
 
   function renderRow(link: Link) {
     const td1Content = [
