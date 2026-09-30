@@ -9,6 +9,7 @@
     "distance": "Расстояние",
     "connectionType": "Тип подключения",
     "tq": "Качество связи",
+    "throughput": "Пропускная способность",
     "lastOnline": "в сети, последнее сообщение %{time} (%{date})",
     "lastOffline": "не в сети, последнее сообщение %{time} (%{date})",
     "activated": "активировано (%{branch})",
