@@ -22,6 +22,34 @@ interface ParsedChart {
   yDomain: [number, number];
 }
 
+interface GrafanaFrameField {
+  config?: {
+    displayNameFromDS?: string;
+  };
+}
+
+interface GrafanaFrameSchema {
+  name?: string;
+  fields?: GrafanaFrameField[];
+}
+
+interface GrafanaFrameData {
+  values?: [number[], (number | null)[]];
+}
+
+interface GrafanaFrame {
+  schema?: GrafanaFrameSchema;
+  data?: GrafanaFrameData;
+}
+
+interface GrafanaQueryResult {
+  frames?: GrafanaFrame[];
+}
+
+interface GrafanaResponse {
+  results?: Record<string, GrafanaQueryResult>;
+}
+
 function parseRelativeMs(t: string): number {
   if (t === "now") return Date.now();
   const m = t.match(/^now-(\d+)([smhdwMy])$/);
@@ -44,7 +72,7 @@ async function fetchChartData(
   orgId: number,
   chart: Chart,
   subst: Record<string, string>,
-): Promise<any> {
+): Promise<GrafanaResponse> {
   const fromStr = chart.from ?? "now-7d";
   const toStr = chart.to ?? "now-1m";
   const maxDataPoints = chart.maxDataPoints ?? 300;
@@ -54,7 +82,7 @@ async function fetchChartData(
   if (chart.datasourceType === "fixture") {
     const response = await fetch(`./${chart.datasourceUid}`);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    return response.json();
+    return response.json() as Promise<GrafanaResponse>;
   }
 
   const query = applySubst(chart.query, subst);
@@ -89,10 +117,10 @@ async function fetchChartData(
     }),
   });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  return response.json();
+  return response.json() as Promise<GrafanaResponse>;
 }
 
-function parseResults(results: Record<string, any>, configMap: Map<string, ChartSeries>): ParsedChart {
+function parseResults(results: Record<string, GrafanaQueryResult>, configMap: Map<string, ChartSeries>): ParsedChart {
   const series: Series[] = [];
   let tMin = Infinity,
     tMax = -Infinity;

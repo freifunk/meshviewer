@@ -1,9 +1,9 @@
 export interface CanRender {
-  render: (element: HTMLElement) => any;
+  render: (element: HTMLElement) => void;
 }
 
 export interface CanAdd {
-  add: (element: CanRender) => any;
+  add: (element: CanRender) => void;
 }
 
 export const Container = function (tag?: string): CanRender & CanAdd {

@@ -11,9 +11,9 @@ import draw, { MapLink, MapNode } from "./forcegraph/draw.js";
 import { Sidebar } from "./sidebar.js";
 import { ClientPointEvent } from "d3-selection";
 import { ObjectsLinksAndNodes } from "./datadistributor.js";
-import { Link, Node, NodeId } from "./utils/node.js";
+import { Link, LinkScale, Node, NodeId } from "./utils/node.js";
 
-export const ForceGraph = function (linkScale: (t: any) => any, sidebar: ReturnType<typeof Sidebar>) {
+export const ForceGraph = function (linkScale: LinkScale, sidebar: ReturnType<typeof Sidebar>) {
   const self: {
     setData: (data: ObjectsLinksAndNodes) => void;
     resetView: () => void;
@@ -34,8 +34,8 @@ export const ForceGraph = function (linkScale: (t: any) => any, sidebar: ReturnT
   let el: HTMLElement;
   let canvas: HTMLCanvasElement;
   let ctx: CanvasRenderingContext2D;
-  let force: d3Force.Simulation<d3Force.SimulationNodeDatum, undefined> | null;
-  let forceLink: d3Force.Force<d3Force.SimulationNodeDatum, undefined> & { links?: (links: any) => any };
+  let force: d3Force.Simulation<MapNode, undefined> | null;
+  let forceLink: d3Force.ForceLink<MapNode, MapLink>;
 
   let transform = d3Zoom.zoomIdentity;
   let intNodes: MapNode[] = [];
@@ -113,7 +113,6 @@ export const ForceGraph = function (linkScale: (t: any) => any, sidebar: ReturnT
     const router = window.router;
 
     if (node !== undefined) {
-      // @ts-expect-error d3 simulation node has o
       router.fullUrl({ node: node.o.node_id });
       return;
     }
@@ -149,21 +148,18 @@ export const ForceGraph = function (linkScale: (t: any) => any, sidebar: ReturnT
   el.classList.add("graph");
 
   forceLink = d3Force
-    .forceLink()
-    .distance(function (node) {
-      // @ts-expect-error d3 node
-      if (node.o.type.indexOf("vpn") === 0) {
+    .forceLink<MapNode, MapLink>()
+    .distance(function (link) {
+      if (link.o.type.indexOf("vpn") === 0) {
         return 0;
       }
       return 75;
     })
-    .strength(function (node) {
-      // @ts-expect-error d3 node
-      if (node.o.type.indexOf("vpn") === 0) {
+    .strength(function (link) {
+      if (link.o.type.indexOf("vpn") === 0) {
         return 0.02;
       }
-      // @ts-expect-error d3 node
-      return Math.max(0.5, node.o.source_tq);
+      return Math.max(0.5, link.o.source_tq);
     });
 
   const zoom = d3Zoom
@@ -176,7 +172,7 @@ export const ForceGraph = function (linkScale: (t: any) => any, sidebar: ReturnT
     });
 
   force = d3Force
-    .forceSimulation()
+    .forceSimulation<MapNode>()
     .force("link", forceLink)
     .force("charge", d3Force.forceManyBody())
     .force("x", d3Force.forceX().strength(0.02))
@@ -270,7 +266,7 @@ export const ForceGraph = function (linkScale: (t: any) => any, sidebar: ReturnT
     });
 
     force!.nodes(intNodes);
-    forceLink.links!(intLinks);
+    forceLink.links(intLinks);
 
     force!.alpha(initial).velocityDecay(0.15).restart();
     if (initial === 1.8) {

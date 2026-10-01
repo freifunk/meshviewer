@@ -20,7 +20,7 @@ function showUptime(uptime: number) {
   return Math.round(seconds) + " d";
 }
 
-const headings: Heading[] = [
+const headings: Heading<Node>[] = [
   {
     name: "",
   },
@@ -59,7 +59,7 @@ const headings: Heading[] = [
 
 export const Nodelist = function (): CanSetData & CanRender {
   const router = window.router;
-  const table = SortTable(headings, 1, renderRow);
+  const table = SortTable<Node>(headings, 1, renderRow);
 
   function renderRow(node: Node) {
     let td0Content: string | VNode = "";

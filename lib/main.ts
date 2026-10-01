@@ -145,8 +145,14 @@ export const main = () => {
 
   language.init(router);
 
+  interface RawData {
+    links: Link[];
+    nodes: Node[];
+    timestamp: string;
+  }
+
   function update() {
-    return Promise.all(config.dataPath.map(helper.getJSON)).then(handleData);
+    return Promise.all(config.dataPath.map((p) => helper.getJSON<RawData>(p))).then(handleData);
   }
 
   update()

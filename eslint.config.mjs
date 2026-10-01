@@ -24,7 +24,7 @@ export default defineConfig([
         ...globals.node,
       },
 
-      ecmaVersion: 2020,
+      ecmaVersion: 2025,
       sourceType: "module",
     },
 

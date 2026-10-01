@@ -3,7 +3,7 @@ import { _ } from "../utils/language.js";
 import * as helper from "../utils/helper.js";
 import { LinkInfo } from "../config_default.js";
 import { ObjectsLinksAndNodes } from "../datadistributor.js";
-import { Link as LinkData } from "../utils/node.js";
+import { Link as LinkData, LinkScale } from "../utils/node.js";
 import { createChartVNode } from "./chart.js";
 
 const patch = init([classModule, propsModule, styleModule, eventListenersModule]);
@@ -27,7 +27,7 @@ function showStatImg(images: VNode[], linkInfo: LinkInfo, link: LinkData, time: 
   images.push(helper.showStat(linkInfo, subst));
 }
 
-export const Link = function (el: HTMLElement, linkData: [LinkData, ...LinkData[]], linkScale: (t: any) => any) {
+export const Link = function (el: HTMLElement, linkData: [LinkData, ...LinkData[]], linkScale: LinkScale) {
   let container = document.createElement("div");
   el.appendChild(container);
   let containerVnode: VNode | undefined;

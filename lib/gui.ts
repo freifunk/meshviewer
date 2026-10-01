@@ -20,6 +20,7 @@ import * as helper from "./utils/helper.js";
 import { Language } from "./utils/language.js";
 import { ObjectsLinksAndNodes } from "./datadistributor.js";
 import { cycleTheme, getTheme, initTheme } from "./theme.js";
+import { LinkScale } from "./utils/node.js";
 
 export const Gui = function (language: ReturnType<typeof Language>) {
   const self: { setData: (data: ObjectsLinksAndNodes) => void } = {
@@ -30,7 +31,7 @@ export const Gui = function (language: ReturnType<typeof Language>) {
   let router = window.router;
   let config = window.config;
 
-  let linkScale = interpolate(config.map.tqFrom, config.map.tqTo);
+  let linkScale: LinkScale = interpolate(config.map.tqFrom, config.map.tqTo);
   let sidebar: ReturnType<typeof Sidebar>;
 
   let buttons = document.createElement("div");

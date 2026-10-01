@@ -3,11 +3,11 @@ import { Link, Node, NodeId } from "./utils/node.js";
 import { Moment } from "moment";
 
 export interface CanSetData {
-  setData: (data: any) => any;
+  setData: (data: ObjectsLinksAndNodes) => void;
 }
 
 export interface CanFiltersChanged {
-  filtersChanged: (filters: Filter[]) => any;
+  filtersChanged: (filters: Filter[]) => void;
 }
 
 export interface NodesByState {
@@ -28,8 +28,8 @@ export interface ObjectsLinksAndNodes {
 
 export interface Filter {
   getKey?: () => string;
-  setRefresh(refresh: () => any): any;
-  run(data: any): Boolean;
+  setRefresh(refresh: (preserveFocus?: boolean) => void): void;
+  run(data: Node): boolean;
 }
 
 export interface GenericFilter extends Filter {

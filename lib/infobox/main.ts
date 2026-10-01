@@ -2,7 +2,7 @@ import { _ } from "../utils/language.js";
 import { Link as LinkView } from "./link.js";
 import { Node as NodeView } from "./node.js";
 import { location } from "./location.js";
-import { Link as LinkData, Node as NodeData, NodeId } from "../utils/node.js";
+import { Link as LinkData, LinkScale, Node as NodeData, NodeId } from "../utils/node.js";
 import { Sidebar } from "../sidebar.js";
 import { TargetLocation } from "../utils/router.js";
 import { ObjectsLinksAndNodes } from "../datadistributor.js";
@@ -15,7 +15,7 @@ type InfoboxPanel = {
 
 export const Main = function (
   sidebar: ReturnType<typeof Sidebar>,
-  linkScale: (t: any) => any,
+  linkScale: LinkScale,
 ): Target & { setData: (nodeOrLinkData: ObjectsLinksAndNodes) => void } {
   let el: HTMLDivElement | undefined;
   let node: InfoboxPanel | undefined;

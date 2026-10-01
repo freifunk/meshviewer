@@ -5,6 +5,7 @@ import { _ } from "./language.js";
 import * as helper from "./helper.js";
 
 export type LinkId = string;
+export type LinkScale = (t: number) => string;
 
 export interface Link {
   type: string; // wifi, vpn etc

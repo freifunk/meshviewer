@@ -9,7 +9,7 @@ export const location = function (el: HTMLElement, position: TargetLocation) {
   el.appendChild(sidebarTitle);
 
   helper
-    .getJSON(
+    .getJSON<{ display_name: string }>(
       config.reverseGeocodingApi +
         "?format=json&lat=" +
         position.lat +
@@ -18,7 +18,7 @@ export const location = function (el: HTMLElement, position: TargetLocation) {
         "&zoom=18&addressdetails=0&accept-language=" +
         _.locale(),
     )
-    .then(function (result: { display_name: string }) {
+    .then(function (result) {
       if (result.display_name) {
         sidebarTitle.outerHTML += "<p>" + result.display_name + "</p>";
       }
