@@ -76,6 +76,7 @@ export default defineConfig(({ command, mode }) => ({
   build: {
     outDir: "build",
     sourcemap: true,
+    chunkSizeWarningLimit: 2000,
     rollupOptions: {
       input: {
         embed: resolve(import.meta.dirname, "embed/index.html"),
