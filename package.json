@@ -90,5 +90,8 @@
   },
   "browserslist": [
     "> 1% in DE"
-  ]
+  ],
+  "allowScripts": {
+    "@parcel/watcher@2.5.1": true
+  }
 }
