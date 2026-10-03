@@ -99,7 +99,7 @@ export const main = () => {
       nodeDict[node.node_id] = node;
     });
 
-    let validLinks = resolveValidLinks(links, nodeDict);
+    const validLinks = resolveValidLinks(links, nodeDict);
 
     validLinks.forEach(function (link) {
       link.id = [link.source.node_id, link.target.node_id].join("-");
@@ -112,7 +112,7 @@ export const main = () => {
         link.latlngs = [source, target];
 
         link.distance = source.distanceTo(target);
-      } catch (e) {
+      } catch {
         // ignore exception
       }
     });
@@ -181,11 +181,14 @@ export const main = () => {
       postHashToParent();
 
       window.setInterval(function () {
-        update().then(function (fresh) {
-          const nd = fresh as ObjectsLinksAndNodes;
-          gui.setData(nd);
-          router.setData(nd);
-        });
+        update()
+          .then(function (fresh) {
+            gui.setData(fresh);
+            router.setData(fresh);
+          })
+          .catch(function (e: unknown) {
+            console.warn("Periodic data update failed:", e);
+          });
       }, 60000);
     })
     .catch(function (e: unknown) {

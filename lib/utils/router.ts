@@ -102,7 +102,7 @@ export class Router extends Navigo {
   customRoute(match?: Match) {
     const d = match?.data as RouteData;
     const lang = routeGroup(d, 0);
-    let viewValue: "map" | "graph" | string | undefined = routeGroup(d, 1);
+    let viewValue: string | undefined = routeGroup(d, 1);
     const node = routeGroup(d, 2);
     const link = routeGroup(d, 3);
     const zoom = routeGroup(d, 4);

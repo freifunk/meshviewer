@@ -37,7 +37,7 @@ export class ClientLayer extends L.GridLayer {
   }
 
   protected createTile(tilePoint: L.Coords) {
-    const tile = L.DomUtil.create("canvas", "leaflet-tile") as HTMLCanvasElement;
+    const tile = L.DomUtil.create<"canvas">("canvas", "leaflet-tile");
 
     const tileSize = this.getTileSize().x;
     tile.width = tileSize;
@@ -48,22 +48,22 @@ export class ClientLayer extends L.GridLayer {
     }
 
     const ctx = tile.getContext("2d")!;
-    let size = tilePoint.multiplyBy(tileSize);
-    let map = this._map;
+    const size = tilePoint.multiplyBy(tileSize);
+    const map = this._map;
 
-    let margin = 50;
-    let bbox = helper.getTileBBox(size, map, tileSize, margin);
+    const margin = 50;
+    const bbox = helper.getTileBBox(size, map, tileSize, margin);
 
-    let nodes = this.data.search(bbox);
+    const nodes = this.data.search(bbox);
 
     if (nodes.length === 0) {
       return tile;
     }
 
-    let startDistance = 10;
+    const startDistance = 10;
 
     nodes.forEach(function (node) {
-      let point = map.project([node.node.location.latitude, node.node.location.longitude]);
+      const point = map.project([node.node.location.latitude, node.node.location.longitude]);
 
       point.x -= size.x;
       point.y -= size.y;

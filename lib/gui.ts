@@ -28,17 +28,17 @@ export const Gui = function (language: ReturnType<typeof Language>) {
   };
   let content: ReturnType<typeof Map> | ReturnType<typeof ForceGraph> | null = null;
   let contentDiv: HTMLDivElement;
-  let router = window.router;
-  let config = window.config;
+  const router = window.router;
+  const config = window.config;
 
-  let linkScale: LinkScale = interpolate(config.map.tqFrom, config.map.tqTo);
+  const linkScale: LinkScale = interpolate(config.map.tqFrom, config.map.tqTo);
   let sidebar: ReturnType<typeof Sidebar>;
 
-  let buttons = document.createElement("div");
+  const buttons = document.createElement("div");
   buttons.classList.add("buttons");
 
-  let fanout = DataDistributor();
-  let fanoutUnfiltered = DataDistributor();
+  const fanout = DataDistributor();
+  const fanoutUnfiltered = DataDistributor();
   fanoutUnfiltered.add(fanout);
 
   function removeContent() {
@@ -85,9 +85,9 @@ export const Gui = function (language: ReturnType<typeof Language>) {
   contentDiv.appendChild(buttons);
 
   initTheme();
-  let buttonTheme = document.createElement("button");
+  const buttonTheme = document.createElement("button");
   function refreshThemeButton() {
-    let current = getTheme();
+    const current = getTheme();
     const themeIcon = { light: "sun", dark: "moon", auto: "auto" }[current];
     buttonTheme.classList.remove("ion-sun", "ion-moon", "ion-auto");
     buttonTheme.classList.add("ion-" + themeIcon);
@@ -100,11 +100,11 @@ export const Gui = function (language: ReturnType<typeof Language>) {
   refreshThemeButton();
   buttons.appendChild(buttonTheme);
 
-  let buttonToggle = document.createElement("button");
+  const buttonToggle = document.createElement("button");
   buttonToggle.classList.add("ion-eye");
   buttonToggle.setAttribute("aria-label", _.t("button.switchView"));
   buttonToggle.onclick = function onclick() {
-    let data: {};
+    let data: Record<string, unknown>;
     if (router.currentView() === "map") {
       data = { view: "graph", lat: undefined, lng: undefined, zoom: undefined };
     } else {
@@ -116,7 +116,7 @@ export const Gui = function (language: ReturnType<typeof Language>) {
   buttons.appendChild(buttonToggle);
 
   if (config.fullscreen || (config.fullscreenFrame && window.frameElement)) {
-    let buttonFullscreen = document.createElement("button");
+    const buttonFullscreen = document.createElement("button");
     buttonFullscreen.classList.add("ion-full-enter");
     buttonFullscreen.setAttribute("aria-label", _.t("button.fullscreen"));
     buttonFullscreen.onclick = function onclick() {
@@ -126,19 +126,19 @@ export const Gui = function (language: ReturnType<typeof Language>) {
     buttons.appendChild(buttonFullscreen);
   }
 
-  let title = Title();
+  const title = Title();
 
-  let header = Container("header");
-  let infobox = Infobox(sidebar, linkScale);
-  let tabs = Tabs();
-  let overview = Container();
-  let legend = Legend(language);
-  let newnodeslist = SimpleNodelist("new", "firstseen", _.t("node.new"));
-  let lostnodeslist = SimpleNodelist("lost", "lastseen", _.t("node.missing"));
-  let nodelist = Nodelist();
-  let linklist = Linklist(linkScale);
-  let statistics = Proportions(fanout);
-  let about = About(config.devicePicturesSource, config.devicePicturesLicense);
+  const header = Container("header");
+  const infobox = Infobox(sidebar, linkScale);
+  const tabs = Tabs();
+  const overview = Container();
+  const legend = Legend(language);
+  const newnodeslist = SimpleNodelist("new", "firstseen", _.t("node.new"));
+  const lostnodeslist = SimpleNodelist("lost", "lastseen", _.t("node.missing"));
+  const nodelist = Nodelist();
+  const linklist = Linklist(linkScale);
+  const statistics = Proportions(fanout);
+  const about = About(config.devicePicturesSource, config.devicePicturesLicense);
 
   fanoutUnfiltered.add(legend);
   fanoutUnfiltered.add(newnodeslist);
@@ -154,11 +154,11 @@ export const Gui = function (language: ReturnType<typeof Language>) {
   overview.add(newnodeslist);
   overview.add(lostnodeslist);
 
-  let filterGui = FilterGui(fanout);
+  const filterGui = FilterGui(fanout);
   fanout.watchFilters(filterGui);
   header.add(filterGui);
 
-  let hostnameFilter = HostnameFilter();
+  const hostnameFilter = HostnameFilter();
   fanout.addFilter(hostnameFilter);
 
   sidebar.add(tabs);

@@ -43,7 +43,16 @@ export const load = async () => {
     showLoaderError("config.json can not be loaded:<br>" + configResponse.statusText, "or report to your community");
     return;
   }
-  const config = await configResponse.json();
+  let config: unknown;
+  try {
+    config = await configResponse.json();
+  } catch (e) {
+    showLoaderError(
+      "config.json is not valid JSON:<br>" + (e instanceof Error ? e.message : String(e)),
+      "or report to your community",
+    );
+    return;
+  }
   window.config = deepMerge(defaultConfig, config);
   main();
 };

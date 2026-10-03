@@ -102,7 +102,7 @@ function prepareLabel(
   stroke: boolean,
 ) {
   return function (node: Node): PreparedLabel {
-    let font = fontSize + "px " + fontFamily;
+    const font = fontSize + "px " + fontFamily;
     return {
       position: L.latLng(node.location.latitude, node.location.longitude),
       label: node.hostname,
@@ -125,26 +125,26 @@ function labelRect(
   maxZoom: number,
   z: number,
 ): RectItem {
-  let zoomSpan = maxZoom - minZoom;
-  let margin = zoomSpan > 0 ? 1 + 1.41 * (1 - (z - minZoom) / zoomSpan) : 1;
+  const zoomSpan = maxZoom - minZoom;
+  const margin = zoomSpan > 0 ? 1 + 1.41 * (1 - (z - minZoom) / zoomSpan) : 1;
 
-  let width = label.width * margin;
-  let height = label.height * margin;
+  const width = label.width * margin;
+  const height = label.height * margin;
 
-  let dx: Record<string, number> = {
+  const dx: Record<string, number> = {
     left: 0,
     right: -width,
     center: -width / 2,
   };
 
-  let dy: Record<string, number> = {
+  const dy: Record<string, number> = {
     top: 0,
     ideographic: -height,
     middle: -height / 2,
   };
 
-  let x = point.x + offset[0] + (dx[anchor[0]] ?? 0);
-  let y = point.y + offset[1] + (dy[anchor[1]] ?? 0);
+  const x = point.x + offset[0] + (dx[anchor[0]] ?? 0);
+  const y = point.y + offset[1] + (dy[anchor[1]] ?? 0);
 
   return { minX: x, minY: y, maxX: x + width, maxY: y + height };
 }
@@ -154,7 +154,7 @@ export type StyledPolyline = L.Polyline & { resetStyle?: () => void };
 
 function mkMarker(dict: Record<string, StyledMarker>, iconFunc: (node: Node) => L.PathOptions) {
   return function (node: Node) {
-    let marker = L.circleMarker([node.location.latitude, node.location.longitude], iconFunc(node)) as StyledMarker;
+    const marker = L.circleMarker([node.location.latitude, node.location.longitude], iconFunc(node)) as StyledMarker;
 
     marker.resetStyle = function resetStyle() {
       marker.setStyle(iconFunc(node));
@@ -172,7 +172,7 @@ function mkMarker(dict: Record<string, StyledMarker>, iconFunc: (node: Node) => 
 }
 
 function addLinksToMap(dict: Record<string, StyledPolyline>, linkScale: LinkScale, graph: Link[]) {
-  let config = window.config;
+  const config = window.config;
   const filtered = graph.filter(function (link) {
     return "distance" in link && link.type.indexOf("vpn") !== 0;
   });
@@ -185,14 +185,14 @@ function addLinksToMap(dict: Record<string, StyledPolyline>, linkScale: LinkScal
       linkColor = linkScale((link.source_tq + link.target_tq) / 2);
     }
 
-    let opts: L.PolylineOptions = {
+    const opts: L.PolylineOptions = {
       color: linkColor,
       weight: 4,
       opacity: 0.5,
       dashArray: "none",
     };
 
-    let line = L.polyline(link.latlngs ?? [], opts) as StyledPolyline;
+    const line = L.polyline(link.latlngs ?? [], opts) as StyledPolyline;
 
     line.resetStyle = function resetStyle() {
       line.setStyle(opts);
@@ -222,7 +222,7 @@ function addLinksToMap(dict: Record<string, StyledPolyline>, linkScale: LinkScal
 }
 
 function getIcon(color: string): L.PathOptions {
-  let config = window.config;
+  const config = window.config;
   const colorOptions = (config.icon as Record<string, L.PathOptions>)[color] ?? {};
   return Object.assign({}, config.icon.base, colorOptions);
 }
@@ -285,14 +285,14 @@ export class LabelLayer extends L.GridLayer {
     linkDict: Record<string, StyledPolyline>,
     linkScale: LinkScale,
   ) {
-    let config = window.config;
-    let iconOnline = getIcon("online");
-    let iconOffline = getIcon("offline");
-    let iconLost = getIcon("lost");
-    let iconAlert = getIcon("alert");
-    let iconNew = getIcon("new");
-    let iconOnlineUplink = Object.assign({}, iconOnline, config.icon["online.uplink"]);
-    let iconNewUplink = Object.assign({}, iconNew, config.icon["new.uplink"]);
+    const config = window.config;
+    const iconOnline = getIcon("online");
+    const iconOffline = getIcon("offline");
+    const iconLost = getIcon("lost");
+    const iconAlert = getIcon("alert");
+    const iconNew = getIcon("new");
+    const iconOnlineUplink = Object.assign({}, iconOnline, config.icon["online.uplink"]);
+    const iconNewUplink = Object.assign({}, iconNew, config.icon["new.uplink"]);
 
     // Check if init or data is already set
     if (this._groups) {
@@ -302,14 +302,14 @@ export class LabelLayer extends L.GridLayer {
       });
     }
 
-    let lines = addLinksToMap(linkDict, linkScale, data.links);
+    const lines = addLinksToMap(linkDict, linkScale, data.links);
 
-    let nodesOnline = helper.subtract(data.nodes.online, data.nodes.new).filter(helper.hasLocation);
-    let nodesOffline = helper.subtract(data.nodes.offline, data.nodes.lost).filter(helper.hasLocation);
-    let nodesNew = data.nodes.new.filter(helper.hasLocation);
-    let nodesLost = data.nodes.lost.filter(helper.hasLocation);
+    const nodesOnline = helper.subtract(data.nodes.online, data.nodes.new).filter(helper.hasLocation);
+    const nodesOffline = helper.subtract(data.nodes.offline, data.nodes.lost).filter(helper.hasLocation);
+    const nodesNew = data.nodes.new.filter(helper.hasLocation);
+    const nodesLost = data.nodes.lost.filter(helper.hasLocation);
 
-    let markersOnline = nodesOnline.map(
+    const markersOnline = nodesOnline.map(
       mkMarker(nodeDict, function (node) {
         if (helper.hasUplink(node)) {
           return iconOnlineUplink;
@@ -318,13 +318,13 @@ export class LabelLayer extends L.GridLayer {
       }),
     );
 
-    let markersOffline = nodesOffline.map(
+    const markersOffline = nodesOffline.map(
       mkMarker(nodeDict, function () {
         return iconOffline;
       }),
     );
 
-    let markersNew = nodesNew.map(
+    const markersNew = nodesNew.map(
       mkMarker(nodeDict, function (node) {
         if (helper.hasUplink(node)) {
           return iconNewUplink;
@@ -333,10 +333,10 @@ export class LabelLayer extends L.GridLayer {
       }),
     );
 
-    let markersLost = nodesLost.map(
+    const markersLost = nodesLost.map(
       mkMarker(nodeDict, function (node) {
-        let config = window.config;
-        let age = moment(data.now).diff(node.lastseen, "days", true);
+        const config = window.config;
+        const age = moment(data.now).diff(node.lastseen, "days", true);
         if (age <= config.maxAgeAlert) {
           return iconAlert;
         }
@@ -372,32 +372,32 @@ export class LabelLayer extends L.GridLayer {
   }
 
   private prepareLabels() {
-    let nodes = this.data;
+    const nodes = this.data;
     if (!nodes || !this._map) {
       return;
     }
-    let config = window.config;
-    let map = this._map;
+    const config = window.config;
+    const map = this._map;
 
     this._theme = readTheme();
     const label = (fillStyle: string | null, fontSize: number, distance: number, stroke: boolean) =>
       prepareLabel(this._measureCtx, this._theme.fontFamily, fillStyle, fontSize, distance, stroke);
 
-    let labelsOnline = nodes.online.map(label(null, 11, 8, true));
-    let labelsOffline = nodes.offline.map(label(config.icon?.offline?.color ?? null, 9, 5, false));
-    let labelsNew = nodes.new.map(label(config.map?.labelNewColor ?? null, 11, 8, true));
-    let labelsLost = nodes.lost.map(label(config.icon?.lost?.color ?? null, 11, 8, true));
+    const labelsOnline = nodes.online.map(label(null, 11, 8, true));
+    const labelsOffline = nodes.offline.map(label(config.icon?.offline?.color ?? null, 9, 5, false));
+    const labelsNew = nodes.new.map(label(config.map?.labelNewColor ?? null, 11, 8, true));
+    const labelsLost = nodes.lost.map(label(config.icon?.lost?.color ?? null, 11, 8, true));
 
-    let prepared: PreparedLabel[] = [...labelsNew, ...labelsLost, ...labelsOnline, ...labelsOffline];
+    const prepared: PreparedLabel[] = [...labelsNew, ...labelsLost, ...labelsOnline, ...labelsOffline];
 
-    let minZoom = this.options.minZoom ?? 0;
-    let maxZoom = getLayerMaxZoom(this, map);
+    const minZoom = this.options.minZoom ?? 0;
+    const maxZoom = getLayerMaxZoom(this, map);
 
-    let trees: RBush<RectItem>[] = [];
+    const trees: RBush<RectItem>[] = [];
 
     function nodeToRect(z: number) {
       return function (element: PreparedLabel): RectItem {
-        let point = map.project(element.position, z);
+        const point = map.project(element.position, z);
         return {
           minX: point.x - nodeRadius,
           minY: point.y - nodeRadius,
@@ -412,17 +412,17 @@ export class LabelLayer extends L.GridLayer {
       trees[z]!.load(prepared.map(nodeToRect(z)));
     }
 
-    let labels = prepared
+    const labels = prepared
       .map(function (label: PreparedLabel): PlacedLabel | undefined {
-        let best = labelLocations
+        const best = labelLocations
           .map(function (loc) {
-            let offset = calcOffset(label.distance, loc);
+            const offset = calcOffset(label.distance, loc);
             let i: number;
 
             for (i = maxZoom; i >= minZoom; i--) {
-              let point = map.project(label.position, i);
-              let rect = labelRect(point, offset, loc, label, minZoom, maxZoom, i);
-              let candidates = trees[i]!.search(rect);
+              const point = map.project(label.position, i);
+              const rect = labelRect(point, offset, loc, label, minZoom, maxZoom, i);
+              const candidates = trees[i]!.search(rect);
 
               if (candidates.length > 0) {
                 break;
@@ -442,7 +442,7 @@ export class LabelLayer extends L.GridLayer {
           return undefined;
         }
 
-        let placed: PlacedLabel = {
+        const placed: PlacedLabel = {
           ...label,
           offset: calcOffset(label.distance, best.loc),
           minZoom: best.z,
@@ -450,8 +450,8 @@ export class LabelLayer extends L.GridLayer {
         };
 
         for (let i = maxZoom; i >= best.z; i--) {
-          let point = map.project(placed.position, i);
-          let rect = labelRect(point, placed.offset, placed.anchor, placed, minZoom, maxZoom, i);
+          const point = map.project(placed.position, i);
+          const rect = labelRect(point, placed.offset, placed.anchor, placed, minZoom, maxZoom, i);
           trees[i]!.insert(rect);
         }
 
@@ -478,9 +478,9 @@ export class LabelLayer extends L.GridLayer {
   }
 
   protected createTile(tilePoint: L.Coords) {
-    let tile = L.DomUtil.create("canvas", "leaflet-tile") as HTMLCanvasElement;
+    const tile = L.DomUtil.create<"canvas">("canvas", "leaflet-tile");
 
-    let tileSize = this.getTileSize().x;
+    const tileSize = this.getTileSize().x;
     tile.width = tileSize;
     tile.height = tileSize;
 
@@ -488,12 +488,12 @@ export class LabelLayer extends L.GridLayer {
       return tile;
     }
 
-    let size = tilePoint.multiplyBy(tileSize);
-    let map = this._map;
-    let theme = this._theme;
+    const size = tilePoint.multiplyBy(tileSize);
+    const map = this._map;
+    const theme = this._theme;
 
     function projectNodes(d: LabelRTreeItem) {
-      let point = map.project(d.label.position);
+      const point = map.project(d.label.position);
 
       point.x -= size.x;
       point.y -= size.y;
@@ -501,9 +501,9 @@ export class LabelLayer extends L.GridLayer {
       return { p: point, label: d.label };
     }
 
-    let bbox = helper.getTileBBox(size, map, tileSize, this.margin);
-    let labels = this.labels.search(bbox).map(projectNodes);
-    let ctx = tile.getContext("2d")!;
+    const bbox = helper.getTileBBox(size, map, tileSize, this.margin);
+    const labels = this.labels.search(bbox).map(projectNodes);
+    const ctx = tile.getContext("2d")!;
 
     ctx.lineWidth = 5;
     ctx.strokeStyle = theme.shadow;

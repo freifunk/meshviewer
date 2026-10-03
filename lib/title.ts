@@ -1,4 +1,4 @@
-import { Link, Node, NodeId } from "./utils/node.js";
+import { Link, Node } from "./utils/node.js";
 import { Target } from "./utils/router.js";
 
 export const Title = function (): Target & { destroy: () => void } {
@@ -18,7 +18,7 @@ export const Title = function (): Target & { destroy: () => void } {
       setTitle();
     },
 
-    gotoNode(node: Node, _nodeDict: { [k: NodeId]: Node }) {
+    gotoNode(node: Node) {
       setTitle(node.hostname);
     },
 
