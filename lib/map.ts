@@ -236,7 +236,7 @@ export const Map = function (linkScale: LinkScale, sidebar: ReturnType<typeof Si
     if ("getBounds" in element && typeof element.getBounds === "function") {
       bounds = element.getBounds()!;
     } else if ("getLatLng" in element && typeof element.getLatLng === "function") {
-      bounds = L.latLngBounds([element.getLatLng()!]);
+      bounds = L.latLngBounds([element.getLatLng()]);
     } else {
       return element;
     }
