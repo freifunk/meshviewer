@@ -142,7 +142,7 @@ export const Map = function (linkScale: LinkScale, sidebar: ReturnType<typeof Si
   const notice = Notice(map);
 
   if (config.geo) {
-    loadGeoLayers(
+    void loadGeoLayers(
       config.geo,
       function (layer) {
         if (!isDestroyed) {

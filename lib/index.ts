@@ -6,4 +6,4 @@ import { load } from "./load.js";
 // register() is emitted and updates arrive one reload late.
 registerSW({ immediate: true });
 
-load();
+load().catch(console.error);

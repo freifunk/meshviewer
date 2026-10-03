@@ -82,7 +82,11 @@ export const Language = function () {
     router = routing;
     /** global: _ */
     _ = new Polyglot({ locale: getLocale(routing.getLang() ?? undefined), allowMissing: true });
-    getJSON<TranslationData>("locale/" + _.locale() + ".json?" + config.cacheBreaker).then(setTranslation);
+    getJSON<TranslationData>("locale/" + _.locale() + ".json?" + config.cacheBreaker)
+      .then(setTranslation)
+      .catch(function (e: unknown) {
+        console.warn("Failed to load translations:", e);
+      });
     document.querySelector("html")!.setAttribute("lang", _.locale());
   }
 
