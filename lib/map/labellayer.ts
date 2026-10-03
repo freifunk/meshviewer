@@ -478,7 +478,7 @@ export class LabelLayer extends L.GridLayer {
   }
 
   protected createTile(tilePoint: L.Coords) {
-    const tile = L.DomUtil.create("canvas", "leaflet-tile") as HTMLCanvasElement;
+    const tile = L.DomUtil.create<"canvas">("canvas", "leaflet-tile");
 
     const tileSize = this.getTileSize().x;
     tile.width = tileSize;

@@ -60,7 +60,7 @@ export const Language = function () {
   }
 
   function setTranslation(translationJson: TranslationData) {
-    _.extend(translationJson as Record<string, string>);
+    _.extend(translationJson);
 
     if (moment.locale(_.locale()) !== _.locale() && translationJson.momentjs) {
       moment.defineLocale(_.locale(), {

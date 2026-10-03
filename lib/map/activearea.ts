@@ -110,8 +110,7 @@ const previousMethods = {
     if (viewport) {
       const scale = this.getZoomScale(zoom);
       const viewHalf = this.getViewportBounds().getCenter();
-      const containerPoint =
-        latlng instanceof L.Point ? latlng : this.latLngToContainerPoint(latlng as L.LatLngExpression);
+      const containerPoint = latlng instanceof L.Point ? latlng : this.latLngToContainerPoint(latlng);
 
       const centerOffset = containerPoint.subtract(viewHalf).multiplyBy(1 - 1 / scale);
       const newCenter = this.containerPointToLatLng(viewHalf.add(centerOffset));
