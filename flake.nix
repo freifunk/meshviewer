@@ -17,7 +17,7 @@
     in
     {
       devShells = forEachSupportedSystem (pkgs: {
-        default = pkgs.mkShellNoCC { packages = with pkgs; [ nodejs ]; };
+        default = pkgs.mkShellNoCC { packages = with pkgs; [ nodejs_26 ]; };
       });
 
       packages = forEachSupportedSystem (
