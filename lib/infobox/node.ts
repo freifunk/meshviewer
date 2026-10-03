@@ -19,8 +19,8 @@ type NodeRecord = Record<string, NodeFieldValue>;
 const patch = init([classModule, propsModule, styleModule, eventListenersModule]);
 
 function showStatImg(nodeInfo: NodeInfo, node: NodeData): VNode {
-  let config = window.config;
-  let subst = {
+  const config = window.config;
+  const subst = {
     "{NODE_ID}": node.node_id,
     "{NODE_NAME}": node.hostname.replace(/[^a-z0-9\-]/gi, "_"),
     "{NODE_CUSTOM}": node.hostname.replace(config.node_custom, "_"),
@@ -34,7 +34,7 @@ function showDevicePictures(pictures: string, device: NodeData) {
   if (!device.model) {
     return null;
   }
-  let subst = {
+  const subst = {
     "{MODEL}": device.model,
     "{NODE_NAME}": device.hostname,
     "{MODEL_HASH}": device.model
@@ -54,8 +54,8 @@ function showDevicePictures(pictures: string, device: NodeData) {
 }
 
 export function Node(el: HTMLElement, node: NodeData, linkScale: LinkScale, nodeDict: { [k: NodeId]: NodeData }) {
-  let config = window.config;
-  let router = window.router;
+  const config = window.config;
+  const router = window.router;
 
   function nodeLink(node: NodeData) {
     return h(
@@ -83,7 +83,7 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: LinkScale, node
   }
 
   function showGateway(node: NodeData) {
-    let gatewayCols = [
+    const gatewayCols = [
       h("span", [nodeIdLink(node.gateway_nexthop), h("br"), _.t("node.nexthop")]),
       h("span", { props: { className: "ion-arrow-right-c" } }),
       h("span", [nodeIdLink(node.gateway), h("br"), "IPv4"]),
@@ -97,7 +97,7 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: LinkScale, node
   }
 
   function renderNeighbourRow(connecting: Neighbour) {
-    let icons = [
+    const icons = [
       h("span", {
         props: {
           className: "icon ion-" + (connecting.link.type.indexOf("wifi") === 0 ? "wifi" : "share-alt"),
@@ -137,7 +137,7 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: LinkScale, node
     ]);
   }
 
-  let headings: Heading<Neighbour>[] = [
+  const headings: Heading<Neighbour>[] = [
     {
       name: "",
       sort: function (a: Neighbour, b: Neighbour) {
@@ -180,11 +180,11 @@ export function Node(el: HTMLElement, node: NodeData, linkScale: LinkScale, node
     },
   ];
 
-  let container = document.createElement("div");
+  const container = document.createElement("div");
   el.appendChild(container);
   let containerVnode: VNode | undefined;
 
-  let tableNeighbour = SortTable<Neighbour>(headings, 1, renderNeighbourRow, ["node-links"]);
+  const tableNeighbour = SortTable<Neighbour>(headings, 1, renderNeighbourRow, ["node-links"]);
 
   const self = {
     render() {

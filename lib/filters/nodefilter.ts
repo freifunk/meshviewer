@@ -2,7 +2,7 @@ import { FilterMethod, ObjectsLinksAndNodes } from "../datadistributor.js";
 
 export const NodeFilter = function (filter: FilterMethod) {
   return function (data: ObjectsLinksAndNodes) {
-    let node: ObjectsLinksAndNodes = Object.create(data);
+    const node: ObjectsLinksAndNodes = Object.create(data);
     node.nodes = { all: [], lost: [], new: [], offline: [], online: [] };
 
     const nodeKeys: (keyof import("../datadistributor.js").NodesByState)[] = [
