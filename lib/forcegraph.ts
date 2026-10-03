@@ -25,7 +25,7 @@ export const ForceGraph = function (linkScale: LinkScale, sidebar: ReturnType<ty
   } = {
     setData: () => {},
     resetView: () => {},
-    gotoNode: (_a, _b) => {},
+    gotoNode: () => {},
     gotoLink: () => {},
     gotoLocation: () => {},
     destroy: () => {},
@@ -284,7 +284,7 @@ export const ForceGraph = function (linkScale: LinkScale, sidebar: ReturnType<ty
     }, true);
   };
 
-  self.gotoNode = function gotoNode(nodeData: Node, _nodeDict: { [k: NodeId]: Node }) {
+  self.gotoNode = function gotoNode(nodeData: Node) {
     moveTo(function calcToNode() {
       draw.setHighlight({ type: "node", id: nodeData.node_id });
       const node = dictNodes[nodeData.node_id];
