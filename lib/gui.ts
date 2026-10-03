@@ -104,7 +104,7 @@ export const Gui = function (language: ReturnType<typeof Language>) {
   buttonToggle.classList.add("ion-eye");
   buttonToggle.setAttribute("aria-label", _.t("button.switchView"));
   buttonToggle.onclick = function onclick() {
-    let data: {};
+    let data: Record<string, unknown>;
     if (router.currentView() === "map") {
       data = { view: "graph", lat: undefined, lng: undefined, zoom: undefined };
     } else {
