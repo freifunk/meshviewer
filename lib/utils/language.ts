@@ -15,7 +15,7 @@ export const Language = function () {
   const config = window.config;
 
   function languageSelect(el: HTMLElement) {
-    let select = document.createElement("select");
+    const select = document.createElement("select");
     select.className = "language-switch";
     select.setAttribute("aria-label", "Language");
     select.addEventListener("change", setSelectLocale);
@@ -35,7 +35,7 @@ export const Language = function () {
   }
 
   function getLocale(input?: LanguageCode): LanguageCode {
-    let language: LanguageCode = input || (navigator.languages && navigator.languages[0]) || navigator.language;
+    const language: LanguageCode = input || (navigator.languages && navigator.languages[0]) || navigator.language;
     const defaultLocale = config.supportedLocale[0];
     if (defaultLocale === undefined) {
       throw new Error("config.supportedLocale must contain at least one locale");

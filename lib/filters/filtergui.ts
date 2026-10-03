@@ -3,9 +3,9 @@ import { CanFiltersChanged, DataDistributor, Filter } from "../datadistributor.j
 import { CanRender } from "../container.js";
 
 export const FilterGui = function (distributor: ReturnType<typeof DataDistributor>): CanFiltersChanged & CanRender {
-  let container = document.createElement("ul");
+  const container = document.createElement("ul");
   container.classList.add("filters");
-  let div = document.createElement("div");
+  const div = document.createElement("div");
 
   function render(el: HTMLElement) {
     el.appendChild(div);
@@ -17,11 +17,11 @@ export const FilterGui = function (distributor: ReturnType<typeof DataDistributo
     }
 
     (filters as (Filter & CanRender)[]).forEach(function (filter) {
-      let li = document.createElement("li");
+      const li = document.createElement("li");
       container.appendChild(li);
       filter.render(li);
 
-      let button = document.createElement("button");
+      const button = document.createElement("button");
       button.classList.add("ion-close");
       button.setAttribute("aria-label", _.t("remove"));
       button.onclick = function onclick() {

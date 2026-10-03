@@ -14,7 +14,7 @@ import { StyledMarker, StyledPolyline } from "./map/labellayer.js";
 import { loadGeoLayers } from "./map/geoUtils.js";
 import { Notice } from "./map/notice.js";
 
-let options = {
+const options = {
   worldCopyJump: true,
   zoomControl: true,
   minZoom: 0,
@@ -39,11 +39,11 @@ export const Map = function (linkScale: LinkScale, sidebar: ReturnType<typeof Si
     render: () => {},
   };
   let savedView: { center: LatLng; zoom: number } | undefined;
-  let config = window.config;
+  const config = window.config;
 
   let map: L.Map;
   let layerControl: L.Control.Layers;
-  let baseLayers: Record<string, L.Layer> = {};
+  const baseLayers: Record<string, L.Layer> = {};
 
   function saveView() {
     savedView = {
@@ -70,13 +70,13 @@ export const Map = function (linkScale: LinkScale, sidebar: ReturnType<typeof Si
     setTimeout(mapActiveArea, 300);
   }
 
-  let el = document.createElement("div");
+  const el = document.createElement("div");
   el.classList.add("map");
 
   map = L.map(el, options);
   mapActiveArea();
 
-  let now = new Date();
+  const now = new Date();
   config.mapLayers.forEach(function (item, i) {
     if (
       (typeof item.config.start === "number" && item.config.start <= now.getHours()) ||
@@ -92,8 +92,8 @@ export const Map = function (linkScale: LinkScale, sidebar: ReturnType<typeof Si
     return a.config.order - b.config.order;
   });
 
-  let layers = config.mapLayers.map(function (layer) {
-    let layerConfig = Object.assign({}, layer.config);
+  const layers = config.mapLayers.map(function (layer) {
+    const layerConfig = Object.assign({}, layer.config);
     if (layerConfig.invertInDarkMode) {
       layerConfig.className = (layerConfig.className ? layerConfig.className + " " : "") + "invert-in-dark-mode";
     }
@@ -129,7 +129,7 @@ export const Map = function (linkScale: LinkScale, sidebar: ReturnType<typeof Si
     baseLayers[layer.name] = layer.layer;
   });
 
-  let button = Button(map, buttons);
+  const button = Button(map, buttons);
 
   map.on("locationfound", button.locationFound);
   map.on("locationerror", button.locationError);
@@ -167,11 +167,11 @@ export const Map = function (linkScale: LinkScale, sidebar: ReturnType<typeof Si
 
   map.zoomControl.setPosition("topright");
 
-  let clientLayer = new ClientLayer({ minZoom: config.clientZoom });
+  const clientLayer = new ClientLayer({ minZoom: config.clientZoom });
   clientLayer.addTo(map);
   clientLayer.setZIndex(5);
 
-  let labelLayer = new LabelLayer({ minZoom: config.labelZoom });
+  const labelLayer = new LabelLayer({ minZoom: config.labelZoom });
   labelLayer.addTo(map);
   labelLayer.setZIndex(6);
 
@@ -199,10 +199,10 @@ export const Map = function (linkScale: LinkScale, sidebar: ReturnType<typeof Si
   });
 
   map.on("load", function () {
-    let inputs = document.querySelectorAll<HTMLInputElement>(".leaflet-control-layers-selector");
+    const inputs = document.querySelectorAll<HTMLInputElement>(".leaflet-control-layers-selector");
     inputs.forEach(function (input) {
       input.setAttribute("role", "radiogroup");
-      let label = input.nextElementSibling;
+      const label = input.nextElementSibling;
       if (label) {
         input.setAttribute("aria-label", label.innerHTML.trim());
       }

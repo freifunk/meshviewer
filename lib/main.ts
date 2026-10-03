@@ -99,7 +99,7 @@ export const main = () => {
       nodeDict[node.node_id] = node;
     });
 
-    let validLinks = resolveValidLinks(links, nodeDict);
+    const validLinks = resolveValidLinks(links, nodeDict);
 
     validLinks.forEach(function (link) {
       link.id = [link.source.node_id, link.target.node_id].join("-");
