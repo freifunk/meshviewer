@@ -112,7 +112,7 @@ export const main = () => {
         link.latlngs = [source, target];
 
         link.distance = source.distanceTo(target);
-      } catch (e) {
+      } catch {
         // ignore exception
       }
     });

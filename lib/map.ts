@@ -32,7 +32,7 @@ export const Map = function (linkScale: LinkScale, sidebar: ReturnType<typeof Si
   } = {
     setData: () => {},
     resetView: () => {},
-    gotoNode: (_n, _d) => {},
+    gotoNode: () => {},
     gotoLink: () => {},
     gotoLocation: () => {},
     destroy: () => {},
@@ -293,7 +293,7 @@ export const Map = function (linkScale: LinkScale, sidebar: ReturnType<typeof Si
     updateView();
   };
 
-  self.gotoNode = function gotoNode(node: Node, _nodeDict: { [k: NodeId]: Node }) {
+  self.gotoNode = function gotoNode(node: Node) {
     button.disableTracking();
     highlight = { type: "node", o: node };
     updateView();
