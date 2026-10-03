@@ -15,7 +15,7 @@ declare module "leaflet" {
     getViewportLatLngBounds(): L.LatLngBounds;
     getOffset(): L.Point;
     setActiveArea(css: string | Record<string, string | number>, keepCenter?: boolean, animate?: boolean): this;
-    getCenter(withoutViewport?: boolean | unknown): L.LatLng;
+    getCenter(withoutViewport?: unknown): L.LatLng;
   }
 }
 
