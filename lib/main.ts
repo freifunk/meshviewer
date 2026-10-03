@@ -182,7 +182,7 @@ export const main = () => {
 
       window.setInterval(function () {
         update().then(function (fresh) {
-          const nd = fresh as ObjectsLinksAndNodes;
+          const nd = fresh;
           gui.setData(nd);
           router.setData(nd);
         });
