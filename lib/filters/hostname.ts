@@ -4,7 +4,7 @@ import { CanRender } from "../container.js";
 import { Filter } from "../datadistributor.js";
 
 export const HostnameFilter = function (): CanRender & Filter {
-  let refreshFunctions: ((preserveFocus?: boolean) => void)[] = [];
+  const refreshFunctions: ((preserveFocus?: boolean) => void)[] = [];
   let timer: ReturnType<typeof setTimeout>;
   let input: HTMLInputElement | undefined;
 

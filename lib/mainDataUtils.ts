@@ -7,7 +7,7 @@ export function resolveValidLinks<TNode extends { node_id: string }, TLink exten
   links: TLink[],
   nodeDict: Record<string, TNode>,
 ): Array<TLink & { source: TNode; target: TNode }> {
-  let validLinks: Array<TLink & { source: TNode; target: TNode }> = [];
+  const validLinks: Array<TLink & { source: TNode; target: TNode }> = [];
 
   links.forEach(function (link) {
     const sourceId = typeof link.source === "string" ? link.source : link.source.node_id;

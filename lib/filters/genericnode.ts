@@ -46,8 +46,8 @@ export const GenericNodeFilter = function (
   }
 
   function render(el: HTMLElement) {
-    let label = document.createElement("label");
-    let strong = document.createElement("strong");
+    const label = document.createElement("label");
+    const strong = document.createElement("strong");
     label.textContent = _.t(name) + ": ";
     label.appendChild(strong);
     el.appendChild(label);
