@@ -181,11 +181,14 @@ export const main = () => {
       postHashToParent();
 
       window.setInterval(function () {
-        update().then(function (fresh) {
-          const nd = fresh;
-          gui.setData(nd);
-          router.setData(nd);
-        });
+        update()
+          .then(function (fresh) {
+            gui.setData(fresh);
+            router.setData(fresh);
+          })
+          .catch(function (e: unknown) {
+            console.warn("Periodic data update failed:", e);
+          });
       }, 60000);
     })
     .catch(function (e: unknown) {

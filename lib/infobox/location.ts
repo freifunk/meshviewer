@@ -22,6 +22,9 @@ export const location = function (el: HTMLElement, position: TargetLocation) {
       if (result.display_name) {
         sidebarTitle.outerHTML += "<p>" + result.display_name + "</p>";
       }
+    })
+    .catch(function (e: unknown) {
+      console.warn("Reverse geocoding failed:", e);
     });
 
   const editLat = document.createElement("input");
