@@ -19,7 +19,7 @@ function read(): Theme {
     if (isTheme(v)) {
       return v;
     }
-  } catch (e) {
+  } catch {
     /* localStorage inaccessible (private mode, sandboxed iframe, file://) */
   }
   return inMemory;
@@ -29,7 +29,7 @@ function write(value: Theme): void {
   inMemory = value;
   try {
     localStorage.setItem(STORAGE_KEY, value);
-  } catch (e) {
+  } catch {
     /* keep in-memory only */
   }
 }
