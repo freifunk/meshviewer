@@ -1,6 +1,6 @@
 import { Node } from "./node.js";
 
-export const hasLocation = function hasLocation(data: Node | {}) {
+export const hasLocation = function hasLocation(data: Node | object) {
   return (
     "location" in data &&
     Boolean(data.location) &&
@@ -11,7 +11,7 @@ export const hasLocation = function hasLocation(data: Node | {}) {
   );
 };
 
-export const hasUplink = function hasUplink(data: Node | {}) {
+export const hasUplink = function hasUplink(data: Node | object) {
   if (!("neighbours" in data) || !Array.isArray(data.neighbours)) {
     return false;
   }

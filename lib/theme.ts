@@ -15,11 +15,11 @@ function isTheme(value: string | null): value is Theme {
 
 function read(): Theme {
   try {
-    let v = localStorage.getItem(STORAGE_KEY);
+    const v = localStorage.getItem(STORAGE_KEY);
     if (isTheme(v)) {
       return v;
     }
-  } catch (e) {
+  } catch {
     /* localStorage inaccessible (private mode, sandboxed iframe, file://) */
   }
   return inMemory;
@@ -29,13 +29,13 @@ function write(value: Theme): void {
   inMemory = value;
   try {
     localStorage.setItem(STORAGE_KEY, value);
-  } catch (e) {
+  } catch {
     /* keep in-memory only */
   }
 }
 
 function resolveTheme(): "light" | "dark" {
-  let current = read();
+  const current = read();
   if (current === "dark") {
     return "dark";
   }
@@ -46,7 +46,7 @@ function resolveTheme(): "light" | "dark" {
 }
 
 function apply(): void {
-  let dark = resolveTheme() === "dark";
+  const dark = resolveTheme() === "dark";
   document.documentElement.classList.toggle(DARK_CLASS, dark);
   document.documentElement.dispatchEvent(new CustomEvent("themechange"));
 }

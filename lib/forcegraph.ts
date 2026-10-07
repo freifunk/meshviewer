@@ -25,7 +25,7 @@ export const ForceGraph = function (linkScale: LinkScale, sidebar: ReturnType<ty
   } = {
     setData: () => {},
     resetView: () => {},
-    gotoNode: (_a, _b) => {},
+    gotoNode: () => {},
     gotoLink: () => {},
     gotoLocation: () => {},
     destroy: () => {},
@@ -39,20 +39,20 @@ export const ForceGraph = function (linkScale: LinkScale, sidebar: ReturnType<ty
 
   let transform = d3Zoom.zoomIdentity;
   let intNodes: MapNode[] = [];
-  let dictNodes: Record<string, MapNode> = {};
+  const dictNodes: Record<string, MapNode> = {};
   let intLinks: MapLink[] = [];
   let movetoTimer: ReturnType<typeof setTimeout>;
   let initial = 1.8;
 
-  let NODE_RADIUS_DRAG = 10;
-  let NODE_RADIUS_SELECT = 15;
-  let LINK_RADIUS_SELECT = 12;
-  let ZOOM_ANIMATE_DURATION = 350;
+  const NODE_RADIUS_DRAG = 10;
+  const NODE_RADIUS_SELECT = 15;
+  const LINK_RADIUS_SELECT = 12;
+  const ZOOM_ANIMATE_DURATION = 350;
 
-  let ZOOM_MIN = 1 / 8;
-  let ZOOM_MAX = 3;
+  const ZOOM_MIN = 1 / 8;
+  const ZOOM_MAX = 3;
 
-  let FORCE_ALPHA = 0.01;
+  const FORCE_ALPHA = 0.01;
 
   draw.setTransform(transform);
 
@@ -284,7 +284,7 @@ export const ForceGraph = function (linkScale: LinkScale, sidebar: ReturnType<ty
     }, true);
   };
 
-  self.gotoNode = function gotoNode(nodeData: Node, _nodeDict: { [k: NodeId]: Node }) {
+  self.gotoNode = function gotoNode(nodeData: Node) {
     moveTo(function calcToNode() {
       draw.setHighlight({ type: "node", id: nodeData.node_id });
       const node = dictNodes[nodeData.node_id];
