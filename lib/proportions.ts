@@ -100,11 +100,11 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     render: () => {},
     renderSingle: () => {},
   };
-  let config = window.config;
-  let scale = d3Interpolate.interpolate(config.forceGraph.tqFrom, config.forceGraph.tqTo);
+  const config = window.config;
+  const scale = d3Interpolate.interpolate(config.forceGraph.tqFrom, config.forceGraph.tqTo);
   let time: Moment = moment();
 
-  let tables: Record<string, TableNode> = {};
+  const tables: Record<string, TableNode> = {};
   // flag set while we apply filters programmatically from the URL hash
   let appliedUrlFilters = false;
 
@@ -168,7 +168,7 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
   });
 
   function fillTable(name: string, table: TableNode | undefined, data: CountItem[]): TableNode {
-    let tableNode: TableNode = table ?? {
+    const tableNode: TableNode = table ?? {
       element: document.createElement("table"),
       vnode: undefined,
     };
@@ -178,24 +178,24 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
       return tableNode;
     }
 
-    let max = Math.max(
+    const max = Math.max(
       ...data.map(function (item) {
         return item[1];
       }),
     );
 
-    let items = data.map(function (dataItem) {
-      let v = max > 0 ? dataItem[1] / max : 0;
+    const items = data.map(function (dataItem) {
+      const v = max > 0 ? dataItem[1] / max : 0;
 
-      let keys = dataItem[2];
-      let value = dataItem[0];
-      let modifierFunction = dataItem[3];
-      let filter = GenericNodeFilter(name, keys, value, modifierFunction);
+      const keys = dataItem[2];
+      const value = dataItem[0];
+      const modifierFunction = dataItem[3];
+      const filter = GenericNodeFilter(name, keys, value, modifierFunction);
 
-      let a = h("a", { on: { click: addFilter(filter) } }, dataItem[0]);
+      const a = h("a", { on: { click: addFilter(filter) } }, dataItem[0]);
 
-      let th = h("th", a);
-      let td = h(
+      const th = h("th", a);
+      const td = h(
         "td",
         h(
           "span",
@@ -211,13 +211,13 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
 
       return h("tr", [th, td]);
     });
-    let tableNew = h("table", { props: { className: "proportion" } }, items);
+    const tableNew = h("table", { props: { className: "proportion" } }, items);
     tableNode.vnode = patch(tableNode.vnode ?? tableNode.element, tableNew);
     return tableNode;
   }
 
   self.setData = function setData(data: ObjectsLinksAndNodes) {
-    let nodes = data.nodes.all;
+    const nodes = data.nodes.all;
     time = data.timestamp ?? moment();
 
     function gatewayNameFromNodeId(nodeid: unknown): string | null {
@@ -290,7 +290,7 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
           encodedValue = encodedValue.slice(1);
         }
 
-        let filter = GenericNodeFilter(
+        const filter = GenericNodeFilter(
           param,
           mapping.keys,
           helper.collapseWhitespace(encodedValue),
@@ -317,10 +317,10 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     self.renderSingle(el, "node.domain");
 
     if (config.globalInfos) {
-      let images = document.createElement("div");
+      const images = document.createElement("div");
       el.appendChild(images);
       const img: VNode[] = [];
-      let subst = {
+      const subst = {
         "{TIME}": String(time.unix()),
         "{LOCALE}": _.locale(),
       };
@@ -332,7 +332,7 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     }
 
     if (config.globalCharts.length) {
-      let chartsEl = document.createElement("div");
+      const chartsEl = document.createElement("div");
       el.appendChild(chartsEl);
       const charts = config.globalCharts.flatMap((chart) => [h("h2", chart.name), createChartVNode(chart, {})]);
       patch(chartsEl, h("div", charts));
@@ -346,7 +346,7 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
       return;
     }
 
-    let h2 = document.createElement("h2");
+    const h2 = document.createElement("h2");
     h2.classList.add("proportion-header");
     h2.textContent = _.t(mappingName);
     h2.onclick = function onclick() {

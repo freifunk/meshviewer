@@ -3,8 +3,8 @@ import * as helper from "../utils/helper.js";
 import { TargetLocation } from "../utils/router.js";
 
 export const location = function (el: HTMLElement, position: TargetLocation) {
-  let config = window.config;
-  let sidebarTitle = document.createElement("h2");
+  const config = window.config;
+  const sidebarTitle = document.createElement("h2");
   sidebarTitle.textContent = _.t("location.location");
   el.appendChild(sidebarTitle);
 
@@ -22,21 +22,24 @@ export const location = function (el: HTMLElement, position: TargetLocation) {
       if (result.display_name) {
         sidebarTitle.outerHTML += "<p>" + result.display_name + "</p>";
       }
+    })
+    .catch(function (e: unknown) {
+      console.warn("Reverse geocoding failed:", e);
     });
 
-  let editLat = document.createElement("input");
+  const editLat = document.createElement("input");
   editLat.setAttribute("aria-label", _.t("location.latitude"));
   editLat.type = "text";
   editLat.value = position.lat.toFixed(9);
   el.appendChild(createBox("lat", _.t("location.latitude"), editLat));
 
-  let editLng = document.createElement("input");
+  const editLng = document.createElement("input");
   editLng.setAttribute("aria-label", _.t("location.longitude"));
   editLng.type = "text";
   editLng.value = position.lng.toFixed(9);
   el.appendChild(createBox("lng", _.t("location.longitude"), editLng));
 
-  let editUci = document.createElement("textarea");
+  const editUci = document.createElement("textarea");
   editUci.setAttribute("aria-label", "Uci");
   editUci.value =
     "uci set gluon-node-info.@location[0]='location'; " +
@@ -52,11 +55,11 @@ export const location = function (el: HTMLElement, position: TargetLocation) {
   el.appendChild(createBox("uci", "Uci", editUci));
 
   function createBox(name: string, title: string, inputElem: HTMLInputElement | HTMLTextAreaElement) {
-    let box = document.createElement("div");
-    let heading = document.createElement("h3");
+    const box = document.createElement("div");
+    const heading = document.createElement("h3");
     heading.textContent = title;
     box.appendChild(heading);
-    let btn = document.createElement("button");
+    const btn = document.createElement("button");
     btn.classList.add("ion-clipboard");
     btn.title = _.t("location.copy");
     btn.setAttribute("aria-label", _.t("location.copy"));
@@ -65,7 +68,7 @@ export const location = function (el: HTMLElement, position: TargetLocation) {
     };
     inputElem.id = "location-" + name;
     inputElem.readOnly = true;
-    let line = document.createElement("p");
+    const line = document.createElement("p");
     line.appendChild(inputElem);
     line.appendChild(btn);
     box.appendChild(line);

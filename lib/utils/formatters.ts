@@ -76,7 +76,7 @@ export const mergeSpellingVariants = function mergeSpellingVariants(counts: Map<
 
 export const listReplace = function listReplace(template: string, subst: ReplaceMapping) {
   for (const [key, value] of Object.entries(subst)) {
-    let re = new RegExp(key, "g");
+    const re = new RegExp(key, "g");
     template = template.replace(re, value);
   }
   return template;

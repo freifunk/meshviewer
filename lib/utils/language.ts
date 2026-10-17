@@ -15,7 +15,7 @@ export const Language = function () {
   const config = window.config;
 
   function languageSelect(el: HTMLElement) {
-    let select = document.createElement("select");
+    const select = document.createElement("select");
     select.className = "language-switch";
     select.setAttribute("aria-label", "Language");
     select.addEventListener("change", setSelectLocale);
@@ -35,7 +35,7 @@ export const Language = function () {
   }
 
   function getLocale(input?: LanguageCode): LanguageCode {
-    let language: LanguageCode = input || (navigator.languages && navigator.languages[0]) || navigator.language;
+    const language: LanguageCode = input || (navigator.languages && navigator.languages[0]) || navigator.language;
     const defaultLocale = config.supportedLocale[0];
     if (defaultLocale === undefined) {
       throw new Error("config.supportedLocale must contain at least one locale");
@@ -60,7 +60,7 @@ export const Language = function () {
   }
 
   function setTranslation(translationJson: TranslationData) {
-    _.extend(translationJson as Record<string, string>);
+    _.extend(translationJson);
 
     if (moment.locale(_.locale()) !== _.locale() && translationJson.momentjs) {
       moment.defineLocale(_.locale(), {
@@ -82,7 +82,11 @@ export const Language = function () {
     router = routing;
     /** global: _ */
     _ = new Polyglot({ locale: getLocale(routing.getLang() ?? undefined), allowMissing: true });
-    getJSON<TranslationData>("locale/" + _.locale() + ".json?" + config.cacheBreaker).then(setTranslation);
+    getJSON<TranslationData>("locale/" + _.locale() + ".json?" + config.cacheBreaker)
+      .then(setTranslation)
+      .catch(function (e: unknown) {
+        console.warn("Failed to load translations:", e);
+      });
     document.querySelector("html")!.setAttribute("lang", _.locale());
   }
 
