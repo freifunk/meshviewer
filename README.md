@@ -29,6 +29,12 @@ The map is reachable at [localhost:8080](http://localhost:8080).
 
 Hint: Instead of the latest release `ghcr.io/freifunk/meshviewer:latest` one can also use version tags for a specific version or `main` for the latest unreleased commits.
 
+### Security headers
+
+The bundled `nginx.conf` sends a Content-Security-Policy that only allows the app's own scripts, plus
+`X-Content-Type-Options` and `Referrer-Policy`. If you serve Meshviewer with another web server, set the same
+headers there. The policy leaves embedding in iframes open; add `frame-ancestors` to restrict it.
+
 ## Configuration
 
 The [configuration documentation](CONFIGURATION.md) is nowhere near finished. Please open a PR to add the missing pieces.
