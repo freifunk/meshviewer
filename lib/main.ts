@@ -196,7 +196,7 @@ export const main = () => {
       const loader = document.querySelector(".loader");
       if (loader) {
         loader.innerHTML +=
-          message +
+          helper.escape(message) +
           '<br /><br /><button onclick="location.reload(true)" class="btn text" aria-label="Try to reload">Try to reload</button><br /> or report to your community';
       }
       console.warn(e);

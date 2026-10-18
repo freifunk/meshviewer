@@ -20,7 +20,9 @@ export const location = function (el: HTMLElement, position: TargetLocation) {
     )
     .then(function (result) {
       if (result.display_name) {
-        sidebarTitle.outerHTML += "<p>" + result.display_name + "</p>";
+        const address = document.createElement("p");
+        address.textContent = result.display_name;
+        sidebarTitle.after(address);
       }
     })
     .catch(function (e: unknown) {
