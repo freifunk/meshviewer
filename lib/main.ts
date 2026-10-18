@@ -59,7 +59,11 @@ export const main = () => {
 
     window.addEventListener("hashchange", postHashToParent);
     window.addEventListener("message", function (event) {
-      if (event && event.data && typeof event.data.hash === "string") {
+      // The embedding page may live on any domain, so check the sender, not the origin.
+      if (event.source !== window.parent) {
+        return;
+      }
+      if (event.data && typeof event.data.hash === "string") {
         replaceHash(event.data.hash);
       }
     });
