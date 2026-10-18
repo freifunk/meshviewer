@@ -1,7 +1,7 @@
 import { h, VNode } from "snabbdom";
 import { _ } from "./language.js";
 import { LinkInfo } from "../config_default.js";
-import { listReplace } from "./formatters.js";
+import { listReplace, listReplaceUrl } from "./formatters.js";
 
 export function attributeEntry(children: VNode[], label: string, value: string | VNode) {
   if (value !== undefined) {
@@ -18,7 +18,7 @@ export function showStat(linkInfo: LinkInfo, subst: ReplaceMapping): VNode {
   if (linkInfo.image) {
     content = h("img", {
       props: {
-        src: listReplace(linkInfo.image, subst),
+        src: listReplaceUrl(linkInfo.image, subst),
         width: linkInfo.width,
         height: linkInfo.height,
         alt: _.t("loading", { name: linkInfo.name }),
@@ -35,7 +35,7 @@ export function showStat(linkInfo: LinkInfo, subst: ReplaceMapping): VNode {
         "a",
         {
           props: {
-            href: listReplace(linkInfo.href, subst),
+            href: listReplaceUrl(linkInfo.href, subst),
             target: "_blank",
             title: listReplace(linkInfo.title, subst),
           },
@@ -53,7 +53,7 @@ export const showDevicePicture = function showDevicePicture(pictures: string, su
   }
 
   return h("img", {
-    props: { src: listReplace(pictures, subst) },
+    props: { src: listReplaceUrl(pictures, subst) },
     class: { "hw-img": true },
     on: {
       // hide non-existent images

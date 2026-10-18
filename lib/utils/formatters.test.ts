@@ -1,6 +1,16 @@
 import { describe, expect, it } from "vitest";
 import moment from "moment";
-import { dictGet, limit, listReplace, one, showDistance, showTq, sortByKey, sum } from "./formatters.js";
+import {
+  dictGet,
+  limit,
+  listReplace,
+  listReplaceUrl,
+  one,
+  showDistance,
+  showTq,
+  sortByKey,
+  sum,
+} from "./formatters.js";
 
 describe("formatters utilities", () => {
   it("showDistance formats meters and handles NaN", () => {
@@ -47,6 +57,20 @@ describe("formatters utilities", () => {
       "\\{SITE\\}": "Meshviewer",
     });
     expect(result).toBe("Hello Alice, welcome to Meshviewer!");
+  });
+
+  it("listReplace inserts replacement patterns like $& literally", () => {
+    expect(listReplace("name={NAME}", { "\\{NAME\\}": "a$&b$'c" })).toBe("name=a$&b$'c");
+  });
+
+  it("listReplaceUrl encodes values so they cannot alter the URL", () => {
+    const url = listReplaceUrl("https://stats.example/d?var-name={NAME}&from=now-7d", {
+      "\\{NAME\\}": "x&var-name=other#",
+    });
+    expect(url).toBe("https://stats.example/d?var-name=x%26var-name%3Dother%23&from=now-7d");
+    expect(listReplaceUrl("https://pics.example/{MODEL}.svg", { "\\{MODEL\\}": "../../evil" })).toBe(
+      "https://pics.example/..%2F..%2Fevil.svg",
+    );
   });
 
   it("sortByKey sorts objects descending by moment timestamp", () => {
