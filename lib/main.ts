@@ -69,7 +69,7 @@ export const main = () => {
     let timestamp = "";
     let nodes: Node[] = [];
     let links: Link[] = [];
-    const nodeDict: Record<string, Node> = {};
+    const nodeDict = Object.create(null) as Record<string, Node>;
 
     for (const entry of data) {
       nodes = nodes.concat(entry.nodes);

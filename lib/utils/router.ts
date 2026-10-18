@@ -3,6 +3,7 @@ import { Language } from "./language.js";
 import { Link, Node, NodeId } from "./node.js";
 import { ObjectsLinksAndNodes } from "../datadistributor.js";
 import { MESHVIEWER_ROUTE_PATTERN } from "./routerUtils.js";
+import { hasOwn } from "./object.js";
 
 export interface TargetLocation {
   lng: number;
@@ -69,7 +70,7 @@ export class Router extends Navigo {
 
   gotoNode(node: { nodeId: NodeId }) {
     const dict = this.objects.nodeDict ?? {};
-    const n = dict[node.nodeId];
+    const n = hasOwn(dict, node.nodeId) ? dict[node.nodeId] : undefined;
     if (n) {
       this.targets.forEach((target) => {
         target.gotoNode(n, dict);

@@ -278,7 +278,7 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     if (keys.length === 0) return;
 
     for (const [param, values] of Object.entries(params)) {
-      if (!(param in statusFieldMapping)) {
+      if (!helper.hasOwn(statusFieldMapping, param)) {
         console.warn("unknown_filter_param", param);
         continue; // continue instead of return to process other params
       }

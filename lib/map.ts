@@ -209,8 +209,8 @@ export const Map = function (linkScale: LinkScale, sidebar: ReturnType<typeof Si
     });
   });
 
-  let nodeDict: Record<string, StyledMarker> = {};
-  let linkDict: Record<string, StyledPolyline> = {};
+  let nodeDict = Object.create(null) as Record<string, StyledMarker>;
+  let linkDict = Object.create(null) as Record<string, StyledPolyline>;
   let highlight: { type: "node"; o: Node } | { type: "link"; o: Link } | undefined;
 
   function resetMarkerStyles(
@@ -278,8 +278,8 @@ export const Map = function (linkScale: LinkScale, sidebar: ReturnType<typeof Si
   }
 
   self.setData = function setData(data: ObjectsLinksAndNodes) {
-    nodeDict = {};
-    linkDict = {};
+    nodeDict = Object.create(null) as Record<string, StyledMarker>;
+    linkDict = Object.create(null) as Record<string, StyledPolyline>;
 
     clientLayer.setData(data);
     labelLayer.setData(data, map, nodeDict, linkDict, linkScale);

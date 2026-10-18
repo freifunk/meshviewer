@@ -1,3 +1,5 @@
+import { hasOwn } from "./utils/object.js";
+
 export interface LinkWithEndpointIds<TNode> {
   source: string | TNode;
   target: string | TNode;
@@ -12,8 +14,8 @@ export function resolveValidLinks<TNode extends { node_id: string }, TLink exten
   links.forEach(function (link) {
     const sourceId = typeof link.source === "string" ? link.source : link.source.node_id;
     const targetId = typeof link.target === "string" ? link.target : link.target.node_id;
-    const source = nodeDict[sourceId];
-    const target = nodeDict[targetId];
+    const source = hasOwn(nodeDict, sourceId) ? nodeDict[sourceId] : undefined;
+    const target = hasOwn(nodeDict, targetId) ? nodeDict[targetId] : undefined;
 
     if (!source || !target) {
       return;
