@@ -72,23 +72,31 @@ export const fullscreen = function fullscreen(btn: HTMLButtonElement) {
   if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement) {
     const enter =
       fel.requestFullscreen?.bind(fel) ?? fel.webkitRequestFullScreen?.bind(fel) ?? fel.mozRequestFullScreen?.bind(fel);
-    // The prefixed variants return undefined instead of a promise.
-    Promise.resolve(enter?.()).catch(function (e: unknown) {
-      console.warn("Entering fullscreen failed:", e);
-    });
-    btn.classList.remove("ion-full-enter");
-    btn.classList.add("ion-full-exit");
+    if (enter) {
+      // The prefixed variants return undefined instead of a promise.
+      Promise.resolve(enter())
+        .then(function () {
+          btn.classList.remove("ion-full-enter");
+          btn.classList.add("ion-full-exit");
+        })
+        .catch(function (e: unknown) {
+          console.warn("Entering fullscreen failed:", e);
+        });
+    }
   } else {
     const exit =
       document.exitFullscreen?.bind(document) ??
       document.webkitExitFullscreen?.bind(document) ??
       document.mozCancelFullScreen?.bind(document);
     if (exit) {
-      Promise.resolve(exit()).catch(function (e: unknown) {
-        console.warn("Exiting fullscreen failed:", e);
-      });
-      btn.classList.remove("ion-full-exit");
-      btn.classList.add("ion-full-enter");
+      Promise.resolve(exit())
+        .then(function () {
+          btn.classList.remove("ion-full-exit");
+          btn.classList.add("ion-full-enter");
+        })
+        .catch(function (e: unknown) {
+          console.warn("Exiting fullscreen failed:", e);
+        });
     }
   }
 };
