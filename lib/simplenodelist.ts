@@ -26,7 +26,7 @@ export const SimpleNodelist = function (
     },
 
     setData(data: ObjectsLinksAndNodes) {
-      const key = nodesState as keyof NodesByState;
+      const key = nodesState;
       const nodeList = data.nodes[key];
 
       const newContainer = h("div");

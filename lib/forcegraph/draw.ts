@@ -27,8 +27,8 @@ let height: number;
 let transform: ZoomTransform;
 let highlight: Highlight;
 
-let NODE_RADIUS = 15;
-let LINE_RADIUS = 12;
+const NODE_RADIUS = 15;
+const LINE_RADIUS = 12;
 
 function drawDetailNode(node: MapNode) {
   if (transform.k > 1 && node.o.is_online) {

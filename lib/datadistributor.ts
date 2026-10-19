@@ -75,7 +75,7 @@ export const DataDistributor = function () {
       notifyObservers();
     }
 
-    let filter: FilterMethod = filters.reduce(
+    const filter: FilterMethod = filters.reduce(
       function (a: FilterMethod, filter) {
         return function (d: Node): boolean {
           return (a(d) && filter.run(d)).valueOf();

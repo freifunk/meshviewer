@@ -15,11 +15,11 @@ declare module "leaflet" {
     getViewportLatLngBounds(): L.LatLngBounds;
     getOffset(): L.Point;
     setActiveArea(css: string | Record<string, string | number>, keepCenter?: boolean, animate?: boolean): this;
-    getCenter(withoutViewport?: boolean | unknown): L.LatLng;
+    getCenter(withoutViewport?: unknown): L.LatLng;
   }
 }
 
-let previousMethods = {
+const previousMethods = {
   getCenter: L.Map.prototype.getCenter,
   setView: L.Map.prototype.setView,
   setZoomAround: (L.Map.prototype as unknown as { setZoomAround: typeof L.Map.prototype.setZoomAround }).setZoomAround,
@@ -32,9 +32,9 @@ let previousMethods = {
     if (this._viewport) {
       return this.getViewportLatLngBounds();
     }
-    let bounds = this.getPixelBounds();
-    let sw = this.unproject(bounds.getBottomLeft());
-    let ne = this.unproject(bounds.getTopRight());
+    const bounds = this.getPixelBounds();
+    const sw = this.unproject(bounds.getBottomLeft());
+    const ne = this.unproject(bounds.getTopRight());
 
     return new L.LatLngBounds(sw, ne);
   },
@@ -64,15 +64,15 @@ let previousMethods = {
   },
 
   getViewportLatLngBounds: function (this: L.Map) {
-    let bounds = this.getViewportBounds();
-    let min = bounds.min ?? L.point(0, 0);
-    let max = bounds.max ?? L.point(0, 0);
+    const bounds = this.getViewportBounds();
+    const min = bounds.min ?? L.point(0, 0);
+    const max = bounds.max ?? L.point(0, 0);
     return L.latLngBounds(this.containerPointToLatLng(min), this.containerPointToLatLng(max));
   },
 
   getOffset: function (this: L.Map) {
-    let mCenter = this.getSize().divideBy(2);
-    let vCenter = this.getViewportBounds().getCenter();
+    const mCenter = this.getSize().divideBy(2);
+    const vCenter = this.getViewportBounds().getCenter();
 
     return mCenter.subtract(vCenter);
   },
@@ -81,7 +81,7 @@ let previousMethods = {
     let center = previousMethods.getCenter.call(this);
 
     if (this.getViewport() && !withoutViewport) {
-      let zoom = this.getZoom();
+      const zoom = this.getZoom();
       let point = this.project(center, zoom);
       point = point.subtract(this.getOffset());
 
@@ -105,16 +105,15 @@ let previousMethods = {
   },
 
   setZoomAround: function (this: L.Map, latlng: L.LatLngExpression | L.Point, zoom: number, options?: L.ZoomOptions) {
-    let viewport = this.getViewport();
+    const viewport = this.getViewport();
 
     if (viewport) {
-      let scale = this.getZoomScale(zoom);
-      let viewHalf = this.getViewportBounds().getCenter();
-      let containerPoint =
-        latlng instanceof L.Point ? latlng : this.latLngToContainerPoint(latlng as L.LatLngExpression);
+      const scale = this.getZoomScale(zoom);
+      const viewHalf = this.getViewportBounds().getCenter();
+      const containerPoint = latlng instanceof L.Point ? latlng : this.latLngToContainerPoint(latlng);
 
-      let centerOffset = containerPoint.subtract(viewHalf).multiplyBy(1 - 1 / scale);
-      let newCenter = this.containerPointToLatLng(viewHalf.add(centerOffset));
+      const centerOffset = containerPoint.subtract(viewHalf).multiplyBy(1 - 1 / scale);
+      const newCenter = this.containerPointToLatLng(viewHalf.add(centerOffset));
 
       return this.setView(newCenter, zoom, { zoom: options } as L.ZoomPanOptions);
     }
@@ -131,16 +130,16 @@ let previousMethods = {
     padding = L.point(padding || [0, 0]);
 
     let zoom = this.getZoom() || 0;
-    let min = this.getMinZoom();
-    let max = this.getMaxZoom();
-    let nw = bounds.getNorthWest();
-    let se = bounds.getSouthEast();
-    let viewport = this.getViewport();
-    let size = (viewport ? L.point(viewport.clientWidth, viewport.clientHeight) : this.getSize()).subtract(padding);
-    let boundsSize = this.project(se, zoom).subtract(this.project(nw, zoom));
-    let snap = L.Browser.any3d ? this.options.zoomSnap : 1;
+    const min = this.getMinZoom();
+    const max = this.getMaxZoom();
+    const nw = bounds.getNorthWest();
+    const se = bounds.getSouthEast();
+    const viewport = this.getViewport();
+    const size = (viewport ? L.point(viewport.clientWidth, viewport.clientHeight) : this.getSize()).subtract(padding);
+    const boundsSize = this.project(se, zoom).subtract(this.project(nw, zoom));
+    const snap = L.Browser.any3d ? this.options.zoomSnap : 1;
 
-    let scale = Math.min(size.x / boundsSize.x, size.y / boundsSize.y);
+    const scale = Math.min(size.x / boundsSize.x, size.y / boundsSize.y);
 
     zoom = this.getScaleZoom(scale, zoom);
 
@@ -164,7 +163,7 @@ let previousMethods = {
     }
 
     if (!this._viewport) {
-      let container = this.getContainer();
+      const container = this.getContainer();
       this._viewport = L.DomUtil.create("div", "");
       container.insertBefore(this._viewport, container.firstChild);
     }
@@ -195,14 +194,14 @@ let previousMethods = {
 
 (L.GridLayer as unknown as { include: (methods: Record<string, unknown>) => void }).include({
   _updateLevels: function (this: any) {
-    let zoom = this._tileZoom;
-    let maxZoom = getLayerMaxZoom(this, this._map);
+    const zoom = this._tileZoom;
+    const maxZoom = getLayerMaxZoom(this, this._map);
 
     if (zoom === undefined) {
       return undefined;
     }
 
-    for (let zoomLevel in this._levels) {
+    for (const zoomLevel in this._levels) {
       const levelObj = this._levels[zoomLevel];
       if (levelObj?.el && (levelObj.el.children.length || zoomLevel === String(zoom))) {
         levelObj.el.style.zIndex = String(maxZoom - Math.abs(zoom - Number(zoomLevel)));
@@ -214,7 +213,7 @@ let previousMethods = {
     }
 
     let level = this._levels[zoom];
-    let map = this._map;
+    const map = this._map;
 
     if (!level) {
       level = this._levels[zoom] = {
@@ -236,16 +235,16 @@ let previousMethods = {
   },
 
   _resetView: function (this: any, e: { pinch?: boolean; flyTo?: boolean }) {
-    let animating = e && (e.pinch || e.flyTo);
+    const animating = e && (e.pinch || e.flyTo);
     this._setView(this._map.getCenter(true), this._map.getZoom(), animating, animating);
   },
 
   _update: function (this: any, center?: L.LatLng) {
-    let map = this._map;
+    const map = this._map;
     if (!map) {
       return;
     }
-    let zoom = map.getZoom();
+    const zoom = map.getZoom();
 
     if (center === undefined) {
       center = map.getCenter(this);
@@ -254,15 +253,15 @@ let previousMethods = {
       return;
     }
 
-    let pixelBounds = this._getTiledPixelBounds(center);
-    let tileRange = this._pxBoundsToTileRange(pixelBounds);
+    const pixelBounds = this._getTiledPixelBounds(center);
+    const tileRange = this._pxBoundsToTileRange(pixelBounds);
     if (!tileRange.min || !tileRange.max) {
       return;
     }
-    let tileCenter = tileRange.getCenter();
-    let queue: L.Coords[] = [];
+    const tileCenter = tileRange.getCenter();
+    const queue: L.Coords[] = [];
 
-    for (let key in this._tiles) {
+    for (const key in this._tiles) {
       if (this._tiles[key]) {
         this._tiles[key].current = false;
       }
@@ -275,14 +274,14 @@ let previousMethods = {
 
     for (let j = tileRange.min.y; j <= tileRange.max.y; j++) {
       for (let i = tileRange.min.x; i <= tileRange.max.x; i++) {
-        let coords = new L.Point(i, j) as L.Coords;
+        const coords = new L.Point(i, j) as L.Coords;
         coords.z = this._tileZoom;
 
         if (!this._isValidTile(coords)) {
           continue;
         }
 
-        let tile = this._tiles[this._tileCoordsToKey(coords)];
+        const tile = this._tiles[this._tileCoordsToKey(coords)];
         if (tile) {
           tile.current = true;
         } else {
@@ -301,7 +300,7 @@ let previousMethods = {
         this.fire("loading");
       }
 
-      let fragment = document.createDocumentFragment();
+      const fragment = document.createDocumentFragment();
 
       for (let i = 0; i < queue.length; i++) {
         this._addTile(queue[i]!, fragment);

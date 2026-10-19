@@ -72,7 +72,10 @@ export const fullscreen = function fullscreen(btn: HTMLButtonElement) {
   if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement) {
     const enter =
       fel.requestFullscreen?.bind(fel) ?? fel.webkitRequestFullScreen?.bind(fel) ?? fel.mozRequestFullScreen?.bind(fel);
-    enter?.();
+    // The prefixed variants return undefined instead of a promise.
+    Promise.resolve(enter?.()).catch(function (e: unknown) {
+      console.warn("Entering fullscreen failed:", e);
+    });
     btn.classList.remove("ion-full-enter");
     btn.classList.add("ion-full-exit");
   } else {
@@ -81,7 +84,9 @@ export const fullscreen = function fullscreen(btn: HTMLButtonElement) {
       document.webkitExitFullscreen?.bind(document) ??
       document.mozCancelFullScreen?.bind(document);
     if (exit) {
-      exit();
+      Promise.resolve(exit()).catch(function (e: unknown) {
+        console.warn("Exiting fullscreen failed:", e);
+      });
       btn.classList.remove("ion-full-exit");
       btn.classList.add("ion-full-enter");
     }
