@@ -39,7 +39,16 @@ describe("load", () => {
 
     await load();
 
-    expect(loaderText()).toContain("config.json can not be loaded:\nNot Found");
+    expect(loaderText()).toContain("config.json can not be loaded:\n404 Not Found");
+    expect(main).not.toHaveBeenCalled();
+  });
+
+  it("shows the numeric status when statusText is empty (HTTP/2)", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("", { status: 404 })));
+
+    await load();
+
+    expect(loaderText()).toContain("config.json can not be loaded:\n404\n");
     expect(main).not.toHaveBeenCalled();
   });
 

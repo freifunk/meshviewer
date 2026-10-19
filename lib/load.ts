@@ -31,7 +31,11 @@ export const load = async () => {
     return;
   }
   if (!configResponse.ok) {
-    showLoaderError("config.json can not be loaded:", configResponse.statusText, "or report to your community");
+    showLoaderError(
+      "config.json can not be loaded:",
+      `${configResponse.status} ${configResponse.statusText}`.trim(),
+      "or report to your community",
+    );
     return;
   }
   let config: unknown;
