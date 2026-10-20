@@ -9,6 +9,7 @@ import * as helper from "./utils/helper.js";
 import { Link, Node } from "./utils/node.js";
 import { ObjectsLinksAndNodes } from "./datadistributor.js";
 import { resolveValidLinks } from "./mainDataUtils.js";
+import { showLoaderError } from "./utils/loader.js";
 
 export const main = () => {
   function normalizeHash(hash: string) {
@@ -58,7 +59,11 @@ export const main = () => {
 
     window.addEventListener("hashchange", postHashToParent);
     window.addEventListener("message", function (event) {
-      if (event && event.data && typeof event.data.hash === "string") {
+      // The embedding page may live on any domain, so check the sender, not the origin.
+      if (event.source !== window.parent) {
+        return;
+      }
+      if (event.data && typeof event.data.hash === "string") {
         replaceHash(event.data.hash);
       }
     });
@@ -69,7 +74,7 @@ export const main = () => {
     let timestamp = "";
     let nodes: Node[] = [];
     let links: Link[] = [];
-    const nodeDict: Record<string, Node> = {};
+    const nodeDict = Object.create(null) as Record<string, Node>;
 
     for (const entry of data) {
       nodes = nodes.concat(entry.nodes);
@@ -192,13 +197,7 @@ export const main = () => {
       }, 60000);
     })
     .catch(function (e: unknown) {
-      const message = e instanceof Error ? e.message : String(e);
-      const loader = document.querySelector(".loader");
-      if (loader) {
-        loader.innerHTML +=
-          message +
-          '<br /><br /><button onclick="location.reload(true)" class="btn text" aria-label="Try to reload">Try to reload</button><br /> or report to your community';
-      }
+      showLoaderError(e instanceof Error ? e.message : String(e), undefined, "or report to your community");
       console.warn(e);
     });
 };

@@ -207,7 +207,7 @@ function addLinksToMap(dict: Record<string, StyledPolyline>, linkScale: LinkScal
         " - " +
         helper.showTq(link.target_tq) +
         "<br>" +
-        link.type +
+        helper.escape(link.type) +
         "</strong>",
     );
 

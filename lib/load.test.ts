@@ -6,11 +6,17 @@ import { main } from "./main.js";
 vi.mock("./main.js", () => ({ main: vi.fn() }));
 
 describe("load", () => {
-  let loader: { innerHTML: string };
+  let children: (string | { tagName: string; textContent: string })[];
+  // The loader content as text, with <br> as line breaks.
+  const loaderText = () =>
+    children.map((c) => (typeof c === "string" ? c : c.tagName === "br" ? "\n" : c.textContent)).join("");
 
   beforeEach(() => {
-    loader = { innerHTML: "" };
-    vi.stubGlobal("document", { querySelector: () => loader });
+    children = [];
+    vi.stubGlobal("document", {
+      querySelector: () => ({ replaceChildren: (...nodes: typeof children) => (children = nodes) }),
+      createElement: (tagName: string) => ({ tagName, textContent: "", setAttribute() {}, addEventListener() {} }),
+    });
     vi.stubGlobal("window", {});
   });
 
@@ -24,7 +30,7 @@ describe("load", () => {
 
     await load();
 
-    expect(loader.innerHTML).toContain("No connection available.");
+    expect(loaderText()).toContain("No connection available.");
     expect(main).not.toHaveBeenCalled();
   });
 
@@ -33,7 +39,16 @@ describe("load", () => {
 
     await load();
 
-    expect(loader.innerHTML).toContain("config.json can not be loaded:<br>Not Found");
+    expect(loaderText()).toContain("config.json can not be loaded:\n404 Not Found");
+    expect(main).not.toHaveBeenCalled();
+  });
+
+  it("shows the numeric status when statusText is empty (HTTP/2)", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("", { status: 404 })));
+
+    await load();
+
+    expect(loaderText()).toContain("config.json can not be loaded:\n404\n");
     expect(main).not.toHaveBeenCalled();
   });
 
@@ -42,18 +57,19 @@ describe("load", () => {
 
     await load();
 
-    expect(loader.innerHTML).toContain("config.json is not valid JSON");
+    expect(loaderText()).toContain("config.json is not valid JSON");
     expect(main).not.toHaveBeenCalled();
   });
 
-  it("escapes HTML from the response in the parse error", async () => {
+  it("inserts the parse error as text", async () => {
     // e.g. a captive portal answering with an HTML page and status 200
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("<img src=x onerror=alert(1)>", { status: 200 })));
 
     await load();
 
-    expect(loader.innerHTML).toContain("config.json is not valid JSON");
-    expect(loader.innerHTML).not.toContain("<img");
+    const detail = children[2];
+    expect(typeof detail).toBe("string");
+    expect(detail).toContain("<img");
   });
 
   it("merges config.json onto the defaults and starts the app", async () => {

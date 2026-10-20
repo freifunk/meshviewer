@@ -28,6 +28,17 @@ describe("Router.deepUrl", () => {
   });
 });
 
+describe("Router.gotoNode", () => {
+  it("ignores node ids that only match inherited object properties", () => {
+    const target = { gotoNode: vi.fn() };
+    const fakeRouter = { objects: { nodeDict: {} }, targets: [target] };
+
+    Router.prototype.gotoNode.call(fakeRouter as never, { nodeId: "constructor" });
+
+    expect(target.gotoNode).not.toHaveBeenCalled();
+  });
+});
+
 describe("Router.customRoute language change", () => {
   const hashSetter = vi.fn<(v: string) => void>();
   const reload = vi.fn<() => void>();

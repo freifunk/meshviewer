@@ -43,7 +43,10 @@ if (!(iframe instanceof HTMLIFrameElement)) {
   });
 
   window.addEventListener("message", function (event) {
-    if (event && event.data && typeof event.data.hash === "string") {
+    if (event.source !== iframe.contentWindow) {
+      return;
+    }
+    if (event.data && typeof event.data.hash === "string") {
       updateParentHash(event.data.hash);
     }
   });

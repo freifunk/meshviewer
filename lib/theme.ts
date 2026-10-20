@@ -1,6 +1,6 @@
 type Theme = "light" | "dark" | "auto";
 
-// Keep STORAGE_KEY and DARK_CLASS in sync with the pre-paint inline script in index.html.
+// Keep STORAGE_KEY and DARK_CLASS in sync with the pre-paint script public/theme-init.js.
 const STORAGE_KEY = "meshviewer.theme";
 const DARK_CLASS = "theme_dark";
 

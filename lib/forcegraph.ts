@@ -39,7 +39,7 @@ export const ForceGraph = function (linkScale: LinkScale, sidebar: ReturnType<ty
 
   let transform = d3Zoom.zoomIdentity;
   let intNodes: MapNode[] = [];
-  const dictNodes: Record<string, MapNode> = {};
+  const dictNodes = Object.create(null) as Record<string, MapNode>;
   let intLinks: MapLink[] = [];
   let movetoTimer: ReturnType<typeof setTimeout>;
   let initial = 1.8;
@@ -227,7 +227,7 @@ export const ForceGraph = function (linkScale: LinkScale, sidebar: ReturnType<ty
   });
 
   self.setData = function setData(data: ObjectsLinksAndNodes) {
-    const nd = data.nodeDict ?? {};
+    const nd = data.nodeDict ?? (Object.create(null) as Record<string, Node>);
 
     intNodes = data.nodes.all.map(function (nodeData) {
       let node = dictNodes[nodeData.node_id];

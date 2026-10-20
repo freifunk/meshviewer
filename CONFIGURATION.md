@@ -166,7 +166,7 @@ Map human readable names to the domain from the individual node as stated in the
 
 ## Node Infos
 
-Add Links to external Sites like wikis or monitoring. You might use one of the following variables as placeholders:
+Add Links to external Sites like wikis or monitoring. You might use one of the following variables as placeholders. In `href` and `image` the values are URL-encoded, since they come from node data:
 
 | variable        | description                                                                                                                      |
 | --------------- | -------------------------------------------------------------------------------------------------------------------------------- |

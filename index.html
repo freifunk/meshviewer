@@ -30,23 +30,8 @@
     <link rel="mask-icon" href="./mask-icon.svg" color="#FFFFFF" />
     <meta name="theme-color" content="#ffffff" />
 
-    <!-- Keep storage key ("meshviewer.theme") and class name ("theme_dark") in sync with lib/theme.ts -->
-    <script>
-      try {
-        var t = localStorage.getItem("meshviewer.theme");
-        if (t === "dark" || (t !== "light" && matchMedia("(prefers-color-scheme: dark)").matches)) {
-          document.documentElement.classList.add("theme_dark");
-        }
-      } catch (e) {
-        try {
-          if (matchMedia("(prefers-color-scheme: dark)").matches) {
-            document.documentElement.classList.add("theme_dark");
-          }
-        } catch (_) {
-          /* matchMedia unavailable; accept a light paint */
-        }
-      }
-    </script>
+    <!-- Blocking on purpose: applies the dark theme before the first paint -->
+    <script src="./theme-init.js" vite-ignore></script>
     <script src="lib/index.ts" type="module"></script>
   </head>
   <body>

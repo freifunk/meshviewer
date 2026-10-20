@@ -74,12 +74,21 @@ export const mergeSpellingVariants = function mergeSpellingVariants(counts: Map<
   return [...merged.values()];
 };
 
-export const listReplace = function listReplace(template: string, subst: ReplaceMapping) {
+export const listReplace = function listReplace(
+  template: string,
+  subst: ReplaceMapping,
+  encode = (value: string) => value,
+) {
   for (const [key, value] of Object.entries(subst)) {
     const re = new RegExp(key, "g");
-    template = template.replace(re, value);
+    // A replacer function keeps "$&" and friends in the value literal.
+    template = template.replace(re, () => encode(value));
   }
   return template;
+};
+
+export const listReplaceUrl = function listReplaceUrl(template: string, subst: ReplaceMapping) {
+  return listReplace(template, subst, encodeURIComponent);
 };
 
 export const showDistance = function showDistance(data: { distance: number }) {

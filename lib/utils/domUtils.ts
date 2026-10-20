@@ -1,7 +1,7 @@
 import { h, VNode } from "snabbdom";
 import { _ } from "./language.js";
 import { LinkInfo } from "../config_default.js";
-import { listReplace } from "./formatters.js";
+import { listReplace, listReplaceUrl } from "./formatters.js";
 
 export function attributeEntry(children: VNode[], label: string, value: string | VNode) {
   if (value !== undefined) {
@@ -18,7 +18,7 @@ export function showStat(linkInfo: LinkInfo, subst: ReplaceMapping): VNode {
   if (linkInfo.image) {
     content = h("img", {
       props: {
-        src: listReplace(linkInfo.image, subst),
+        src: listReplaceUrl(linkInfo.image, subst),
         width: linkInfo.width,
         height: linkInfo.height,
         alt: _.t("loading", { name: linkInfo.name }),
@@ -35,7 +35,7 @@ export function showStat(linkInfo: LinkInfo, subst: ReplaceMapping): VNode {
         "a",
         {
           props: {
-            href: listReplace(linkInfo.href, subst),
+            href: listReplaceUrl(linkInfo.href, subst),
             target: "_blank",
             title: listReplace(linkInfo.title, subst),
           },
@@ -53,7 +53,7 @@ export const showDevicePicture = function showDevicePicture(pictures: string, su
   }
 
   return h("img", {
-    props: { src: listReplace(pictures, subst) },
+    props: { src: listReplaceUrl(pictures, subst) },
     class: { "hw-img": true },
     on: {
       // hide non-existent images
@@ -72,23 +72,31 @@ export const fullscreen = function fullscreen(btn: HTMLButtonElement) {
   if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement) {
     const enter =
       fel.requestFullscreen?.bind(fel) ?? fel.webkitRequestFullScreen?.bind(fel) ?? fel.mozRequestFullScreen?.bind(fel);
-    // The prefixed variants return undefined instead of a promise.
-    Promise.resolve(enter?.()).catch(function (e: unknown) {
-      console.warn("Entering fullscreen failed:", e);
-    });
-    btn.classList.remove("ion-full-enter");
-    btn.classList.add("ion-full-exit");
+    if (enter) {
+      // The prefixed variants return undefined instead of a promise.
+      Promise.resolve(enter())
+        .then(function () {
+          btn.classList.remove("ion-full-enter");
+          btn.classList.add("ion-full-exit");
+        })
+        .catch(function (e: unknown) {
+          console.warn("Entering fullscreen failed:", e);
+        });
+    }
   } else {
     const exit =
       document.exitFullscreen?.bind(document) ??
       document.webkitExitFullscreen?.bind(document) ??
       document.mozCancelFullScreen?.bind(document);
     if (exit) {
-      Promise.resolve(exit()).catch(function (e: unknown) {
-        console.warn("Exiting fullscreen failed:", e);
-      });
-      btn.classList.remove("ion-full-exit");
-      btn.classList.add("ion-full-enter");
+      Promise.resolve(exit())
+        .then(function () {
+          btn.classList.remove("ion-full-exit");
+          btn.classList.add("ion-full-enter");
+        })
+        .catch(function (e: unknown) {
+          console.warn("Exiting fullscreen failed:", e);
+        });
     }
   }
 };
