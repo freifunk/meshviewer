@@ -30,27 +30,12 @@
     <link rel="mask-icon" href="./mask-icon.svg" color="#FFFFFF" />
     <meta name="theme-color" content="#ffffff" />
 
-    <!-- Keep storage key ("meshviewer.theme") and class name ("theme_dark") in sync with lib/theme.ts -->
-    <script>
-      try {
-        var t = localStorage.getItem("meshviewer.theme");
-        if (t === "dark" || (t !== "light" && matchMedia("(prefers-color-scheme: dark)").matches)) {
-          document.documentElement.classList.add("theme_dark");
-        }
-      } catch (e) {
-        try {
-          if (matchMedia("(prefers-color-scheme: dark)").matches) {
-            document.documentElement.classList.add("theme_dark");
-          }
-        } catch (_) {
-          /* matchMedia unavailable; accept a light paint */
-        }
-      }
-    </script>
-    <script type="module" crossorigin src="./assets/index-DSIpgYV6.js"></script>
-    <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-Dezn_h7o.js">
-    <link rel="stylesheet" crossorigin href="./assets/main-DUOIwO_Y.css">
-  </head>
+    <!-- Blocking on purpose: applies the dark theme before the first paint -->
+    <script src="./theme-init.js" ></script>
+    <script type="module" crossorigin src="./assets/index-fFONFB0H.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-P2Xu9kJm.js">
+    <link rel="stylesheet" crossorigin href="./assets/index-dfwZfTVL.css">
+  <link rel="manifest" href="./manifest.webmanifest"></head>
   <body>
     <div class="loader">
       <p>
