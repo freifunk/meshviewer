@@ -5,7 +5,7 @@ import { location } from "./location.js";
 import { Link as LinkData, LinkScale, Node as NodeData, NodeId } from "../utils/node.js";
 import { Sidebar } from "../sidebar.js";
 import { TargetLocation } from "../utils/router.js";
-import { ObjectsLinksAndNodes } from "../datadistributor.js";
+import { DataDistributor, ObjectsLinksAndNodes } from "../datadistributor.js";
 import { Target } from "../utils/router.js";
 
 type InfoboxPanel = {
@@ -16,6 +16,7 @@ type InfoboxPanel = {
 export const Main = function (
   sidebar: ReturnType<typeof Sidebar>,
   linkScale: LinkScale,
+  filterManager?: ReturnType<typeof DataDistributor>,
 ): Target & { setData: (nodeOrLinkData: ObjectsLinksAndNodes) => void } {
   let el: HTMLDivElement | undefined;
   let node: InfoboxPanel | undefined;
@@ -64,7 +65,7 @@ export const Main = function (
 
     gotoNode(nodeData: NodeData, nodeDict: { [k: NodeId]: NodeData }) {
       create();
-      node = NodeView(el!, nodeData, linkScale, nodeDict);
+      node = NodeView(el!, nodeData, linkScale, nodeDict, filterManager);
       node.render();
     },
 

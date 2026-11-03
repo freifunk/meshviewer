@@ -129,7 +129,7 @@ export const Gui = function (language: ReturnType<typeof Language>) {
   const title = Title();
 
   const header = Container("header");
-  const infobox = Infobox(sidebar, linkScale);
+  const infobox = Infobox(sidebar, linkScale, fanout);
   const tabs = Tabs();
   const overview = Container();
   const legend = Legend(language);
@@ -167,6 +167,12 @@ export const Gui = function (language: ReturnType<typeof Language>) {
   tabs.add("node.links", linklist);
   tabs.add("sidebar.stats", statistics);
   tabs.add("sidebar.about", about);
+
+  // If filters are present in the URL, switch to the "nodes" tab on load
+  const urlParams = router.getParams();
+  if (Object.keys(urlParams).length > 0) {
+    tabs.select("node.nodes");
+  }
 
   router.addTarget(title);
   router.addTarget(infobox);
