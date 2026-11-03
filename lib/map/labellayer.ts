@@ -179,10 +179,12 @@ function addLinksToMap(dict: Record<string, StyledPolyline>, linkScale: LinkScal
 
   return filtered.map(function (link) {
     let linkColor: string;
-    if (link.type.indexOf("other") == 0 && link.source_tq >= 0.99 && link.target_tq >= 0.99) {
+    const sm = helper.linkMetric(link.source_tq, link.source_tp);
+    const tm = helper.linkMetric(link.target_tq, link.target_tp);
+    if (link.type.indexOf("other") == 0 && (sm ?? 0) >= 0.99 && (tm ?? 0) >= 0.99) {
       linkColor = config.map.otherLinkColor;
     } else {
-      linkColor = linkScale((link.source_tq + link.target_tq) / 2);
+      linkColor = linkScale(((sm ?? 0) + (tm ?? 0)) / 2);
     }
 
     const opts: L.PolylineOptions = {
@@ -203,9 +205,7 @@ function addLinksToMap(dict: Record<string, StyledPolyline>, linkScale: LinkScal
         "<br><strong>" +
         helper.showDistance(link) +
         " / " +
-        helper.showTq(link.source_tq) +
-        " - " +
-        helper.showTq(link.target_tq) +
+        helper.showBiDiLinkMetric(link.source_tq, link.source_tp, link.target_tq, link.target_tp) +
         "<br>" +
         helper.escape(link.type) +
         "</strong>",

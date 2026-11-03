@@ -22,6 +22,10 @@
 
     th,
     td {
+      &:nth-child(2) {
+        width: 42%;
+      }
+
       &:nth-child(3),
       &:nth-child(5) {
         width: 12%;
