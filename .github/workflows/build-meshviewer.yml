@@ -18,7 +18,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm install
-      - run: npm audit
+      # Fail on high/critical only: low/moderate findings keep appearing in
+      # build-time tooling (workbox-build, eslint) before upstream ships
+      # fixes (currently deepmerge and minimatch), and none of it ends up
+      # in the shipped bundle.
+      - run: npm audit --audit-level=high
       - run: npm run lint
       - run: npm run test:unit
       - run: npm run build
