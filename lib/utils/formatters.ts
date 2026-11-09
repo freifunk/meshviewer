@@ -102,3 +102,66 @@ export const showDistance = function showDistance(data: { distance: number }) {
 export const showTq = function showTq(tq: number) {
   return (tq * 100).toFixed(0) + "%";
 };
+
+// Format throughput in kbps as an SI-prefixed bit/s string (e.g. "24 Mbit/s").
+export const showThroughput = function showThroughput(kbps: number) {
+  if (kbps === undefined || kbps === null || isNaN(kbps)) {
+    return "";
+  }
+  const units = ["kbit/s", "Mbit/s", "Gbit/s", "Tbit/s"];
+  let value = kbps;
+  let unit = 0;
+  while (value >= 1000 && unit < units.length - 1) {
+    value /= 1000;
+    unit++;
+  }
+  return (value < 10 ? value.toFixed(1) : value.toFixed(0)) + " " + units[unit];
+};
+
+// Batman V throughput (kbps) mapped to linkMetric 0 and 1.
+// Below 1 Mbit/s a link is not usable and it ususally has a max at ~1 Gbit/s
+const THROUGHPUT_FLOOR_KBPS = 1e3;
+const THROUGHPUT_CEILING_KBPS = 1.2e6;
+
+// Returns a Link's link-quality metric for a given direction, normalised to a
+// 0..1 scale where higher is better. Batman IV uses tq directly (TQ=0 is
+// treated as no metric; call sites coalesce to 0 for colouring). Batman V
+// maps throughput logarithmically between THROUGHPUT_FLOOR_KBPS and
+// THROUGHPUT_CEILING_KBPS. Returns undefined when neither metric is set or
+// non-zero.
+export const linkMetric = function linkMetric(tq: number | undefined, throughput: number | undefined) {
+  if (tq !== undefined && tq > 0) {
+    return tq;
+  }
+  if (throughput !== undefined && throughput > 0) {
+    const lo = Math.log10(THROUGHPUT_FLOOR_KBPS);
+    const hi = Math.log10(THROUGHPUT_CEILING_KBPS);
+    const v = (Math.log10(throughput) - lo) / (hi - lo);
+    return Math.max(0, Math.min(1, v));
+  }
+  return undefined;
+};
+
+// Human-readable display string for a Link direction.
+export const showLinkMetric = function showLinkMetric(tq: number | undefined, throughput: number | undefined) {
+  if (tq !== undefined && tq > 0) {
+    return showTq(tq);
+  }
+  if (throughput !== undefined && throughput > 0) {
+    return showThroughput(throughput);
+  }
+  return "";
+};
+
+// Human-readable display string for both directions of a Link, omitting the
+// separator when one side has no metric (e.g. VPN gateways in Batman V).
+export const showBiDiLinkMetric = function showBiDiLinkMetric(
+  src_tq: number | undefined,
+  src_throughput: number | undefined,
+  tgt_tq: number | undefined,
+  tgt_throughput: number | undefined,
+) {
+  const src = showLinkMetric(src_tq, src_throughput);
+  const tgt = showLinkMetric(tgt_tq, tgt_throughput);
+  return [src, tgt].filter(Boolean).join(" - ");
+};
