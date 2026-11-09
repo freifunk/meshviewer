@@ -407,6 +407,7 @@ export const config: Config = {
     "AVM FRITZ!Box 7320",
     "AVM FRITZ!Box 7330",
     "AVM FRITZ!Box 7330 SL",
+    "Linksys WRT160NL",
     "TP-Link TL-MR13U v1",
     "TP-Link TL-MR3020 v1",
     "TP-Link TL-MR3040 v1",
