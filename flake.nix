@@ -1,7 +1,7 @@
 {
   description = "Visualization for Freifunk open mesh network nodes";
 
-  inputs.nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz";
+  inputs.nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.zst";
 
   outputs =
     { nixpkgs, ... }:
