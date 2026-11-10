@@ -1,5 +1,22 @@
 @use "variables";
 
+.node-chart-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+
+  &:focus {
+    color: inherit;
+  }
+
+  &:hover,
+  &:focus-visible {
+    .node-chart-bg {
+      stroke: variables.$color-primary;
+    }
+  }
+}
+
 .node-chart {
   padding-bottom: 1em;
 

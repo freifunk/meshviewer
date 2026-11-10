@@ -75,6 +75,10 @@ export interface Chart {
   from?: string;
   to?: string;
   maxDataPoints?: number;
+  // Optional link to the matching Grafana dashboard. Opens in a new tab when
+  // the rendered chart is clicked. Supports $node/$source/$target, $from and
+  // $to placeholders.
+  href?: string;
   series?: ChartSeries[];
 }
 

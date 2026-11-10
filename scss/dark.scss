@@ -156,6 +156,15 @@ variables.$color-online: color.adjust(variables.$color-online, $lightness: 40%);
     }
   }
 
+  // `.theme_dark a` is more specific than `.node-chart-link`, so the chart link
+  // has to inherit the surrounding text color explicitly.
+  .node-chart-link {
+    &,
+    &:focus {
+      color: inherit;
+    }
+  }
+
   //@import 'modules/button';
   button {
     background: color.adjust(variables.$color-white, $lightness: 10%);
