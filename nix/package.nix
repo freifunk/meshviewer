@@ -10,7 +10,7 @@ buildNpmPackage (finalAttrs: {
   inherit version src;
 
   npmDeps = importNpmLock { npmRoot = src; };
-  npmConfigHook = importNpmLock.npmConfigHook;
+  inherit (importNpmLock) npmConfigHook;
 
   installPhase = ''
     mkdir -p $out
