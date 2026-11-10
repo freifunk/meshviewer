@@ -216,6 +216,7 @@ The example below uses `nodeCharts`. The other `…Charts` are configured identi
       "from": "now-7d",                         # optional, time range start (default "now-7d")
       "to": "now-1m",                           # optional, time range end (default "now-1m")
       "maxDataPoints": 300,
+      "href": "/_grafana/d/abc123xyz/traffic?var-node=$node&from=$from&to=$to", # optional, opened in a new tab on click
       "series": [
         { "name": "RX", "color": "#73BF69" },
         { "name": "TX", "color": "#F2495C", "negate": true }
@@ -234,6 +235,13 @@ The UID is visible in the browser URL: `/datasources/edit/{uid}`.
 - `name` — must match the series name returned by the query (column alias or measurement name)
 - `color` — any CSS color value, e.g. `"#73BF69"`
 - `negate` — set `true` to flip the sign, e.g. for TX on a combined RX/TX chart
+
+**Linking to Grafana:** With `href`, the whole chart becomes a link that opens in a new tab,
+e.g. to the dashboard the chart was modelled after. Placeholders are replaced before the link
+is used: `$node` in `nodeCharts`, `$source` and `$target` in `linkCharts` (as in the query),
+plus `$from` and `$to` (the chart's time range). Values are URL-encoded. Other `$…` variables
+without a value are left untouched, e.g. Grafana dashboard variables. Omit `href` to leave the
+chart unlinked.
 
 ## Global Infos
 
