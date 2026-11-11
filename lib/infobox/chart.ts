@@ -10,6 +10,7 @@ import { format as d3Format } from "d3-format";
 import { schemeTableau10 } from "d3-scale-chromatic";
 import { _ } from "../utils/language.js";
 import { Chart, ChartSeries } from "../config_default.js";
+import { buildChartHref } from "./chartHref.js";
 
 interface Series {
   name: string;
@@ -289,7 +290,7 @@ export function createChartVNode(chart: Chart, subst: Record<string, string>): V
   const grafanaUrl = grafana.url.replace(/\/$/, "");
   const orgId = grafana.orgId ?? 1;
 
-  return h("div", {
+  const chartVNode = h("div", {
     class: { "node-chart": true },
     hook: {
       insert: async (vnode: VNode) => {
@@ -311,4 +312,18 @@ export function createChartVNode(chart: Chart, subst: Record<string, string>): V
       },
     },
   });
+
+  const href = buildChartHref(chart, subst);
+  if (!href) {
+    return chartVNode;
+  }
+
+  return h(
+    "a",
+    {
+      class: { "node-chart-link": true },
+      props: { href, target: "_blank", rel: "noopener noreferrer" },
+    },
+    chartVNode,
+  );
 }
