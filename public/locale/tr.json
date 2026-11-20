@@ -9,6 +9,7 @@
     "distance": "Mesafe",
     "connectionType": "Bağlantı türü",
     "tq": "İletim kalitesi",
+    "throughput": "Aktarım hızı",
     "lastOnline": "çevrimiçi, son mesaj %{time} (%{date})",
     "lastOffline": "çevrimdışı, son mesaj %{time} (%{date})",
     "activated": "aktif (%{branch})",

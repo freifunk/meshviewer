@@ -319,6 +319,210 @@
         "longitude": 13.3958
       },
       "is_gateway": false
+    },
+    {
+      "node_id": "021122334410",
+      "hostname": "Mizar",
+      "domain": "lab",
+      "firstseen": "@now-8d",
+      "lastseen": "@now",
+      "is_online": true,
+      "location": {
+        "latitude": 52.4992,
+        "longitude": 13.076
+      },
+      "firmware": {
+        "release": "1.0.0",
+        "base": "openwrt"
+      },
+      "uptime": "@now-6h",
+      "nproc": 1,
+      "loadavg": 0.22,
+      "memory_usage": 0.36,
+      "model": "TP-Link Archer C6 v3",
+      "clients": 5,
+      "clients_wifi24": 2,
+      "clients_wifi5": 3,
+      "clients_other": 0,
+      "is_gateway": false,
+      "addresses": ["fd00::20", "10.0.0.20"],
+      "gateway_nexthop": "021122334414",
+      "gateway": "021122334414",
+      "gateway6": "021122334414",
+      "autoupdater": {
+        "enabled": true,
+        "branch": "stable"
+      }
+    },
+    {
+      "node_id": "021122334411",
+      "hostname": "Alcor",
+      "domain": "lab",
+      "firstseen": "@now-7d",
+      "lastseen": "@now",
+      "is_online": true,
+      "location": {
+        "latitude": 52.5005,
+        "longitude": 13.0735
+      },
+      "firmware": {
+        "release": "1.0.0",
+        "base": "openwrt"
+      },
+      "uptime": "@now-5h",
+      "nproc": 4,
+      "loadavg": 0.18,
+      "memory_usage": 0.41,
+      "model": "ZyXEL NWA50AX",
+      "clients": 3,
+      "clients_wifi24": 1,
+      "clients_wifi5": 2,
+      "clients_other": 0,
+      "is_gateway": false,
+      "addresses": ["fd00::21", "10.0.0.21"],
+      "gateway_nexthop": "021122334414",
+      "gateway": "021122334414",
+      "gateway6": "021122334414",
+      "autoupdater": {
+        "enabled": true,
+        "branch": "stable"
+      }
+    },
+    {
+      "node_id": "021122334412",
+      "hostname": "Castor",
+      "domain": "lab",
+      "firstseen": "@now-6d",
+      "lastseen": "@now",
+      "is_online": true,
+      "location": {
+        "latitude": 52.4978,
+        "longitude": 13.0788
+      },
+      "firmware": {
+        "release": "1.0.0",
+        "base": "openwrt"
+      },
+      "uptime": "@now-9h",
+      "nproc": 2,
+      "loadavg": 0.12,
+      "memory_usage": 0.29,
+      "model": "MikroTik hAP ac3",
+      "clients": 2,
+      "clients_wifi24": 1,
+      "clients_wifi5": 1,
+      "clients_other": 0,
+      "is_gateway": false,
+      "addresses": ["fd00::22", "10.0.0.22"],
+      "gateway_nexthop": "021122334415",
+      "gateway": "021122334415",
+      "gateway6": "021122334415",
+      "autoupdater": {
+        "enabled": true,
+        "branch": "stable"
+      }
+    },
+    {
+      "node_id": "021122334413",
+      "hostname": "Procyon",
+      "domain": "lab",
+      "firstseen": "@now-4d",
+      "lastseen": "@now",
+      "is_online": true,
+      "location": {
+        "latitude": 52.496,
+        "longitude": 13.0742
+      },
+      "firmware": {
+        "release": "1.0.0",
+        "base": "openwrt"
+      },
+      "uptime": "@now-2h",
+      "nproc": 1,
+      "loadavg": 0.06,
+      "memory_usage": 0.22,
+      "model": "TP-Link CPE510 v3",
+      "clients": 1,
+      "clients_wifi24": 1,
+      "clients_wifi5": 0,
+      "clients_other": 0,
+      "is_gateway": false,
+      "addresses": ["fd00::23", "10.0.0.23"],
+      "gateway_nexthop": "021122334414",
+      "gateway": "021122334414",
+      "gateway6": "021122334414",
+      "autoupdater": {
+        "enabled": true,
+        "branch": "stable"
+      }
+    },
+    {
+      "node_id": "021122334414",
+      "hostname": "Polaris",
+      "domain": "lab",
+      "firstseen": "@now-90d",
+      "lastseen": "@now",
+      "is_online": true,
+      "location": {
+        "latitude": 52.502,
+        "longitude": 13.0805
+      },
+      "firmware": {
+        "release": "1.0.0",
+        "base": "openwrt"
+      },
+      "uptime": "@now-25d",
+      "nproc": 4,
+      "loadavg": 0.44,
+      "memory_usage": 0.39,
+      "model": "PC Engines APU2",
+      "clients": 0,
+      "clients_wifi24": 0,
+      "clients_wifi5": 0,
+      "clients_other": 0,
+      "is_gateway": true,
+      "addresses": ["fd00::24", "10.0.0.24"],
+      "gateway_nexthop": "021122334414",
+      "gateway": "021122334414",
+      "gateway6": "021122334414",
+      "autoupdater": {
+        "enabled": false,
+        "branch": "stable"
+      }
+    },
+    {
+      "node_id": "021122334415",
+      "hostname": "Spica",
+      "domain": "lab",
+      "firstseen": "@now-100d",
+      "lastseen": "@now",
+      "is_online": true,
+      "location": {
+        "latitude": 52.4948,
+        "longitude": 13.07
+      },
+      "firmware": {
+        "release": "1.0.0",
+        "base": "openwrt"
+      },
+      "uptime": "@now-40d",
+      "nproc": 4,
+      "loadavg": 0.51,
+      "memory_usage": 0.47,
+      "model": "PC Engines APU2",
+      "clients": 0,
+      "clients_wifi24": 0,
+      "clients_wifi5": 0,
+      "clients_other": 0,
+      "is_gateway": true,
+      "addresses": ["fd00::25", "10.0.0.25"],
+      "gateway_nexthop": "021122334415",
+      "gateway": "021122334415",
+      "gateway6": "021122334415",
+      "autoupdater": {
+        "enabled": false,
+        "branch": "stable"
+      }
     }
   ],
   "links": [
@@ -357,6 +561,76 @@
       "target_addr": "02:11:22:33:44:99",
       "source_tq": 0.42,
       "target_tq": 0.17
+    },
+    {
+      "type": "wifi5",
+      "source": "021122334410",
+      "target": "021122334411",
+      "source_addr": "02:11:22:33:44:10",
+      "target_addr": "02:11:22:33:44:11",
+      "source_tp": 866000,
+      "target_tp": 780000
+    },
+    {
+      "type": "wifi5",
+      "source": "021122334410",
+      "target": "021122334412",
+      "source_addr": "02:11:22:33:44:10",
+      "target_addr": "02:11:22:33:44:12",
+      "source_tp": 300000,
+      "target_tp": 8500
+    },
+    {
+      "type": "wifi24",
+      "source": "021122334410",
+      "target": "021122334413",
+      "source_addr": "02:11:22:33:44:10",
+      "target_addr": "02:11:22:33:44:13",
+      "source_tp": 800,
+      "target_tp": 2400
+    },
+    {
+      "type": "wifi5",
+      "source": "021122334411",
+      "target": "021122334412",
+      "source_addr": "02:11:22:33:44:11",
+      "target_addr": "02:11:22:33:44:12",
+      "source_tp": 54000,
+      "target_tp": 54000
+    },
+    {
+      "type": "vpn",
+      "source": "021122334414",
+      "target": "021122334410",
+      "source_addr": "02:11:22:33:44:14",
+      "target_addr": "02:11:22:33:44:10",
+      "target_tp": 1000000
+    },
+    {
+      "type": "vpn",
+      "source": "021122334412",
+      "target": "021122334415",
+      "source_addr": "02:11:22:33:44:12",
+      "target_addr": "02:11:22:33:44:15",
+      "source_tp": 100000
+    },
+    {
+      "type": "vpn",
+      "source": "021122334414",
+      "target": "021122334413",
+      "source_addr": "02:11:22:33:44:14",
+      "target_addr": "02:11:22:33:44:13",
+      "source_tq": 0.98,
+      "target_tp": 1000000
+    },
+    {
+      "type": "other",
+      "source": "021122334415",
+      "target": "021122334414",
+      "source_addr": "02:11:22:33:44:15",
+      "target_addr": "02:11:22:33:44:14",
+      "source_tp": 1200000,
+      "target_tp": 1200000
     }
   ]
 }
