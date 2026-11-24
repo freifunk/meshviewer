@@ -1,5 +1,6 @@
 {
   "siteName": "[TASK] Add node.owner filter; auto-select nodes tab for filter URLs",
+  "showContact": true,
   "dataPath": [
     "./"
   ],
