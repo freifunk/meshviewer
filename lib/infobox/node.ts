@@ -249,7 +249,7 @@ export function Node(
 
         if (field) {
           let cell: VNode = typeof field === "object" ? field : h("td", String(field));
-          if (typeof field !== "object" && row.value === "owner" && filterManager) {
+          if (typeof field !== "object" && row.value === "owner" && filterManager && config.showContact) {
             const ownerValue = String(field);
             const filter = GenericNodeFilter("node.contact", ["owner"], ownerValue, undefined);
             cell = h("td", [

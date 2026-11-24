@@ -1,5 +1,6 @@
 {
   "siteName": "Meshviewer Local Fixtures",
+  "showContact": true,
   "dataPath": ["/fixtures/"],
   "grafana": {
     "url": "./_grafana",

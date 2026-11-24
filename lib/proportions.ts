@@ -34,7 +34,7 @@ type StatusFieldKey =
   | "node.domain"
   | "node.contact";
 
-const statusFieldMapping: Record<StatusFieldKey, MappingEntry> = {
+const statusFieldMapping: Partial<Record<StatusFieldKey, MappingEntry>> = {
   "node.status": {
     keys: ["is_online"],
     nodeValueModifier: function (d: unknown) {
@@ -87,9 +87,6 @@ const statusFieldMapping: Record<StatusFieldKey, MappingEntry> = {
     keys: ["domain"],
     nodeValueModifier: (d: unknown) => (typeof d === "string" ? getDomainName(d) : null),
   },
-  "node.contact": {
-    keys: ["owner"],
-  },
 };
 
 const patch = init([classModule, propsModule, styleModule, eventListenersModule]);
@@ -105,6 +102,12 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     renderSingle: () => {},
   };
   const config = window.config;
+  // Contact statistics and the node.contact filter are opt-in: the mapping is
+  // only registered when the operator set showContact (default: false), so
+  // neither the statistics table nor filter URLs leak contact data.
+  if (config.showContact) {
+    statusFieldMapping["node.contact"] = { keys: ["owner"] };
+  }
   const scale = d3Interpolate.interpolate(config.forceGraph.tqFrom, config.forceGraph.tqTo);
   let time: Moment = moment();
 
@@ -237,8 +240,14 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
 
     // set nodeValueModifier for selectedGatewayIP filter later
     // so that access to data.nodeDict can be encapsulated
-    statusFieldMapping["node.selectedGatewayIPv4"].nodeValueModifier = gatewayNameFromNodeId;
-    statusFieldMapping["node.selectedGatewayIPv6"].nodeValueModifier = gatewayNameFromNodeId;
+    const gatewayIPv4Mapping = statusFieldMapping["node.selectedGatewayIPv4"];
+    const gatewayIPv6Mapping = statusFieldMapping["node.selectedGatewayIPv6"];
+    if (gatewayIPv4Mapping) {
+      gatewayIPv4Mapping.nodeValueModifier = gatewayNameFromNodeId;
+    }
+    if (gatewayIPv6Mapping) {
+      gatewayIPv6Mapping.nodeValueModifier = gatewayNameFromNodeId;
+    }
 
     function sortVersionCountAndName(a: CountItem, b: CountItem) {
       // descending by count
@@ -249,6 +258,9 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     }
     function processMapping(name: StatusFieldKey, sorter?: (a: CountItem, b: CountItem) => number) {
       const m = statusFieldMapping[name];
+      if (!m) {
+        return;
+      }
       const arr = count(nodes, m.keys, m.nodeValueModifier, data);
       const sorted = sorter
         ? arr.sort(sorter)
@@ -269,7 +281,9 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     processMapping("node.selectedGatewayIPv4");
     processMapping("node.selectedGatewayIPv6");
     processMapping("node.domain");
-    processMapping("node.contact");
+    if (config.showContact) {
+      processMapping("node.contact");
+    }
 
     if (!appliedUrlFilters) {
       applyFiltersFromHash();
@@ -288,6 +302,9 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
         continue; // continue instead of return to process other params
       }
       const mapping = statusFieldMapping[param as StatusFieldKey];
+      if (!mapping) {
+        continue;
+      }
 
       values.forEach(function (encodedValue) {
         const negate = encodedValue.startsWith("!");
@@ -320,7 +337,9 @@ export const Proportions = function (filterManager: ReturnType<typeof DataDistri
     self.renderSingle(el, "node.selectedGatewayIPv4");
     self.renderSingle(el, "node.selectedGatewayIPv6");
     self.renderSingle(el, "node.domain");
-    self.renderSingle(el, "node.contact");
+    if (config.showContact) {
+      self.renderSingle(el, "node.contact");
+    }
 
     if (config.globalInfos) {
       const images = document.createElement("div");
