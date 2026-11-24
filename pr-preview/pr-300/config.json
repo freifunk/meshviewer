@@ -17,6 +17,7 @@
       "from": "now-7d",
       "to": "now-1m",
       "maxDataPoints": 300,
+      "href": "./_grafana/d/node-traffic?var-node=$node&from=$from&to=$to",
       "series": [
         {
           "name": "RX",
@@ -36,6 +37,7 @@
       "datasourceUid": "grafana-link.json",
       "datasourceType": "fixture",
       "query": "union(alias(avg by () (avg_over_time(link_tq{source.id=~\"^$source$\",target.id=~\"^$target$\"})), \"Source → Target\"), alias(avg by () (avg_over_time(link_tq{source.id=~\"^$target$\",target.id=~\"^$source$\"})), \"Target → Source\"))",
+      "href": "./_grafana/d/link-tq?var-source=$source&var-target=$target&from=$from&to=$to",
       "series": [
         {
           "name": "Source → Target",
