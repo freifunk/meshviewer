@@ -251,7 +251,7 @@ export function Node(
           let cell: VNode = typeof field === "object" ? field : h("td", String(field));
           if (typeof field !== "object" && row.value === "owner" && filterManager) {
             const ownerValue = String(field);
-            const filter = GenericNodeFilter("node.owner", ["owner"], ownerValue, undefined);
+            const filter = GenericNodeFilter("node.contact", ["owner"], ownerValue, undefined);
             cell = h("td", [
               h(
                 "a",
