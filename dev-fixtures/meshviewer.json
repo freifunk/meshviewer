@@ -3,6 +3,7 @@
   "nodes": [
     {
       "node_id": "021122334401",
+      "owner": "mail@example.org",
       "hostname": "Sirius",
       "domain": "lab",
       "firstseen": "@now-6d",
@@ -37,6 +38,7 @@
     },
     {
       "node_id": "1004",
+      "owner": "https://freifunk.example/@alice",
       "hostname": "Vega",
       "domain": "lab",
       "firstseen": "@now-7d",
@@ -71,6 +73,7 @@
     },
     {
       "node_id": "node.a03",
+      "owner": "mail@example.org",
       "hostname": "Arktur",
       "domain": "lab",
       "firstseen": "@now-38d",

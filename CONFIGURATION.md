@@ -18,6 +18,27 @@ You can find an example configuration at `config.example.json`. This guide tries
   "nodeZoom": 19, # default 18, max. 19, OpenStreetMap zoomlevel when a node is selected
 ```
 
+### Contact / Owner
+
+The `owner` field of the node data (the node owner's contact, as entered in the
+firmware) is **hidden by default**. When `showContact` is enabled, all contacts
+are listed with their node counts in the statistics tab and the node contact
+becomes a filter (via the statistics table, the node infobox and filter URLs
+like `?node.contact=mail@example.org`):
+
+```json
+  "showContact": true
+```
+
+Independent of this option, the contact can still be displayed for a single
+node in the infobox via `nodeAttr`:
+
+```json
+  "nodeAttr": [
+    { "name": "node.contact", "value": "owner" }
+  ]
+```
+
 ### List with general Links
 
 You can add some general links via a list. They get displayed in the header of the sidebar.

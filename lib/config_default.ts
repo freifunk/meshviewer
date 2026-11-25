@@ -118,6 +118,10 @@ export interface Config {
   clientZoom: number;
   fullscreen: boolean;
   fullscreenFrame: boolean;
+  // Show the node owner contact in the statistics and make it filterable.
+  // Off by default: the contact data of node owners must not be published
+  // without the operator's consent.
+  showContact: boolean;
   nodeAttr: NodeAttr[];
   // List of two letter locale names
   supportedLocale: LanguageCode[];
@@ -234,6 +238,7 @@ export const config: Config = {
   clientZoom: 15,
   fullscreen: true,
   fullscreenFrame: true,
+  showContact: false,
   nodeAttr: [
     // value can be a node attribute (1 depth) or a function in utils/node with prefix show
     {
